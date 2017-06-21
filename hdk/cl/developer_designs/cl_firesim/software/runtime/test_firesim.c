@@ -148,7 +148,7 @@ out:
 
 
 /*
- * check if the corresponding AFI for hello_world is loaded
+ * check if the corresponding AFI for firesim is loaded
  */
 
 int check_afi_ready(int slot_id) {

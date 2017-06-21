@@ -13,7 +13,7 @@
 // implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-module cl_hello_world 
+module cl_firesim 
 
 (
    `include "cl_ports.vh" // Fixed port definition
@@ -22,7 +22,7 @@ module cl_hello_world
 
 `include "cl_common_defines.vh"      // CL Defines for all examples
 `include "cl_id_defines.vh"          // Defines for ID0 and ID1 (PCI ID's)
-`include "cl_hello_world_defines.vh" // CL Defines for cl_hello_world
+`include "cl_firesim_defines.vh" // CL Defines for cl_firesim
 
 logic rst_main_n_sync;
 

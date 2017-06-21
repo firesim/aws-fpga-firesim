@@ -40,8 +40,8 @@ export SH_LIB_DIR  = $(HDK_SHELL_DESIGN_DIR)/lib
 export SH_INF_DIR  = $(HDK_SHELL_DESIGN_DIR)/interfaces
 export SH_SH_DIR   = $(HDK_SHELL_DESIGN_DIR)/sh_ddr/sim
 
-SV_TEST_LIST = test_hello_world
-C_TEST_LIST  = test_hello_world.c
+SV_TEST_LIST = test_firesim
+C_TEST_LIST  = test_firesim.c
 
 all:	make_sim_dir compile run
 

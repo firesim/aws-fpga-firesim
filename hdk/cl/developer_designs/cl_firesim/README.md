@@ -10,7 +10,7 @@
 <a name="overview"></a>
 ## Overview
 
-This simple *hello_world* example builds a Custom Logic (CL) that will enable the instance to "peek" and "poke" registers in the Custom Logic (C). These registers will be in the memory space behind AppPF BAR0, which is the ocl\_cl\_ AXI-lite bus on the Shell to CL interface.
+This simple *firesim* example builds a Custom Logic (CL) that will enable the instance to "peek" and "poke" registers in the Custom Logic (C). These registers will be in the memory space behind AppPF BAR0, which is the ocl\_cl\_ AXI-lite bus on the Shell to CL interface.
 
 This example demonstrate a basic use-case of the Virtual LED and Virtual DIP switches.
 
@@ -22,7 +22,7 @@ Please read here for [general instructions to build the CL, register an AFI, and
 <a name="description"></a>
 ## Functional Description
 
-The cl_hello_world example demonstrates basic Shell-to-CL connectivity, memory-mapped register instantiations and the use of the Virtual LED and DIP switches. The cl_hello_world example implements two registers in the FPGA AppPF BAR0 memory space connected to the OCL AXI-L interface. The two registers are:
+The cl_firesim example demonstrates basic Shell-to-CL connectivity, memory-mapped register instantiations and the use of the Virtual LED and DIP switches. The cl_firesim example implements two registers in the FPGA AppPF BAR0 memory space connected to the OCL AXI-L interface. The two registers are:
 
 1. Hello World Register (offset 0x500)
 2. Virtual LED Register (offset 0x504)
@@ -33,7 +33,7 @@ The Hello World Register is a 32-bit read/write register. However, in order to d
 
 The Virtual LED register is a 16-bit read-only register that shadows the lower 16 bits of the Hello World Register such that it will hold the same value as bits 15:0 of the Hello World Register.
 
-The cl_hello_world design utilizes the Virtual LED and DIP switch interface which consistes of two signals described in the [cl_ports.vh] (./../../../common/shell_stable/design/interfaces/cl_ports.vh) file:
+The cl_firesim design utilizes the Virtual LED and DIP switch interface which consistes of two signals described in the [cl_ports.vh] (./../../../common/shell_stable/design/interfaces/cl_ports.vh) file:
 
 
 ```
@@ -49,7 +49,7 @@ While running on F1, the developer can use the FPGA tools `fpga-get-virtual-led`
 ### Unused interfaces
 
 The Hello World example does not use most of AWS Shell interface, hence the unused signals are tied off.
-At the end of `cl_hello_world.sv` file, there is a specific `include` command for an interface-specific `.inc` file, to handle the tie-off\'s for every unused interface.
+At the end of `cl_firesim.sv` file, there is a specific `include` command for an interface-specific `.inc` file, to handle the tie-off\'s for every unused interface.
 
 
 <a name="metadata"></a>

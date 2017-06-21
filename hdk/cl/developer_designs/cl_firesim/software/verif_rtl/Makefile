@@ -16,16 +16,16 @@
 
 VPATH = src:include:$(HDK_DIR)/common/software/src:$(HDK_DIR)/common/software/include
 
-C_SRCS := test_hello_world.c pcie_utils.c cl_utils.c main.c
+C_SRCS := test_firesim.c pcie_utils.c cl_utils.c main.c
 C_OBJS := $(C_SRCS:.c=.o)
 
 CC = gcc
 CFLAGS = -I ./include
 CFLAGS += -I $(HDK_DIR)/common/software/include
-all: test_hello_world
+all: test_firesim
 
-test_hello_world: $(C_SRCS)
+test_firesim: $(C_SRCS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm test_hello_world
+	rm test_firesim

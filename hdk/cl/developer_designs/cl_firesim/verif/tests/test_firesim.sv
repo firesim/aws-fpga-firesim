@@ -14,7 +14,7 @@
 // limitations under the License.
 
 
-module test_hello_world();
+module test_firesim();
 
 import tb_type_defines_pkg::*;
 `include "cl_common_defines.vh" // CL Defines with register addresses
@@ -67,4 +67,4 @@ logic [15:0] vled_value;
       $finish;
    end
 
-endmodule // test_hello_world
+endmodule // test_firesim
