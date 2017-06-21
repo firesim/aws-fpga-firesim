@@ -14,12 +14,22 @@
 // limitations under the License.
 
 
-//Put module name of the CL design here.  This is used to instantiate in top.sv
-`define CL_NAME cl_template
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
-//Highly recommeneded.  For lib FIFO block, uses less async reset (take advantage of
-// FPGA flop init capability).  This will help with routing resources.
-`define FPGA_LESS_RST
+// Vivado does not support svGetScopeFromName
+#ifdef INCLUDE_DPI_CALLS
+#ifndef VIVADO_SIM
+#include "svdpi.h"
+#endif
+#endif
 
-//Must have this define or will get syntax errors.  Curretly XDMA not supported.
-`define NO_XDMA
+#include "sh_dpi_tasks.h"
+
+void test_main(uint32_t *exit_code) {
+
+  // NULL Test
+
+  *exit_code = 0;
+}
