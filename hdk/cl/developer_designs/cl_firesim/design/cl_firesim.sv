@@ -38,7 +38,7 @@ logic rst_main_n_sync;
 
 `include "unused_flr_template.inc"
 `include "unused_ddr_a_b_d_template.inc"
-`include "unused_ddr_c_template.inc"
+// `include "unused_ddr_c_template.inc"
 `include "unused_pcim_template.inc"
 `include "unused_dma_pcis_template.inc"
 `include "unused_cl_sda_template.inc"
@@ -160,101 +160,117 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
 
     /* instantiate firesim top level here */
 
-  F1Shim firesim_top (
-    .clock(clk_main_a0),
-    .reset(rst_main_n_sync),
-    .io_master_aw_ready(ocl_sh_awready_q),
-    .io_master_aw_valid(sh_ocl_awvalid_q),
-    .io_master_aw_bits_addr(sh_ocl_awaddr_q),
-    .io_master_aw_bits_len(8'h0),
-    .io_master_aw_bits_size(3'h3),
-    .io_master_aw_bits_burst(2'h1),
-    .io_master_aw_bits_lock(1'h0),
-    .io_master_aw_bits_cache(4'h0),
-    .io_master_aw_bits_prot(3'h0), //unused? (could connect?)
-    .io_master_aw_bits_qos(4'h0),
-    .io_master_aw_bits_region(4'h0),
-    .io_master_aw_bits_id(12'h0),
-    .io_master_aw_bits_user(1'h0),
-    .io_master_w_ready(ocl_sh_wready_q),
-    .io_master_w_valid(sh_ocl_wvalid_q),
-    .io_master_w_bits_data(sh_ocl_wdata_q),
-    .io_master_w_bits_last(1'h1),
-    .io_master_w_bits_id(12'h0),
-    .io_master_w_bits_strb(sh_ocl_wstrb_q), //OR 8'hff
-    .io_master_w_bits_user(1'h0),
-    .io_master_b_ready(sh_ocl_bready_q),
-    .io_master_b_valid(ocl_sh_bvalid_q),
-    .io_master_b_bits_resp(ocl_sh_bresp_q),
-    .io_master_b_bits_id(),      // UNUSED at top level
-    .io_master_b_bits_user(),    // UNUSED at top level
-    .io_master_ar_ready(ocl_sh_arready_q),
-    .io_master_ar_valid(sh_ocl_arvalid_q),
-    .io_master_ar_bits_addr(sh_ocl_araddr_q),
-    .io_master_ar_bits_len(8'h0),
-    .io_master_ar_bits_size(3'h3),
-    .io_master_ar_bits_burst(2'h1),
-    .io_master_ar_bits_lock(1'h0),
-    .io_master_ar_bits_cache(4'h0),
-    .io_master_ar_bits_prot(3'h0),
-    .io_master_ar_bits_qos(4'h0),
-    .io_master_ar_bits_region(4'h0),
-    .io_master_ar_bits_id(12'h0),
-    .io_master_ar_bits_user(1'h0),
-    .io_master_r_ready(sh_ocl_rready_q),
-    .io_master_r_valid(ocl_sh_rvalid_q),
-    .io_master_r_bits_resp(ocl_sh_rresp_q),
-    .io_master_r_bits_data(ocl_sh_rdata_q),
-    .io_master_r_bits_last(), //UNUSED at top level
-    .io_master_r_bits_id(),      // UNUSED at top level
-    .io_master_r_bits_user()    // UNUSED at top level
+   // TODO: switch to AXI width converter IP on DDR IF, or change rocket-chip config
+  wire [31:0] io_slave_aw_bits_addr;
+  assign cl_sh_dr_awaddr = { 29'b0, io_slave_aw_bits_addr, 3'b0 }; // TODO: check this
 
-// TODO memory interface
-//  input         io_slave_aw_ready,
-//  output        io_slave_aw_valid,
-//  output [31:0] io_slave_aw_bits_addr,
-//  output [7:0]  io_slave_aw_bits_len,
-//  output [2:0]  io_slave_aw_bits_size,
-//  output [1:0]  io_slave_aw_bits_burst,
-//  output        io_slave_aw_bits_lock,
-//  output [3:0]  io_slave_aw_bits_cache,
-//  output [2:0]  io_slave_aw_bits_prot,
-//  output [3:0]  io_slave_aw_bits_qos,
-//  output [3:0]  io_slave_aw_bits_region,
-//  output [15:0] io_slave_aw_bits_id,
-//  output        io_slave_aw_bits_user,
-//  input         io_slave_w_ready,
-//  output        io_slave_w_valid,
-//  output [63:0] io_slave_w_bits_data,
-//  output        io_slave_w_bits_last,
-//  output [15:0] io_slave_w_bits_id,
-//  output [7:0]  io_slave_w_bits_strb,
-//  output        io_slave_w_bits_user,
-//  output        io_slave_b_ready,
-//  input         io_slave_b_valid,
-//  input  [1:0]  io_slave_b_bits_resp,
-//  input  [15:0] io_slave_b_bits_id,
-//  input         io_slave_b_bits_user,
-//  input         io_slave_ar_ready,
-//  output        io_slave_ar_valid,
-//  output [31:0] io_slave_ar_bits_addr,
-//  output [7:0]  io_slave_ar_bits_len,
-//  output [2:0]  io_slave_ar_bits_size,
-//  output [1:0]  io_slave_ar_bits_burst,
-//  output        io_slave_ar_bits_lock,
-//  output [3:0]  io_slave_ar_bits_cache,
-//  output [2:0]  io_slave_ar_bits_prot,
-//  output [3:0]  io_slave_ar_bits_qos,
-//  output [3:0]  io_slave_ar_bits_region,
-//  output [15:0] io_slave_ar_bits_id,
-//  output        io_slave_ar_bits_user,
-//  output        io_slave_r_ready,
-//  input         io_slave_r_valid,
-//  input  [1:0]  io_slave_r_bits_resp,
-//  input  [63:0] io_slave_r_bits_data,
-//  input         io_slave_r_bits_last,
-//  input  [15:0] io_slave_r_bits_id,
-//  input         io_slave_r_bits_user
+  wire [63:0] io_slave_w_bits_data;
+  assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
+
+  wire [7:0] io_slave_w_bits_strb;
+  assign cl_sh_ddr_wstrb = { 56'b0, io_slave_w_bits_strb };
+
+  wire [31:0] io_slave_ar_bits_addr;
+  assign cl_sh_ddr_araddr = { 29'b0, io_slave_ar_bits_addr, 3'b0 };
+
+  F1Shim firesim_top (
+   .clock(clk_main_a0),
+   .reset(rst_main_n_sync),
+   .io_master_aw_ready(ocl_sh_awready_q),
+   .io_master_aw_valid(sh_ocl_awvalid_q),
+   .io_master_aw_bits_addr(sh_ocl_awaddr_q),
+   .io_master_aw_bits_len(8'h0),
+   .io_master_aw_bits_size(3'h3),
+   .io_master_aw_bits_burst(2'h1),
+   .io_master_aw_bits_lock(1'h0),
+   .io_master_aw_bits_cache(4'h0),
+   .io_master_aw_bits_prot(3'h0), //unused? (could connect?)
+   .io_master_aw_bits_qos(4'h0),
+   .io_master_aw_bits_region(4'h0),
+   .io_master_aw_bits_id(12'h0),
+   .io_master_aw_bits_user(1'h0),
+   .io_master_w_ready(ocl_sh_wready_q),
+   .io_master_w_valid(sh_ocl_wvalid_q),
+   .io_master_w_bits_data(sh_ocl_wdata_q),
+   .io_master_w_bits_last(1'h1),
+   .io_master_w_bits_id(12'h0),
+   .io_master_w_bits_strb(sh_ocl_wstrb_q), //OR 8'hff
+   .io_master_w_bits_user(1'h0),
+   .io_master_b_ready(sh_ocl_bready_q),
+   .io_master_b_valid(ocl_sh_bvalid_q),
+   .io_master_b_bits_resp(ocl_sh_bresp_q),
+   .io_master_b_bits_id(),      // UNUSED at top level
+   .io_master_b_bits_user(),    // UNUSED at top level
+   .io_master_ar_ready(ocl_sh_arready_q),
+   .io_master_ar_valid(sh_ocl_arvalid_q),
+   .io_master_ar_bits_addr(sh_ocl_araddr_q),
+   .io_master_ar_bits_len(8'h0),
+   .io_master_ar_bits_size(3'h3),
+   .io_master_ar_bits_burst(2'h1),
+   .io_master_ar_bits_lock(1'h0),
+   .io_master_ar_bits_cache(4'h0),
+   .io_master_ar_bits_prot(3'h0),
+   .io_master_ar_bits_qos(4'h0),
+   .io_master_ar_bits_region(4'h0),
+   .io_master_ar_bits_id(12'h0),
+   .io_master_ar_bits_user(1'h0),
+   .io_master_r_ready(sh_ocl_rready_q),
+   .io_master_r_valid(ocl_sh_rvalid_q),
+   .io_master_r_bits_resp(ocl_sh_rresp_q),
+   .io_master_r_bits_data(ocl_sh_rdata_q),
+   .io_master_r_bits_last(), //UNUSED at top level
+   .io_master_r_bits_id(),      // UNUSED at top level
+   .io_master_r_bits_user(),    // UNUSED at top level
+
+   .io_slave_aw_ready(sh_cl_ddr_awready),
+   .io_slave_aw_valid(cl_sh_ddr_awvalid),
+   .io_slave_aw_bits_addr(io_slave_aw_bits_addr),
+   .io_slave_aw_bits_len(cl_sh_ddr_awlen),
+   .io_slave_aw_bits_size(cl_sh_ddr_awsize),
+   .io_slave_aw_bits_burst(), // not available on DDR IF
+   .io_slave_aw_bits_lock(), // not available on DDR IF
+   .io_slave_aw_bits_cache(), // not available on DDR IF
+   .io_slave_aw_bits_prot(), // not available on DDR IF
+   .io_slave_aw_bits_qos(), // not available on DDR IF
+   .io_slave_aw_bits_region(), // not available on DDR IF
+   .io_slave_aw_bits_id(cl_sh_ddr_awid),
+   .io_slave_aw_bits_user(), // not available on DDR IF
+
+   .io_slave_w_ready(sh_cl_ddr_wready),
+   .io_slave_w_valid(cl_sh_ddr_wvalid),
+   .io_slave_w_bits_data(io_slave_w_bits_data),
+   .io_slave_w_bits_last(cl_sh_ddr_wlast),
+   .io_slave_w_bits_id(cl_sh_ddr_wid),
+   .io_slave_w_bits_strb(io_slave_w_bits_strb),
+   .io_slave_w_bits_user(), // not available on DDR IF
+
+   .io_slave_b_ready(cl_sh_ddr_bready),
+   .io_slave_b_valid(sh_cl_ddr_bvalid),
+   .io_slave_b_bits_resp(sh_cl_ddr_bresp),
+   .io_slave_b_bits_id(sh_cl_ddr_bid),
+   .io_slave_b_bits_user(1'b0), // TODO check this
+
+   .io_slave_ar_ready(sh_cl_ddr_arready),
+   .io_slave_ar_valid(cl_sh_ddr_arvalid),
+   .io_slave_ar_bits_addr(io_slave_ar_bits_addr),
+   .io_slave_ar_bits_len(cl_sh_ddr_arlen),
+   .io_slave_ar_bits_size(cl_sh_ddr_arsize),
+   .io_slave_ar_bits_burst(), // not available on DDR IF
+   .io_slave_ar_bits_lock(), // not available on DDR IF
+   .io_slave_ar_bits_cache(), // not available on DDR IF
+   .io_slave_ar_bits_prot(), // not available on DDR IF
+   .io_slave_ar_bits_qos(), // not available on DDR IF
+   .io_slave_ar_bits_region(), // not available on DDR IF
+   .io_slave_ar_bits_id(cl_sh_ddr_arid), // not available on DDR IF
+   .io_slave_ar_bits_user(), // not available on DDR IF
+
+   .io_slave_r_ready(cl_sh_ddr_rready),
+   .io_slave_r_valid(sh_cl_ddr_rvalid),
+   .io_slave_r_bits_resp(sh_cl_ddr_rresp),
+   .io_slave_r_bits_data(sh_cl_ddr_rdata[63:0]),
+   .io_slave_r_bits_last(sh_cl_ddr_rlast),
+   .io_slave_r_bits_id(sh_cl_ddr_rid),
+   .io_slave_r_bits_user(1'b0) // TODO check this
 );
 
 

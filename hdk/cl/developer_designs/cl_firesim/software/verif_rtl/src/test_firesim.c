@@ -47,6 +47,8 @@ void test_main(uint32_t *exit_code) {
 #endif
 #endif
 
+  log_printf("HELLO! THIS IS SAGAR\n");
+
   log_printf("Writing 0xDEAD_BEEF to address 0x%x", HELLO_WORLD_REG_ADDR);
   cl_poke(HELLO_WORLD_REG_ADDR, 0xDEADBEEF);
   cl_peek(HELLO_WORLD_REG_ADDR, &rdata);
