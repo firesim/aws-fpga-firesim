@@ -175,12 +175,12 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
 
   F1Shim firesim_top (
    .clock(clk_main_a0),
-   .reset(rst_main_n_sync),
+   .reset(~rst_main_n_sync),
    .io_master_aw_ready(ocl_sh_awready_q),
    .io_master_aw_valid(sh_ocl_awvalid_q),
    .io_master_aw_bits_addr(sh_ocl_awaddr_q),
    .io_master_aw_bits_len(8'h0),
-   .io_master_aw_bits_size(3'h3),
+   .io_master_aw_bits_size(3'h2),
    .io_master_aw_bits_burst(2'h1),
    .io_master_aw_bits_lock(1'h0),
    .io_master_aw_bits_cache(4'h0),

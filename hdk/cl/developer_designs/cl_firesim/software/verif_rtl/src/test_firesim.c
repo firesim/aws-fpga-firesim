@@ -28,6 +28,9 @@
 
 #define HELLO_WORLD_REG_ADDR UINT64_C(0x00)
 
+#define RESET_REG UINT64_C(0x0)
+#define SOMETHING_REG UINT64_C(0x20)
+
 void test_main(uint32_t *exit_code) {
 
 // Vivado does not support svGetScopeFromName
@@ -49,17 +52,35 @@ void test_main(uint32_t *exit_code) {
 
   log_printf("HELLO! THIS IS SAGAR\n");
 
-  log_printf("Writing 0xDEAD_BEEF to address 0x%x", HELLO_WORLD_REG_ADDR);
-  cl_poke(HELLO_WORLD_REG_ADDR, 0xDEADBEEF);
-  cl_peek(HELLO_WORLD_REG_ADDR, &rdata);
+  // TODO: not clear: how does time/cycles factor in here?
+  // ideally it works just like real software interfacing with the FPGA?
+  log_printf("writing somethingreg 1\n");
+  cl_poke(SOMETHING_REG, 0x1);
 
-  log_printf("Reading 0x%x from address 0x%x", rdata, HELLO_WORLD_REG_ADDR);
 
-  if (rdata == 0xEFBEADDE) {
-    log_printf("Test PASSED");
-  } else {
-    log_printf("Test FAILED");
+  rdata = 0;
+  while (rdata == 0) {
+      cl_peek(0x28, &rdata);
+      log_printf("from 0x28 got: 0x%x\n", rdata);
   }
+
+
+
+
+  log_printf("writing reset a\n");
+  cl_poke(RESET_REG, 0xA);
+  log_printf("writing reset 0\n");
+  cl_poke(RESET_REG, 0x0);
+
+  //cl_peek(BOOTROM_TESTREG, &rdata);
+
+//  log_printf("Reading 0x%x from address 0x%x", rdata, BOOTROM_TESTREG);
+
+//  if (rdata == 0xEFBEADDE) {
+//    log_printf("Test PASSED");
+//  } else {
+//    log_printf("Test FAILED");
+//  }
 
   *exit_code = 0;
 }
