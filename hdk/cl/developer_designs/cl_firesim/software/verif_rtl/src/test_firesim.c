@@ -14,6 +14,10 @@
 // limitations under the License.
 
 #include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -50,7 +54,51 @@ void test_main(uint32_t *exit_code) {
 #endif
 #endif
 
-  log_printf("HELLO! THIS IS SAGAR\n");
+    /* setup pipes */
+    int fd[2];
+    char * driver_to_xsim = "/tmp/driver_to_xsim";
+    char * xsim_to_driver = "/tmp/xsim_to_driver";
+    mkfifo(xsim_to_driver, 0666);
+    log_printf("opening driver_to_xsim\n");
+    int driver_to_xsim_fd = open(driver_to_xsim, O_RDONLY);
+    log_printf("opening xsim_to_driver\n"); 
+    int xsim_to_driver_fd = open(xsim_to_driver, O_WRONLY);
+
+    char buf[8];
+    while(1) {
+//        log_printf("waiting to read...\n");
+        int readbytes = read(driver_to_xsim_fd, buf, 8);
+        if (readbytes != 8) {
+            if (readbytes != 0) {
+                log_printf("only read %d bytes\n", readbytes);
+            }
+            continue;
+        }
+        uint64_t cmd = *((uint64_t*)buf);
+
+//        log_printf("GOT CMD! %llx\n", cmd);
+        if (cmd >> 63) {
+            //write
+            uint32_t addr = (cmd >> 32) & 0x7FFFFFFF;
+            uint32_t data = cmd & 0xFFFFFFFF;
+            cl_poke(addr << 2, data);
+            // just send something back
+            write(xsim_to_driver_fd, buf, 8);
+        } else {
+            // read
+            uint32_t addr = cmd & 0xFFFFFFFF;
+            uint32_t dat;
+            cl_peek(addr << 2, &dat);
+            uint64_t ret = dat;
+            write(xsim_to_driver_fd, (char*)&ret, 8);
+        }
+
+    }
+
+
+
+
+/*  log_printf("HELLO! THIS IS SAGAR\n");
 
   // TODO: not clear: how does time/cycles factor in here?
   // ideally it works just like real software interfacing with the FPGA?
@@ -71,7 +119,7 @@ void test_main(uint32_t *exit_code) {
   cl_poke(RESET_REG, 0xA);
   log_printf("writing reset 0\n");
   cl_poke(RESET_REG, 0x0);
-
+*/
   //cl_peek(BOOTROM_TESTREG, &rdata);
 
 //  log_printf("Reading 0x%x from address 0x%x", rdata, BOOTROM_TESTREG);
