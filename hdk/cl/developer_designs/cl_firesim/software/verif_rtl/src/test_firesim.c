@@ -71,6 +71,7 @@ void test_main(uint32_t *exit_code) {
         if (readbytes != 8) {
             if (readbytes != 0) {
                 log_printf("only read %d bytes\n", readbytes);
+                exit(1);
             }
             continue;
         }

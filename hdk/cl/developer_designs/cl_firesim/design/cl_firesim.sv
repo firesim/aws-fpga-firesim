@@ -162,7 +162,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
 
    // TODO: switch to AXI width converter IP on DDR IF, or change rocket-chip config
   wire [31:0] io_slave_aw_bits_addr;
-  assign cl_sh_dr_awaddr = { 29'b0, io_slave_aw_bits_addr, 3'b0 }; // TODO: check this
+  assign cl_sh_ddr_awaddr = { 29'b0, io_slave_aw_bits_addr, 3'b0 }; // TODO: check this
 
   wire [63:0] io_slave_w_bits_data;
   assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
@@ -427,8 +427,3 @@ always_ff @(posedge clk_main_a0)
 `endif //  `ifndef DISABLE_VJTAG_DEBUG
 
 endmodule
-
-
-
-
-
