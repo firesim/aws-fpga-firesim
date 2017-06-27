@@ -50,15 +50,6 @@ logic rst_main_n_sync;
 //-------------------------------------------------
 // Wires
 //-------------------------------------------------
-  logic        arvalid_q;
-  logic [31:0] araddr_q;
-  logic [31:0] hello_world_q_byte_swapped;
-  logic [15:0] vled_q;
-  logic [15:0] pre_cl_sh_status_vled;
-  logic [15:0] sh_cl_status_vdip_q;
-  logic [15:0] sh_cl_status_vdip_q2;
-  logic [31:0] hello_world_q;
-
 //-------------------------------------------------
 // ID Values (cl_hello_world_defines.vh)
 //-------------------------------------------------
@@ -162,7 +153,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
 
    // TODO: switch to AXI width converter IP on DDR IF, or change rocket-chip config
   wire [31:0] io_slave_aw_bits_addr;
-  assign cl_sh_ddr_awaddr = { 29'b0, io_slave_aw_bits_addr, 3'b0 }; // TODO: check this
+  assign cl_sh_ddr_awaddr = { 33'b0, io_slave_aw_bits_addr[27:0], 3'b0 }; // TODO: check this
 
   wire [63:0] io_slave_w_bits_data;
   assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
@@ -171,14 +162,14 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
   assign cl_sh_ddr_wstrb = { 56'b0, io_slave_w_bits_strb };
 
   wire [31:0] io_slave_ar_bits_addr;
-  assign cl_sh_ddr_araddr = { 29'b0, io_slave_ar_bits_addr, 3'b0 };
+  assign cl_sh_ddr_araddr = { 33'b0, io_slave_ar_bits_addr[27:0], 3'b0 };
 
   F1Shim firesim_top (
    .clock(clk_main_a0),
-   .reset(~rst_main_n_sync),
+   .reset(!rst_main_n_sync),
    .io_master_aw_ready(ocl_sh_awready_q),
    .io_master_aw_valid(sh_ocl_awvalid_q),
-   .io_master_aw_bits_addr(sh_ocl_awaddr_q),
+   .io_master_aw_bits_addr(sh_ocl_awaddr_q[24:0]),
    .io_master_aw_bits_len(8'h0),
    .io_master_aw_bits_size(3'h2),
    .io_master_aw_bits_burst(2'h1),
@@ -203,9 +194,9 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_master_b_bits_user(),    // UNUSED at top level
    .io_master_ar_ready(ocl_sh_arready_q),
    .io_master_ar_valid(sh_ocl_arvalid_q),
-   .io_master_ar_bits_addr(sh_ocl_araddr_q),
+   .io_master_ar_bits_addr(sh_ocl_araddr_q[24:0]),
    .io_master_ar_bits_len(8'h0),
-   .io_master_ar_bits_size(3'h3),
+   .io_master_ar_bits_size(3'h2),
    .io_master_ar_bits_burst(2'h1),
    .io_master_ar_bits_lock(1'h0),
    .io_master_ar_bits_cache(4'h0),

@@ -64,6 +64,9 @@ void test_main(uint32_t *exit_code) {
     log_printf("opening xsim_to_driver\n"); 
     int xsim_to_driver_fd = open(xsim_to_driver, O_WRONLY);
 
+
+    sv_pause(2); // warm up 2us
+
     char buf[8];
     while(1) {
 //        log_printf("waiting to read...\n");
@@ -84,7 +87,7 @@ void test_main(uint32_t *exit_code) {
             uint32_t data = cmd & 0xFFFFFFFF;
             cl_poke(addr << 2, data);
             // just send something back
-            write(xsim_to_driver_fd, buf, 8);
+//            write(xsim_to_driver_fd, buf, 8);
         } else {
             // read
             uint32_t addr = cmd & 0xFFFFFFFF;
