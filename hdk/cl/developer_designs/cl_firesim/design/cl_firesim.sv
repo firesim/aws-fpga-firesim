@@ -112,7 +112,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .aclk          (clk_main_a0),
    .aresetn       (rst_main_n_sync),
    .s_axi_awaddr  (sh_ocl_awaddr),
-   .s_axi_awprot   (2'h0),
+   .s_axi_awprot   (3'h0),
    .s_axi_awvalid (sh_ocl_awvalid),
    .s_axi_awready (ocl_sh_awready),
    .s_axi_wdata   (sh_ocl_wdata),
