@@ -38,7 +38,7 @@ logic rst_main_n_sync;
 
 `include "unused_flr_template.inc"
 `include "unused_ddr_a_b_d_template.inc"
-// `include "unused_ddr_c_template.inc"
+`include "unused_ddr_c_template.inc"
 `include "unused_pcim_template.inc"
 `include "unused_dma_pcis_template.inc"
 `include "unused_cl_sda_template.inc"
@@ -211,7 +211,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_master_r_bits_data(ocl_sh_rdata_q),
    .io_master_r_bits_last(), //UNUSED at top level
    .io_master_r_bits_id(),      // UNUSED at top level
-   .io_master_r_bits_user(),    // UNUSED at top level
+   .io_master_r_bits_user()/*,    // UNUSED at top level
 
    .io_slave_aw_ready(sh_cl_ddr_awready),
    .io_slave_aw_valid(cl_sh_ddr_awvalid),
@@ -262,6 +262,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_slave_r_bits_last(sh_cl_ddr_rlast),
    .io_slave_r_bits_id(sh_cl_ddr_rid),
    .io_slave_r_bits_user(1'b0) // TODO check this
+*/
 );
 
 
