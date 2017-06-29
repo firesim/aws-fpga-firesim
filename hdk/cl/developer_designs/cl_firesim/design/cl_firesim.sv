@@ -38,7 +38,7 @@ logic rst_main_n_sync;
 
 `include "unused_flr_template.inc"
 `include "unused_ddr_a_b_d_template.inc"
-`include "unused_ddr_c_template.inc"
+//`include "unused_ddr_c_template.inc"
 `include "unused_pcim_template.inc"
 `include "unused_dma_pcis_template.inc"
 `include "unused_cl_sda_template.inc"
@@ -164,6 +164,9 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
   wire [31:0] io_slave_ar_bits_addr;
   assign cl_sh_ddr_araddr = { 33'b0, io_slave_ar_bits_addr[27:0], 3'b0 };
 
+  assign cl_sh_ddr_awsize = 3'b110;
+  assign cl_sh_ddr_arsize = 3'b110;
+
   F1Shim firesim_top (
    .clock(clk_main_a0),
    .reset(!rst_main_n_sync),
@@ -211,13 +214,13 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_master_r_bits_data(ocl_sh_rdata_q),
    .io_master_r_bits_last(), //UNUSED at top level
    .io_master_r_bits_id(),      // UNUSED at top level
-   .io_master_r_bits_user()/*,    // UNUSED at top level
+   .io_master_r_bits_user(),    // UNUSED at top level
 
    .io_slave_aw_ready(sh_cl_ddr_awready),
    .io_slave_aw_valid(cl_sh_ddr_awvalid),
    .io_slave_aw_bits_addr(io_slave_aw_bits_addr),
    .io_slave_aw_bits_len(cl_sh_ddr_awlen),
-   .io_slave_aw_bits_size(cl_sh_ddr_awsize),
+   .io_slave_aw_bits_size(), // unused. manually assign cl_sh_ddr_awsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
    .io_slave_aw_bits_burst(), // not available on DDR IF
    .io_slave_aw_bits_lock(), // not available on DDR IF
    .io_slave_aw_bits_cache(), // not available on DDR IF
@@ -245,7 +248,7 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_slave_ar_valid(cl_sh_ddr_arvalid),
    .io_slave_ar_bits_addr(io_slave_ar_bits_addr),
    .io_slave_ar_bits_len(cl_sh_ddr_arlen),
-   .io_slave_ar_bits_size(cl_sh_ddr_arsize),
+   .io_slave_ar_bits_size(), // unused. manually assign cl_sh_ddr_arsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
    .io_slave_ar_bits_burst(), // not available on DDR IF
    .io_slave_ar_bits_lock(), // not available on DDR IF
    .io_slave_ar_bits_cache(), // not available on DDR IF
@@ -262,7 +265,6 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_slave_r_bits_last(sh_cl_ddr_rlast),
    .io_slave_r_bits_id(sh_cl_ddr_rid),
    .io_slave_r_bits_user(1'b0) // TODO check this
-*/
 );
 
 
