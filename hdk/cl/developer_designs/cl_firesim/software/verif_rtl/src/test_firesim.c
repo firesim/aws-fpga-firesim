@@ -58,9 +58,6 @@ void test_main(uint32_t *exit_code) {
     log_printf("opening xsim_to_driver\n"); 
     int xsim_to_driver_fd = open(xsim_to_driver, O_WRONLY);
 
-    // TODO remove this probably:
-    sv_pause(2); // warm up 2us
-
     char buf[8];
     while(1) {
         int readbytes = read(driver_to_xsim_fd, buf, 8);
