@@ -204,7 +204,9 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/cl_debug_bridge/cl_debug_bridge.xci\
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci\
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci\
-  $CL_DIR/ip/axi_dwidth_converter_dram/axi_dwidth_converter_dram.xci
+  $CL_DIR/ip/axi_dwidth_converter_dram/axi_dwidth_converter_dram.xci\
+  $CL_DIR/ip/axi_clock_converter_dram/axi_clock_converter_dram.xci\
+  $CL_DIR/ip/axi_clock_converter_ocl/axi_clock_converter_ocl.xci
 ]
 
 # Additional IP's that might be needed if using the DDR

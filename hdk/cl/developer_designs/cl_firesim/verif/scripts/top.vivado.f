@@ -55,6 +55,8 @@ ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_register_slice_v2_1_
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_infrastructure_v1_1_vl_rfs.v
 ${SH_LIB_DIR}/../ip/axi_clock_converter_0/sim/axi_clock_converter_0.v
 ${CL_ROOT}/ip/axi_dwidth_converter_dram/sim/axi_dwidth_converter_dram.v
+${CL_ROOT}/ip/axi_clock_converter_dram/sim/axi_clock_converter_dram.v
+${CL_ROOT}/ip/axi_clock_converter_ocl/sim/axi_clock_converter_ocl.v
 ${CL_ROOT}/design/cl_firesim_generated.sv
 ${CL_ROOT}/design/cl_firesim.sv
 
