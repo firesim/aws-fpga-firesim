@@ -151,21 +151,52 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
 
     /* instantiate firesim top level here */
 
-   // TODO: switch to AXI width converter IP on DDR IF, or change rocket-chip config
-  wire [31:0] io_slave_aw_bits_addr;
-  assign cl_sh_ddr_awaddr = { 33'b0, io_slave_aw_bits_addr[27:0], 3'b0 }; // TODO: check this
 
-  wire [63:0] io_slave_w_bits_data;
-  assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
+wire [15 : 0] fsimtop_s_axi_awid;
+wire [63 : 0] fsimtop_s_axi_awaddr;
+wire [7 : 0] fsimtop_s_axi_awlen;
+wire [2 : 0] fsimtop_s_axi_awsize;
+wire [1 : 0] fsimtop_s_axi_awburst;
+wire [0 : 0] fsimtop_s_axi_awlock;
+wire [3 : 0] fsimtop_s_axi_awcache;
+wire [2 : 0] fsimtop_s_axi_awprot;
+wire [3 : 0] fsimtop_s_axi_awregion;
+wire [3 : 0] fsimtop_s_axi_awqos;
+wire fsimtop_s_axi_awvalid;
+wire fsimtop_s_axi_awready;
+wire [63 : 0] fsimtop_s_axi_wdata;
+wire [7 : 0] fsimtop_s_axi_wstrb;
+wire fsimtop_s_axi_wlast;
+wire fsimtop_s_axi_wvalid;
+wire fsimtop_s_axi_wready;
+wire [15 : 0] fsimtop_s_axi_bid;
+wire [1 : 0] fsimtop_s_axi_bresp;
+wire fsimtop_s_axi_bvalid;
+wire fsimtop_s_axi_bready;
+wire [15 : 0] fsimtop_s_axi_arid;
+wire [63 : 0] fsimtop_s_axi_araddr;
+wire [7 : 0] fsimtop_s_axi_arlen;
+wire [2 : 0] fsimtop_s_axi_arsize;
+wire [1 : 0] fsimtop_s_axi_arburst;
+wire [0 : 0] fsimtop_s_axi_arlock;
+wire [3 : 0] fsimtop_s_axi_arcache;
+wire [2 : 0] fsimtop_s_axi_arprot;
+wire [3 : 0] fsimtop_s_axi_arregion;
+wire [3 : 0] fsimtop_s_axi_arqos;
+wire fsimtop_s_axi_arvalid;
+wire fsimtop_s_axi_arready;
+wire [15 : 0] fsimtop_s_axi_rid;
+wire [63 : 0] fsimtop_s_axi_rdata;
+wire [1 : 0] fsimtop_s_axi_rresp;
+wire fsimtop_s_axi_rlast;
+wire fsimtop_s_axi_rvalid;
+wire fsimtop_s_axi_rready;
 
-  wire [7:0] io_slave_w_bits_strb;
-  assign cl_sh_ddr_wstrb = { 56'b0, io_slave_w_bits_strb };
+wire [63:0] fsimtop_awaddr_fix;
+wire [63:0] fsimtop_araddr_fix;
 
-  wire [31:0] io_slave_ar_bits_addr;
-  assign cl_sh_ddr_araddr = { 33'b0, io_slave_ar_bits_addr[27:0], 3'b0 };
-
-  assign cl_sh_ddr_awsize = 3'b110;
-  assign cl_sh_ddr_arsize = 3'b110;
+assign fsimtop_awaddr_fix = {36'b0, fsimtop_s_axi_awaddr[27:0]};
+assign fsimtop_araddr_fix = {36'b0, fsimtop_s_axi_araddr[27:0]};
 
   F1Shim firesim_top (
    .clock(clk_main_a0),
@@ -216,58 +247,145 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
    .io_master_r_bits_id(),      // UNUSED at top level
    .io_master_r_bits_user(),    // UNUSED at top level
 
-   .io_slave_aw_ready(sh_cl_ddr_awready),
-   .io_slave_aw_valid(cl_sh_ddr_awvalid),
-   .io_slave_aw_bits_addr(io_slave_aw_bits_addr),
-   .io_slave_aw_bits_len(cl_sh_ddr_awlen),
-   .io_slave_aw_bits_size(), // unused. manually assign cl_sh_ddr_awsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
-   .io_slave_aw_bits_burst(), // not available on DDR IF
-   .io_slave_aw_bits_lock(), // not available on DDR IF
-   .io_slave_aw_bits_cache(), // not available on DDR IF
-   .io_slave_aw_bits_prot(), // not available on DDR IF
-   .io_slave_aw_bits_qos(), // not available on DDR IF
-   .io_slave_aw_bits_region(), // not available on DDR IF
-   .io_slave_aw_bits_id(cl_sh_ddr_awid),
+   .io_slave_aw_ready(fsimtop_s_axi_awready),
+   .io_slave_aw_valid(fsimtop_s_axi_awvalid),
+   .io_slave_aw_bits_addr(fsimtop_s_axi_awaddr),
+   .io_slave_aw_bits_len(fsimtop_s_axi_awlen),
+   .io_slave_aw_bits_size(fsimtop_s_axi_awsize), // unused. manually assign cl_sh_ddr_awsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
+   .io_slave_aw_bits_burst(fsimtop_s_axi_awburst), // not available on DDR IF
+   .io_slave_aw_bits_lock(fsimtop_s_axi_awlock), // not available on DDR IF
+   .io_slave_aw_bits_cache(fsimtop_s_axi_awcache), // not available on DDR IF
+   .io_slave_aw_bits_prot(fsimtop_s_axi_awprot), // not available on DDR IF
+   .io_slave_aw_bits_qos(fsimtop_s_axi_awqos), // not available on DDR IF
+   .io_slave_aw_bits_region(fsimtop_s_axi_awregion), // not available on DDR IF
+   .io_slave_aw_bits_id(fsimtop_s_axi_awid),
    .io_slave_aw_bits_user(), // not available on DDR IF
 
-   .io_slave_w_ready(sh_cl_ddr_wready),
-   .io_slave_w_valid(cl_sh_ddr_wvalid),
-   .io_slave_w_bits_data(io_slave_w_bits_data),
-   .io_slave_w_bits_last(cl_sh_ddr_wlast),
-   .io_slave_w_bits_id(cl_sh_ddr_wid),
-   .io_slave_w_bits_strb(io_slave_w_bits_strb),
+   .io_slave_w_ready(fsimtop_s_axi_wready),
+   .io_slave_w_valid(fsimtop_s_axi_wvalid),
+   .io_slave_w_bits_data(fsimtop_s_axi_wdata),
+   .io_slave_w_bits_last(fsimtop_s_axi_wlast),
+   .io_slave_w_bits_id(), // unused
+   .io_slave_w_bits_strb(fsimtop_s_axi_wstrb),
    .io_slave_w_bits_user(), // not available on DDR IF
 
-   .io_slave_b_ready(cl_sh_ddr_bready),
-   .io_slave_b_valid(sh_cl_ddr_bvalid),
-   .io_slave_b_bits_resp(sh_cl_ddr_bresp),
-   .io_slave_b_bits_id(sh_cl_ddr_bid),
+   .io_slave_b_ready(fsimtop_s_axi_bready),
+   .io_slave_b_valid(fsimtop_s_axi_bvalid),
+   .io_slave_b_bits_resp(fsimtop_s_axi_bresp),
+   .io_slave_b_bits_id(fsimtop_s_axi_bid),
    .io_slave_b_bits_user(1'b0), // TODO check this
 
-   .io_slave_ar_ready(sh_cl_ddr_arready),
-   .io_slave_ar_valid(cl_sh_ddr_arvalid),
-   .io_slave_ar_bits_addr(io_slave_ar_bits_addr),
-   .io_slave_ar_bits_len(cl_sh_ddr_arlen),
-   .io_slave_ar_bits_size(), // unused. manually assign cl_sh_ddr_arsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
-   .io_slave_ar_bits_burst(), // not available on DDR IF
-   .io_slave_ar_bits_lock(), // not available on DDR IF
-   .io_slave_ar_bits_cache(), // not available on DDR IF
-   .io_slave_ar_bits_prot(), // not available on DDR IF
-   .io_slave_ar_bits_qos(), // not available on DDR IF
-   .io_slave_ar_bits_region(), // not available on DDR IF
-   .io_slave_ar_bits_id(cl_sh_ddr_arid), // not available on DDR IF
+   .io_slave_ar_ready(fsimtop_s_axi_arready),
+   .io_slave_ar_valid(fsimtop_s_axi_arvalid),
+   .io_slave_ar_bits_addr(fsimtop_s_axi_araddr),
+   .io_slave_ar_bits_len(fsimtop_s_axi_arlen),
+   .io_slave_ar_bits_size(fsimtop_s_axi_arsize), // unused. manually assign cl_sh_ddr_arsize above. see https://github.com/firesim/aws-fpga-firesim/blob/master/ERRATA.md#unsupported-features-planned-for-future-releases
+   .io_slave_ar_bits_burst(fsimtop_s_axi_arburst), // not available on DDR IF
+   .io_slave_ar_bits_lock(fsimtop_s_axi_arlock), // not available on DDR IF
+   .io_slave_ar_bits_cache(fsimtop_s_axi_arcache), // not available on DDR IF
+   .io_slave_ar_bits_prot(fsimtop_s_axi_arprot), // not available on DDR IF
+   .io_slave_ar_bits_qos(fsimtop_s_axi_arqos), // not available on DDR IF
+   .io_slave_ar_bits_region(fsimtop_s_axi_arregion), // not available on DDR IF
+   .io_slave_ar_bits_id(fsimtop_s_axi_arid), // not available on DDR IF
    .io_slave_ar_bits_user(), // not available on DDR IF
 
-   .io_slave_r_ready(cl_sh_ddr_rready),
-   .io_slave_r_valid(sh_cl_ddr_rvalid),
-   .io_slave_r_bits_resp(sh_cl_ddr_rresp),
-   .io_slave_r_bits_data(sh_cl_ddr_rdata[63:0]),
-   .io_slave_r_bits_last(sh_cl_ddr_rlast),
-   .io_slave_r_bits_id(sh_cl_ddr_rid),
+   .io_slave_r_ready(fsimtop_s_axi_rready),
+   .io_slave_r_valid(fsimtop_s_axi_rvalid),
+   .io_slave_r_bits_resp(fsimtop_s_axi_rresp),
+   .io_slave_r_bits_data(fsimtop_s_axi_rdata),
+   .io_slave_r_bits_last(fsimtop_s_axi_rlast),
+   .io_slave_r_bits_id(fsimtop_s_axi_rid),
    .io_slave_r_bits_user(1'b0) // TODO check this
 );
 
+// AXI width converter (64-bit FireSim mem IF <-> 512 bit DRAM IF)
 
+axi_dwidth_converter_dram your_instance_name (
+  .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
+  .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
+
+  .s_axi_awid(fsimtop_s_axi_awid),          // input wire [15 : 0] s_axi_awid
+  .s_axi_awaddr(fsimtop_awaddr_fix),      // input wire [63 : 0] s_axi_awaddr
+  .s_axi_awlen(fsimtop_s_axi_awlen),        // input wire [7 : 0] s_axi_awlen
+  .s_axi_awsize(fsimtop_s_axi_awsize),      // input wire [2 : 0] s_axi_awsize
+  .s_axi_awburst(fsimtop_s_axi_awburst),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awlock(fsimtop_s_axi_awlock),      // input wire [0 : 0] s_axi_awlock
+  .s_axi_awcache(fsimtop_s_axi_awcache),    // input wire [3 : 0] s_axi_awcache
+  .s_axi_awprot(fsimtop_s_axi_awprot),      // input wire [2 : 0] s_axi_awprot
+  .s_axi_awregion(fsimtop_s_axi_awregion),  // input wire [3 : 0] s_axi_awregion
+  .s_axi_awqos(fsimtop_s_axi_awqos),        // input wire [3 : 0] s_axi_awqos
+  .s_axi_awvalid(fsimtop_s_axi_awvalid),    // input wire s_axi_awvalid
+  .s_axi_awready(fsimtop_s_axi_awready),    // output wire s_axi_awready
+  .s_axi_wdata(fsimtop_s_axi_wdata),        // input wire [63 : 0] s_axi_wdata
+  .s_axi_wstrb(fsimtop_s_axi_wstrb),        // input wire [7 : 0] s_axi_wstrb
+  .s_axi_wlast(fsimtop_s_axi_wlast),        // input wire s_axi_wlast
+  .s_axi_wvalid(fsimtop_s_axi_wvalid),      // input wire s_axi_wvalid
+  .s_axi_wready(fsimtop_s_axi_wready),      // output wire s_axi_wready
+  .s_axi_bid(fsimtop_s_axi_bid),            // output wire [15 : 0] s_axi_bid
+  .s_axi_bresp(fsimtop_s_axi_bresp),        // output wire [1 : 0] s_axi_bresp
+  .s_axi_bvalid(fsimtop_s_axi_bvalid),      // output wire s_axi_bvalid
+  .s_axi_bready(fsimtop_s_axi_bready),      // input wire s_axi_bready
+  .s_axi_arid(fsimtop_s_axi_arid),          // input wire [15 : 0] s_axi_arid
+  .s_axi_araddr(fsimtop_araddr_fix),      // input wire [63 : 0] s_axi_araddr
+  .s_axi_arlen(fsimtop_s_axi_arlen),        // input wire [7 : 0] s_axi_arlen
+  .s_axi_arsize(fsimtop_s_axi_arsize),      // input wire [2 : 0] s_axi_arsize
+  .s_axi_arburst(fsimtop_s_axi_arburst),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arlock(fsimtop_s_axi_arlock),      // input wire [0 : 0] s_axi_arlock
+  .s_axi_arcache(fsimtop_s_axi_arcache),    // input wire [3 : 0] s_axi_arcache
+  .s_axi_arprot(fsimtop_s_axi_arprot),      // input wire [2 : 0] s_axi_arprot
+  .s_axi_arregion(fsimtop_s_axi_arregion),  // input wire [3 : 0] s_axi_arregion
+  .s_axi_arqos(fsimtop_s_axi_arqos),        // input wire [3 : 0] s_axi_arqos
+  .s_axi_arvalid(fsimtop_s_axi_arvalid),    // input wire s_axi_arvalid
+  .s_axi_arready(fsimtop_s_axi_arready),    // output wire s_axi_arready
+  .s_axi_rid(fsimtop_s_axi_rid),            // output wire [15 : 0] s_axi_rid
+  .s_axi_rdata(fsimtop_s_axi_rdata),        // output wire [63 : 0] s_axi_rdata
+  .s_axi_rresp(fsimtop_s_axi_rresp),        // output wire [1 : 0] s_axi_rresp
+  .s_axi_rlast(fsimtop_s_axi_rlast),        // output wire s_axi_rlast
+  .s_axi_rvalid(fsimtop_s_axi_rvalid),      // output wire s_axi_rvalid
+  .s_axi_rready(fsimtop_s_axi_rready),      // input wire s_axi_rready
+
+//below should be done
+  .m_axi_awaddr(cl_sh_ddr_awaddr),      // output wire [63 : 0] m_axi_awaddr
+  .m_axi_awlen(cl_sh_ddr_awlen),        // output wire [7 : 0] m_axi_awlen
+  .m_axi_awsize(cl_sh_ddr_awsize),      // output wire [2 : 0] m_axi_awsize
+  .m_axi_awburst(),    // output wire [1 : 0] m_axi_awburst
+  .m_axi_awlock(),      // output wire [0 : 0] m_axi_awlock
+  .m_axi_awcache(),    // output wire [3 : 0] m_axi_awcache
+  .m_axi_awprot(),      // output wire [2 : 0] m_axi_awprot
+  .m_axi_awregion(),  // output wire [3 : 0] m_axi_awregion
+  .m_axi_awqos(),        // output wire [3 : 0] m_axi_awqos
+  .m_axi_awvalid(cl_sh_ddr_awvalid),    // output wire m_axi_awvalid
+  .m_axi_awready(sh_cl_ddr_awready),    // input wire m_axi_awready
+
+  .m_axi_wdata(cl_sh_ddr_wdata),        // output wire [511 : 0] m_axi_wdata
+  .m_axi_wstrb(cl_sh_ddr_wstrb),        // output wire [63 : 0] m_axi_wstrb
+  .m_axi_wlast(cl_sh_ddr_wlast),        // output wire m_axi_wlast
+  .m_axi_wvalid(cl_sh_ddr_wvalid),      // output wire m_axi_wvalid
+  .m_axi_wready(sh_cl_ddr_wready),      // input wire m_axi_wready
+
+  .m_axi_bresp(sh_cl_ddr_bresp),        // input wire [1 : 0] m_axi_bresp
+  .m_axi_bvalid(sh_cl_ddr_bvalid),      // input wire m_axi_bvalid
+  .m_axi_bready(cl_sh_ddr_bready),      // output wire m_axi_bready
+
+
+  .m_axi_araddr(cl_sh_ddr_araddr),      // output wire [63 : 0] m_axi_araddr
+  .m_axi_arlen(cl_sh_ddr_arlen),        // output wire [7 : 0] m_axi_arlen
+  .m_axi_arsize(cl_sh_ddr_arsize),      // output wire [2 : 0] m_axi_arsize
+  .m_axi_arburst(),    // output wire [1 : 0] m_axi_arburst
+  .m_axi_arlock(),      // output wire [0 : 0] m_axi_arlock
+  .m_axi_arcache(),    // output wire [3 : 0] m_axi_arcache
+  .m_axi_arprot(),      // output wire [2 : 0] m_axi_arprot
+  .m_axi_arregion(),  // output wire [3 : 0] m_axi_arregion
+  .m_axi_arqos(),        // output wire [3 : 0] m_axi_arqos
+  .m_axi_arvalid(cl_sh_ddr_arvalid),    // output wire m_axi_arvalid
+  .m_axi_arready(sh_cl_ddr_arready),    // input wire m_axi_arready
+
+  .m_axi_rdata(sh_cl_ddr_rdata),        // input wire [511 : 0] m_axi_rdata
+  .m_axi_rresp(sh_cl_ddr_rresp),        // input wire [1 : 0] m_axi_rresp
+  .m_axi_rlast(sh_cl_ddr_rlast),        // input wire m_axi_rlast
+  .m_axi_rvalid(sh_cl_ddr_rvalid),      // input wire m_axi_rvalid
+  .m_axi_rready(cl_sh_ddr_rready)      // output wire m_axi_rready
+);
 
 //-------------------------------------------
 // Tie-Off Global Signals
