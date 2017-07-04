@@ -58,3 +58,4 @@ vivado*.log
 
 # Python compiled code
 *.pyc
+sdk/userspace/lib
