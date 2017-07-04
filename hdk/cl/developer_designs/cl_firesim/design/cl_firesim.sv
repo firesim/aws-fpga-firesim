@@ -38,7 +38,6 @@ logic rst_main_n_sync;
 
 `include "unused_flr_template.inc"
 `include "unused_ddr_a_b_d_template.inc"
-//`include "unused_ddr_c_template.inc"
 `include "unused_pcim_template.inc"
 `include "unused_dma_pcis_template.inc"
 `include "unused_cl_sda_template.inc"
@@ -104,54 +103,55 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
   logic [ 1:0] ocl_sh_rresp_q;
   logic        sh_ocl_rready_q;
 
+// clock converter for OCL connection
+axi_clock_converter_ocl2 ocl_clock_convert (
+  .s_axi_aclk(clk_main_a0),        // input wire s_axi_aclk
+  .s_axi_aresetn(rst_main_n_sync),  // input wire s_axi_aresetn
 
-  // pipeline registers to break timing path
-  // see https://www.xilinx.com/support/documentation/ip_documentation/axi_interconnect/v2_1/pg059-axi-interconnect.pdf
-  // page 5
-  axi_register_slice_light AXIL_OCL_REG_SLC (
-   .aclk          (clk_main_a0),
-   .aresetn       (rst_main_n_sync),
-   .s_axi_awaddr  (sh_ocl_awaddr),
-   .s_axi_awprot   (3'h0),
-   .s_axi_awvalid (sh_ocl_awvalid),
-   .s_axi_awready (ocl_sh_awready),
-   .s_axi_wdata   (sh_ocl_wdata),
-   .s_axi_wstrb   (sh_ocl_wstrb),
-   .s_axi_wvalid  (sh_ocl_wvalid),
-   .s_axi_wready  (ocl_sh_wready),
-   .s_axi_bresp   (ocl_sh_bresp),
-   .s_axi_bvalid  (ocl_sh_bvalid),
-   .s_axi_bready  (sh_ocl_bready),
-   .s_axi_araddr  (sh_ocl_araddr),
-   .s_axi_arvalid (sh_ocl_arvalid),
-   .s_axi_arready (ocl_sh_arready),
-   .s_axi_rdata   (ocl_sh_rdata),
-   .s_axi_rresp   (ocl_sh_rresp),
-   .s_axi_rvalid  (ocl_sh_rvalid),
-   .s_axi_rready  (sh_ocl_rready),
-   .m_axi_awaddr  (sh_ocl_awaddr_q),
-   .m_axi_awprot  (),
-   .m_axi_awvalid (sh_ocl_awvalid_q),
-   .m_axi_awready (ocl_sh_awready_q),
-   .m_axi_wdata   (sh_ocl_wdata_q),
-   .m_axi_wstrb   (sh_ocl_wstrb_q),
-   .m_axi_wvalid  (sh_ocl_wvalid_q),
-   .m_axi_wready  (ocl_sh_wready_q),
-   .m_axi_bresp   (ocl_sh_bresp_q),
-   .m_axi_bvalid  (ocl_sh_bvalid_q),
-   .m_axi_bready  (sh_ocl_bready_q),
-   .m_axi_araddr  (sh_ocl_araddr_q),
-   .m_axi_arvalid (sh_ocl_arvalid_q),
-   .m_axi_arready (ocl_sh_arready_q),
-   .m_axi_rdata   (ocl_sh_rdata_q),
-   .m_axi_rresp   (ocl_sh_rresp_q),
-   .m_axi_rvalid  (ocl_sh_rvalid_q),
-   .m_axi_rready  (sh_ocl_rready_q)
-  );
+  .s_axi_awaddr(sh_ocl_awaddr),    // input wire [31 : 0] s_axi_awaddr
+  .s_axi_awprot(3'h0),             // input wire [2 : 0] s_axi_awprot
+  .s_axi_awvalid(sh_ocl_awvalid),  // input wire s_axi_awvalid
+  .s_axi_awready(ocl_sh_awready),  // output wire s_axi_awready
+  .s_axi_wdata(sh_ocl_wdata),      // input wire [31 : 0] s_axi_wdata
+  .s_axi_wstrb(sh_ocl_wstrb),      // input wire [3 : 0] s_axi_wstrb
+  .s_axi_wvalid(sh_ocl_wvalid),    // input wire s_axi_wvalid
+  .s_axi_wready(ocl_sh_wready),    // output wire s_axi_wready
+  .s_axi_bresp(ocl_sh_bresp),      // output wire [1 : 0] s_axi_bresp
+  .s_axi_bvalid(ocl_sh_bvalid),    // output wire s_axi_bvalid
+  .s_axi_bready(sh_ocl_bready),    // input wire s_axi_bready
+  .s_axi_araddr(sh_ocl_araddr),    // input wire [31 : 0] s_axi_araddr
+  .s_axi_arprot(3'h0),             // input wire [2 : 0] s_axi_arprot
+  .s_axi_arvalid(sh_ocl_arvalid),  // input wire s_axi_arvalid
+  .s_axi_arready(ocl_sh_arready),  // output wire s_axi_arready
+  .s_axi_rdata(ocl_sh_rdata),      // output wire [31 : 0] s_axi_rdata
+  .s_axi_rresp(ocl_sh_rresp),      // output wire [1 : 0] s_axi_rresp
+  .s_axi_rvalid(ocl_sh_rvalid),    // output wire s_axi_rvalid
+  .s_axi_rready(sh_ocl_rready),    // input wire s_axi_rready
+
+  .m_axi_aclk(clk_main_a0),        // input wire m_axi_aclk
+  .m_axi_aresetn(rst_main_n_sync),  // input wire m_axi_aresetn
+  .m_axi_awaddr(sh_ocl_awaddr_q),    // output wire [31 : 0] m_axi_awaddr
+  .m_axi_awprot(),    // output wire [2 : 0] m_axi_awprot
+  .m_axi_awvalid(sh_ocl_awvalid_q),  // output wire m_axi_awvalid
+  .m_axi_awready(ocl_sh_awready_q),  // input wire m_axi_awready
+  .m_axi_wdata(sh_ocl_wdata_q),      // output wire [31 : 0] m_axi_wdata
+  .m_axi_wstrb(sh_ocl_wstrb_q),      // output wire [3 : 0] m_axi_wstrb
+  .m_axi_wvalid(sh_ocl_wvalid_q),    // output wire m_axi_wvalid
+  .m_axi_wready(ocl_sh_wready_q),    // input wire m_axi_wready
+  .m_axi_bresp(ocl_sh_bresp_q),      // input wire [1 : 0] m_axi_bresp
+  .m_axi_bvalid(ocl_sh_bvalid_q),    // input wire m_axi_bvalid
+  .m_axi_bready(sh_ocl_bready_q),    // output wire m_axi_bready
+  .m_axi_araddr(sh_ocl_araddr_q),    // output wire [31 : 0] m_axi_araddr
+  .m_axi_arprot(),    // output wire [2 : 0] m_axi_arprot
+  .m_axi_arvalid(sh_ocl_arvalid_q),  // output wire m_axi_arvalid
+  .m_axi_arready(ocl_sh_arready_q),  // input wire m_axi_arready
+  .m_axi_rdata(ocl_sh_rdata_q),      // input wire [31 : 0] m_axi_rdata
+  .m_axi_rresp(ocl_sh_rresp_q),      // input wire [1 : 0] m_axi_rresp
+  .m_axi_rvalid(ocl_sh_rvalid_q),    // input wire m_axi_rvalid
+  .m_axi_rready(sh_ocl_rready_q)    // output wire m_axi_rready
+);
 
     /* instantiate firesim top level here */
-
-
 wire [15 : 0] fsimtop_s_axi_awid;
 wire [63 : 0] fsimtop_s_axi_awaddr;
 wire [7 : 0] fsimtop_s_axi_awlen;
@@ -300,7 +300,7 @@ assign fsimtop_araddr_fix = {36'b0, fsimtop_s_axi_araddr[27:0]};
 
 // AXI width converter (64-bit FireSim mem IF <-> 512 bit DRAM IF)
 
-axi_dwidth_converter_dram your_instance_name (
+axi_dwidth_converter_dram dram_width_convert (
   .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
   .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
 

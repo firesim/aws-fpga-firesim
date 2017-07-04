@@ -35,6 +35,7 @@
 -include ${HDK_COMMON_DIR}/verif/include
 -include ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/verilog
 -include ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl
+# -include ${CL_ROOT}/ip/axi_dwidth_converter_dram/hdl
 
 ${CL_ROOT}/../common/design/cl_common_defines.vh
 ${CL_ROOT}/design/cl_firesim_defines.vh
@@ -56,7 +57,7 @@ ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_infrastructure_v1_1_
 ${SH_LIB_DIR}/../ip/axi_clock_converter_0/sim/axi_clock_converter_0.v
 ${CL_ROOT}/ip/axi_dwidth_converter_dram/sim/axi_dwidth_converter_dram.v
 ${CL_ROOT}/ip/axi_clock_converter_dram/sim/axi_clock_converter_dram.v
-${CL_ROOT}/ip/axi_clock_converter_ocl/sim/axi_clock_converter_ocl.v
+${CL_ROOT}/ip/axi_clock_converter_ocl2/sim/axi_clock_converter_ocl2.v
 ${CL_ROOT}/design/cl_firesim_generated.sv
 ${CL_ROOT}/design/cl_firesim.sv
 
