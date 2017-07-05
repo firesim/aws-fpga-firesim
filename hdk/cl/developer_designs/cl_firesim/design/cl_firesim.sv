@@ -25,7 +25,7 @@ module cl_firesim
 `include "cl_firesim_defines.vh" // CL Defines for cl_firesim
 
 logic rst_main_n_sync;
-
+logic rst_extra_n_sync;
 
 //--------------------------------------------0
 // Start with Tie-Off of Unused Interfaces
@@ -59,6 +59,7 @@ logic rst_main_n_sync;
 // Reset Synchronization
 //-------------------------------------------------
 logic pre_sync_rst_n;
+logic pre_sync_rst_n_extra;
 
 always_ff @(negedge rst_main_n or posedge clk_main_a0)
    if (!rst_main_n)
@@ -71,6 +72,20 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
       pre_sync_rst_n  <= 1;
       rst_main_n_sync <= pre_sync_rst_n;
    end
+
+always_ff @(negedge rst_main_n or posedge clk_extra_a1)
+   if (!rst_main_n)
+   begin
+      pre_sync_rst_n_extra  <= 0;
+      rst_extra_n_sync <= 0;
+   end
+   else
+   begin
+      pre_sync_rst_n_extra  <= 1;
+      rst_extra_n_sync <= pre_sync_rst_n_extra;
+   end
+
+
 
 //-------------------------------------------------
 // PCIe OCL AXI-L (SH to CL) Timing Flops
@@ -128,8 +143,8 @@ axi_clock_converter_ocl2 ocl_clock_convert (
   .s_axi_rvalid(ocl_sh_rvalid),    // output wire s_axi_rvalid
   .s_axi_rready(sh_ocl_rready),    // input wire s_axi_rready
 
-  .m_axi_aclk(clk_main_a0),        // input wire m_axi_aclk
-  .m_axi_aresetn(rst_main_n_sync),  // input wire m_axi_aresetn
+  .m_axi_aclk(clk_extra_a1),        // input wire m_axi_aclk
+  .m_axi_aresetn(rst_extra_n_sync),  // input wire m_axi_aresetn
   .m_axi_awaddr(sh_ocl_awaddr_q),    // output wire [31 : 0] m_axi_awaddr
   .m_axi_awprot(),    // output wire [2 : 0] m_axi_awprot
   .m_axi_awvalid(sh_ocl_awvalid_q),  // output wire m_axi_awvalid
@@ -199,8 +214,8 @@ assign fsimtop_awaddr_fix = {36'b0, fsimtop_s_axi_awaddr[27:0]};
 assign fsimtop_araddr_fix = {36'b0, fsimtop_s_axi_araddr[27:0]};
 
   F1Shim firesim_top (
-   .clock(clk_main_a0),
-   .reset(!rst_main_n_sync),
+   .clock(clk_extra_a1),
+   .reset(!rst_extra_n_sync),
    .io_master_aw_ready(ocl_sh_awready_q),
    .io_master_aw_valid(sh_ocl_awvalid_q),
    .io_master_aw_bits_addr(sh_ocl_awaddr_q[24:0]),
@@ -300,10 +315,9 @@ assign fsimtop_araddr_fix = {36'b0, fsimtop_s_axi_araddr[27:0]};
 
 // AXI width converter (64-bit FireSim mem IF <-> 512 bit DRAM IF)
 
-axi_dwidth_converter_dram dram_width_convert (
-  .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
-  .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
-
+axi_dwidth_and_clock_converter_dram dram_width_clock_convert (
+  .s_axi_aclk(clk_extra_a1),          // input wire s_axi_aclk
+  .s_axi_aresetn(rst_extra_n_sync),    // input wire s_axi_aresetn
   .s_axi_awid(fsimtop_s_axi_awid),          // input wire [15 : 0] s_axi_awid
   .s_axi_awaddr(fsimtop_awaddr_fix),      // input wire [63 : 0] s_axi_awaddr
   .s_axi_awlen(fsimtop_s_axi_awlen),        // input wire [7 : 0] s_axi_awlen
@@ -344,7 +358,8 @@ axi_dwidth_converter_dram dram_width_convert (
   .s_axi_rvalid(fsimtop_s_axi_rvalid),      // output wire s_axi_rvalid
   .s_axi_rready(fsimtop_s_axi_rready),      // input wire s_axi_rready
 
-//below should be done
+  .m_axi_aclk(clk_main_a0),          // input wire m_axi_aclk
+  .m_axi_aresetn(rst_main_n_sync),    // input wire m_axi_aresetn
   .m_axi_awaddr(cl_sh_ddr_awaddr),      // output wire [63 : 0] m_axi_awaddr
   .m_axi_awlen(cl_sh_ddr_awlen),        // output wire [7 : 0] m_axi_awlen
   .m_axi_awsize(cl_sh_ddr_awsize),      // output wire [2 : 0] m_axi_awsize
@@ -356,18 +371,14 @@ axi_dwidth_converter_dram dram_width_convert (
   .m_axi_awqos(),        // output wire [3 : 0] m_axi_awqos
   .m_axi_awvalid(cl_sh_ddr_awvalid),    // output wire m_axi_awvalid
   .m_axi_awready(sh_cl_ddr_awready),    // input wire m_axi_awready
-
   .m_axi_wdata(cl_sh_ddr_wdata),        // output wire [511 : 0] m_axi_wdata
   .m_axi_wstrb(cl_sh_ddr_wstrb),        // output wire [63 : 0] m_axi_wstrb
   .m_axi_wlast(cl_sh_ddr_wlast),        // output wire m_axi_wlast
   .m_axi_wvalid(cl_sh_ddr_wvalid),      // output wire m_axi_wvalid
   .m_axi_wready(sh_cl_ddr_wready),      // input wire m_axi_wready
-
   .m_axi_bresp(sh_cl_ddr_bresp),        // input wire [1 : 0] m_axi_bresp
   .m_axi_bvalid(sh_cl_ddr_bvalid),      // input wire m_axi_bvalid
   .m_axi_bready(cl_sh_ddr_bready),      // output wire m_axi_bready
-
-
   .m_axi_araddr(cl_sh_ddr_araddr),      // output wire [63 : 0] m_axi_araddr
   .m_axi_arlen(cl_sh_ddr_arlen),        // output wire [7 : 0] m_axi_arlen
   .m_axi_arsize(cl_sh_ddr_arsize),      // output wire [2 : 0] m_axi_arsize
@@ -379,7 +390,6 @@ axi_dwidth_converter_dram dram_width_convert (
   .m_axi_arqos(),        // output wire [3 : 0] m_axi_arqos
   .m_axi_arvalid(cl_sh_ddr_arvalid),    // output wire m_axi_arvalid
   .m_axi_arready(sh_cl_ddr_arready),    // input wire m_axi_arready
-
   .m_axi_rdata(sh_cl_ddr_rdata),        // input wire [511 : 0] m_axi_rdata
   .m_axi_rresp(sh_cl_ddr_rresp),        // input wire [1 : 0] m_axi_rresp
   .m_axi_rlast(sh_cl_ddr_rlast),        // input wire m_axi_rlast
