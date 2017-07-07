@@ -360,6 +360,7 @@ axi_dwidth_and_clock_converter_dram dram_width_clock_convert (
 
   .m_axi_aclk(clk_main_a0),          // input wire m_axi_aclk
   .m_axi_aresetn(rst_main_n_sync),    // input wire m_axi_aresetn
+
   .m_axi_awaddr(cl_sh_ddr_awaddr),      // output wire [63 : 0] m_axi_awaddr
   .m_axi_awlen(cl_sh_ddr_awlen),        // output wire [7 : 0] m_axi_awlen
   .m_axi_awsize(cl_sh_ddr_awsize),      // output wire [2 : 0] m_axi_awsize
@@ -371,14 +372,17 @@ axi_dwidth_and_clock_converter_dram dram_width_clock_convert (
   .m_axi_awqos(),        // output wire [3 : 0] m_axi_awqos
   .m_axi_awvalid(cl_sh_ddr_awvalid),    // output wire m_axi_awvalid
   .m_axi_awready(sh_cl_ddr_awready),    // input wire m_axi_awready
+
   .m_axi_wdata(cl_sh_ddr_wdata),        // output wire [511 : 0] m_axi_wdata
   .m_axi_wstrb(cl_sh_ddr_wstrb),        // output wire [63 : 0] m_axi_wstrb
   .m_axi_wlast(cl_sh_ddr_wlast),        // output wire m_axi_wlast
   .m_axi_wvalid(cl_sh_ddr_wvalid),      // output wire m_axi_wvalid
   .m_axi_wready(sh_cl_ddr_wready),      // input wire m_axi_wready
+
   .m_axi_bresp(sh_cl_ddr_bresp),        // input wire [1 : 0] m_axi_bresp
   .m_axi_bvalid(sh_cl_ddr_bvalid),      // input wire m_axi_bvalid
   .m_axi_bready(cl_sh_ddr_bready),      // output wire m_axi_bready
+
   .m_axi_araddr(cl_sh_ddr_araddr),      // output wire [63 : 0] m_axi_araddr
   .m_axi_arlen(cl_sh_ddr_arlen),        // output wire [7 : 0] m_axi_arlen
   .m_axi_arsize(cl_sh_ddr_arsize),      // output wire [2 : 0] m_axi_arsize
@@ -390,12 +394,17 @@ axi_dwidth_and_clock_converter_dram dram_width_clock_convert (
   .m_axi_arqos(),        // output wire [3 : 0] m_axi_arqos
   .m_axi_arvalid(cl_sh_ddr_arvalid),    // output wire m_axi_arvalid
   .m_axi_arready(sh_cl_ddr_arready),    // input wire m_axi_arready
+
   .m_axi_rdata(sh_cl_ddr_rdata),        // input wire [511 : 0] m_axi_rdata
   .m_axi_rresp(sh_cl_ddr_rresp),        // input wire [1 : 0] m_axi_rresp
   .m_axi_rlast(sh_cl_ddr_rlast),        // input wire m_axi_rlast
   .m_axi_rvalid(sh_cl_ddr_rvalid),      // input wire m_axi_rvalid
   .m_axi_rready(cl_sh_ddr_rready)      // output wire m_axi_rready
 );
+
+assign cl_sh_ddr_awid = 16'b0;
+assign cl_sh_ddr_arid = 16'b0;
+assign cl_sh_ddr_wid = 16'b0;
 
 //-------------------------------------------
 // Tie-Off Global Signals
