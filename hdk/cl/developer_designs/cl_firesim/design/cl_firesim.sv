@@ -300,7 +300,7 @@ assign fsimtop_araddr_fix = {36'b0, fsimtop_s_axi_araddr[27:0]};
 
 // AXI width converter (64-bit FireSim mem IF <-> 512 bit DRAM IF)
 
-axi_dwidth_converter_dram your_instance_name (
+axi_dwidth_converter_dram_fifo your_instance_name (
   .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
   .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
 
