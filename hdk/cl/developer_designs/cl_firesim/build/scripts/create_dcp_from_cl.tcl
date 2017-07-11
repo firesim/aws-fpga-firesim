@@ -472,6 +472,7 @@ lock_design -level routing
 
 # Report final timing
 report_timing_summary -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_timing_summary.rpt
+report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
 # This is what will deliver to AWS
 
