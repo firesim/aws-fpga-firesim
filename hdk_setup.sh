@@ -29,6 +29,20 @@ script_dir=$(dirname $full_script)
 
 debug=0
 
+# This function checks if an environment module exists
+# Returns 0 if it exists, and returns 1 if it doesn't
+function does_module_exist() {
+
+    output=`/usr/bin/ls /usr/local/Modules/$MODULE_VERSION/modulefiles | grep $1`
+
+    if [[ $output == "$1" ]]; then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
+
 function info_msg {
   echo -e "INFO: $1"
 }
@@ -97,15 +111,6 @@ else
 fi
 
 debug_msg "Checking for Vivado install:"
-
-# On the FPGA Developer AMI use module load to use the correct version of Vivado
-if [ -e /usr/local/Modules/$MODULE_VERSION/bin/modulecmd ]; then
-  # Module command is installed.
-  # Load and unload the modules just to make sure have the environment set correctly
-  module unload vivado
-  module unload sdx
-  module load vivado
-fi
 
 # before going too far make sure Vivado is available
 if ! vivado -version > /dev/null 2>&1; then
