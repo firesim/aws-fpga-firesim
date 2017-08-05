@@ -310,7 +310,7 @@ wire fsimtop_s_axi_rready;
 );
 
   wire [31:0] io_slave_aw_bits_addr;
-  assign cl_sh_ddr_awaddr = { 33'b0, io_slave_aw_bits_addr[27:0], 3'b0 }; // TODO: check this
+  assign cl_sh_ddr_awaddr = { 30'b0, io_slave_aw_bits_addr[30:0], 3'b0 }; // TODO: check this
 
   wire [63:0] io_slave_w_bits_data;
   assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
@@ -319,7 +319,7 @@ wire fsimtop_s_axi_rready;
   assign cl_sh_ddr_wstrb = { 56'b0, io_slave_w_bits_strb };
 
   wire [31:0] io_slave_ar_bits_addr;
-  assign cl_sh_ddr_araddr = { 33'b0, io_slave_ar_bits_addr[27:0], 3'b0 };
+  assign cl_sh_ddr_araddr = { 30'b0, io_slave_ar_bits_addr[30:0], 3'b0 };
 
   assign cl_sh_ddr_awsize = 3'b110;
   assign cl_sh_ddr_arsize = 3'b110;
