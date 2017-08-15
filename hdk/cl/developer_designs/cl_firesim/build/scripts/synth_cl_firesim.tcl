@@ -58,7 +58,8 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
-  $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci
+  $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
+  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci
 ]
 
 # Additional IP's that might be needed if using the DDR
@@ -92,7 +93,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Start design synthes
 
 update_compile_order -fileset sources_1
 puts "\nRunning synth_design for $CL_MODULE $CL_DIR/build/scripts \[[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Y}]\]"
-eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive]
+eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive -retiming]
 
 set failval [catch {exec grep "FAIL" failfast.csv}]
 if { $failval==0 } {

@@ -53,11 +53,12 @@ logic rst_extra_n_sync;
   assign cl_sh_id0[31:0] = `CL_SH_ID0;
   assign cl_sh_id1[31:0] = `CL_SH_ID1;
 
+
+
 //-------------------------------------------------
-// Reset Synchronization
+// Reset Synchronization Outer
 //-------------------------------------------------
 logic pre_sync_rst_n;
-logic pre_sync_rst_n_extra;
 
 always_ff @(negedge rst_main_n or posedge clk_main_a0)
    if (!rst_main_n)
@@ -71,7 +72,51 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
       rst_main_n_sync <= pre_sync_rst_n;
    end
 
-always_ff @(negedge rst_main_n or posedge clk_extra_a1)
+
+
+//---------------------------
+// new clocking
+//-------------------
+//
+//
+//----------------------------------------------------------------------------
+//  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
+//   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
+//----------------------------------------------------------------------------
+// clk_out1____85.004______0.000______50.0______177.835____296.544
+// clk_out2____89.962______0.000______50.0______176.536____296.544
+// clk_out3____74.968______0.000______50.0______180.754____296.544
+//
+//----------------------------------------------------------------------------
+// Input Clock   Freq (MHz)    Input Jitter (UI)
+//----------------------------------------------------------------------------
+// __primary_________125.000____________0.010
+
+logic clock_gend_85;
+logic clock_gend_90;
+logic clock_gend_75;
+
+logic firesim_internal_clock;
+assign firesim_internal_clock = clock_gend_90;
+ 
+clk_wiz_0_firesim firesim_clocking
+(
+    // Clock out ports
+    .clk_out1(clock_gend_85),     // output clk_out1
+    .clk_out2(clock_gend_90),     // output clk_out2
+    .clk_out3(clock_gend_75),     // output clk_out3
+    // Status and control signals
+    .reset(!rst_main_n_sync), // input reset
+    .locked(),       // output locked
+   // Clock in ports
+    .clk_in1(clk_main_a0)      // input clk_in1, expects 125 mhz
+);
+
+//-------------------------------------------------
+// Reset Synchronization Inner
+//-------------------------------------------------
+logic pre_sync_rst_n_extra;
+always_ff @(negedge rst_main_n or posedge firesim_internal_clock)
    if (!rst_main_n)
    begin
       pre_sync_rst_n_extra  <= 0;
@@ -82,8 +127,6 @@ always_ff @(negedge rst_main_n or posedge clk_extra_a1)
       pre_sync_rst_n_extra  <= 1;
       rst_extra_n_sync <= pre_sync_rst_n_extra;
    end
-
-
 
 //-------------------------------------------------
 // PCIe OCL AXI-L (SH to CL) Timing Flops
@@ -141,7 +184,7 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .s_axi_rvalid(ocl_sh_rvalid),    // output wire s_axi_rvalid
   .s_axi_rready(sh_ocl_rready),    // input wire s_axi_rready
 
-  .m_axi_aclk(clk_extra_a1),        // input wire m_axi_aclk
+  .m_axi_aclk(firesim_internal_clock),        // input wire m_axi_aclk
   .m_axi_aresetn(rst_extra_n_sync),  // input wire m_axi_aresetn
   .m_axi_awaddr(sh_ocl_awaddr_q),    // output wire [31 : 0] m_axi_awaddr
   .m_axi_awprot(),    // output wire [2 : 0] m_axi_awprot
@@ -209,7 +252,7 @@ wire fsimtop_s_axi_rvalid;
 wire fsimtop_s_axi_rready;
 
   F1Shim firesim_top (
-   .clock(clk_extra_a1),
+   .clock(firesim_internal_clock),
    .reset(!rst_extra_n_sync),
    .io_master_aw_ready(ocl_sh_awready_q),
    .io_master_aw_valid(sh_ocl_awvalid_q),
@@ -326,7 +369,7 @@ wire fsimtop_s_axi_rready;
   assign cl_sh_ddr_wid = 16'b0;
 
 axi_clock_converter_dramslim clock_convert_dramslim (
-  .s_axi_aclk(clk_extra_a1),          // input wire s_axi_aclk
+  .s_axi_aclk(firesim_internal_clock),          // input wire s_axi_aclk
   .s_axi_aresetn(rst_extra_n_sync),    // input wire s_axi_aresetn
 
   .s_axi_awid(fsimtop_s_axi_awid),          // input wire [15 : 0] s_axi_awid
@@ -448,25 +491,28 @@ always_ff @(posedge clk_main_a0)
       sh_cl_glcount0_q <= sh_cl_glcount0;
 
 
+logic zeroila;
+assign zeroila = 64'b0;
+
 // Integrated Logic Analyzers (ILA)
    ila_0 CL_ILA_0 (
                    .clk    (clk_main_a0),
-                   .probe0 (sh_ocl_awvalid_q),
-                   .probe1 (sh_ocl_awaddr_q ),
-                   .probe2 (ocl_sh_awready_q),
-                   .probe3 (sh_ocl_arvalid_q),
-                   .probe4 (sh_ocl_araddr_q ),
-                   .probe5 (ocl_sh_arready_q)
+                   .probe0 (zeroila),
+                   .probe1 (zeroila),
+                   .probe2 (zeroila),
+                   .probe3 (zeroila),
+                   .probe4 (zeroila),
+                   .probe5 (zeroila)
                    );
 
    ila_0 CL_ILA_1 (
                    .clk    (clk_main_a0),
-                   .probe0 (ocl_sh_bvalid_q),
-                   .probe1 (sh_cl_glcount0_q),
-                   .probe2 (sh_ocl_bready_q),
-                   .probe3 (ocl_sh_rvalid_q),
-                   .probe4 ({32'b0,ocl_sh_rdata_q[31:0]}),
-                   .probe5 (sh_ocl_rready_q)
+                   .probe0 (zeroila),
+                   .probe1 (zeroila),
+                   .probe2 (zeroila),
+                   .probe3 (zeroila),
+                   .probe4 (zeroila),
+                   .probe5 (zeroila)
                    );
 
 // Debug Bridge 
