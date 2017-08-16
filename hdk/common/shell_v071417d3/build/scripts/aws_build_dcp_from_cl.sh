@@ -34,7 +34,7 @@ function usage
 }
 
 # Default arguments for script and strategy
-strategy=DEFAULT
+strategy=TIMING
 clock_recipe_a=A0
 clock_recipe_b=B0
 clock_recipe_c=C0
