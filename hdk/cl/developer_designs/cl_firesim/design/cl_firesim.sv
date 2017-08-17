@@ -25,7 +25,8 @@ module cl_firesim
 `include "cl_firesim_defines.vh" // CL Defines for cl_firesim
 
 logic rst_main_n_sync;
-logic rst_extra_n_sync;
+logic rst_firesim_n_sync;
+logic rst_extra1_n_sync;
 
 //--------------------------------------------0
 // Start with Tie-Off of Unused Interfaces
@@ -72,6 +73,19 @@ always_ff @(negedge rst_main_n or posedge clk_main_a0)
       rst_main_n_sync <= pre_sync_rst_n;
    end
 
+logic pre_sync_rst_n_extra1;
+always_ff @(negedge rst_main_n or posedge clk_extra_a1)
+   if (!rst_main_n)
+   begin
+      pre_sync_rst_n_extra1  <= 0;
+      rst_extra1_n_sync <= 0;
+   end
+   else
+   begin
+      pre_sync_rst_n_extra1  <= 1;
+      rst_extra1_n_sync <= pre_sync_rst_n_extra1;
+   end
+
 
 
 //---------------------------
@@ -106,26 +120,26 @@ clk_wiz_0_firesim firesim_clocking
     .clk_out2(clock_gend_90),     // output clk_out2
     .clk_out3(clock_gend_75),     // output clk_out3
     // Status and control signals
-    .reset(!rst_main_n_sync), // input reset
+    .reset(!rst_extra1_n_sync), // input reset
     .locked(),       // output locked
    // Clock in ports
-    .clk_in1(clk_main_a0)      // input clk_in1, expects 125 mhz
+    .clk_in1(clk_extra_a1)      // input clk_in1, expects 125 mhz
 );
 
 //-------------------------------------------------
 // Reset Synchronization Inner
 //-------------------------------------------------
-logic pre_sync_rst_n_extra;
+logic pre_sync_rst_n_firesim;
 always_ff @(negedge rst_main_n or posedge firesim_internal_clock)
    if (!rst_main_n)
    begin
-      pre_sync_rst_n_extra  <= 0;
-      rst_extra_n_sync <= 0;
+      pre_sync_rst_n_firesim  <= 0;
+      rst_firesim_n_sync <= 0;
    end
    else
    begin
-      pre_sync_rst_n_extra  <= 1;
-      rst_extra_n_sync <= pre_sync_rst_n_extra;
+      pre_sync_rst_n_firesim  <= 1;
+      rst_firesim_n_sync <= pre_sync_rst_n_firesim;
    end
 
 //-------------------------------------------------
@@ -185,7 +199,7 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .s_axi_rready(sh_ocl_rready),    // input wire s_axi_rready
 
   .m_axi_aclk(firesim_internal_clock),        // input wire m_axi_aclk
-  .m_axi_aresetn(rst_extra_n_sync),  // input wire m_axi_aresetn
+  .m_axi_aresetn(rst_firesim_n_sync),  // input wire m_axi_aresetn
   .m_axi_awaddr(sh_ocl_awaddr_q),    // output wire [31 : 0] m_axi_awaddr
   .m_axi_awprot(),    // output wire [2 : 0] m_axi_awprot
   .m_axi_awvalid(sh_ocl_awvalid_q),  // output wire m_axi_awvalid
@@ -253,7 +267,7 @@ wire fsimtop_s_axi_rready;
 
   F1Shim firesim_top (
    .clock(firesim_internal_clock),
-   .reset(!rst_extra_n_sync),
+   .reset(!rst_firesim_n_sync),
    .io_master_aw_ready(ocl_sh_awready_q),
    .io_master_aw_valid(sh_ocl_awvalid_q),
    .io_master_aw_bits_addr(sh_ocl_awaddr_q[24:0]),
@@ -370,7 +384,7 @@ wire fsimtop_s_axi_rready;
 
 axi_clock_converter_dramslim clock_convert_dramslim (
   .s_axi_aclk(firesim_internal_clock),          // input wire s_axi_aclk
-  .s_axi_aresetn(rst_extra_n_sync),    // input wire s_axi_aresetn
+  .s_axi_aresetn(rst_firesim_n_sync),    // input wire s_axi_aresetn
 
   .s_axi_awid(fsimtop_s_axi_awid),          // input wire [15 : 0] s_axi_awid
   .s_axi_awaddr(fsimtop_s_axi_awaddr),      // input wire [63 : 0] s_axi_awaddr
