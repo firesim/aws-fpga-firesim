@@ -5,7 +5,7 @@ AWS FPGA HDK is the official kit provided by AWS to facilitate RTL development (
 
 Useful resources:
 * Check out the [release notes](../RELEASE_NOTES.md) for information about the latest bug fixes, updates, and features added to the HDK.
-* [FAQ](../aws-fpga/FAQs.md)
+* [FAQ](../FAQs.md)
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -16,12 +16,12 @@ Useful resources:
     - [Start Custom Logic (CL) Design](#startcl)
     - [Simulate Custom Logic (CL) RTL Design](#simcl)
     - [Build Custom Logic (CL) Design to send to AWS](#buildcl)
-3. [Vivado HLx Setup/Environment](#vivadohlx)    
+3. [Vivado IP Integrator (IPI) and GUI Workflow](#ipi)    
 
 <a name="overview"></a>
 ## Overview 
 
-The AWS FPGA HDK includes all the design files and scripts required to build an Amazon FPGA Image (AFI) from RTL (Verilog/VHDL) custom design. Developers can download the HDK and use it in their preferred design environment: In the cloud or on-premise. AWS offers the [FPGA Developer AMI on AWS Marketplace](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) with pre-installed tools to develop, simulate, and build an AFI.
+The AWS FPGA HDK includes all the design files and scripts required to build an Amazon FPGA Image (AFI) from RTL (Verilog/VHDL) custom design. Developers can download the HDK and use it in their preferred design environment: In the cloud or on-premises. AWS offers the [FPGA Developer AMI on AWS Marketplace](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) with pre-installed tools to develop, simulate, and build an AFI.
 
 **NOTE:** The HDK is developed and tested in a **Linux** environment only
 
@@ -40,11 +40,11 @@ The HDK also includes test benches for each provided example, and instructions o
 <a name="gettingstarted"></a>
 ## Getting Started 
 
-### Have an instance or server with Xilinx Vivado tools and License <a name="vivado"></a>
+### Have an EC2 instance or on-premises server installed with Xilinx Vivado tools and License <a name="vivado"></a>
 
 To get started, the developer needs to have a development environment with Xilinx Vivado tools installed. An easy way to get this by using the [AWS FPGA Developer AMI](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) which comes with all the tools and required licenses pre-installed.
 
-For developers who like to work on-premise or different AMI in the cloud, follow the [required license for on-premise document](./docs/on_premise_licensing_help.md).
+For developers who like to work on-premises or different AMI in the cloud, follow the [required license for on-premises document](./docs/on_premise_licensing_help.md).
 
 Please refer to the [release notes](../RELEASE_NOTES.md) or the [supported Vivado version](./supported_vivado_versions.txt) for the exact version of Vivado tools, and the required license components.
 
@@ -85,16 +85,21 @@ Follow the [RTL simulation environment setup](./docs/RTL_Simulating_CL_Designs.m
 You can follow the [build scripts readme](./common/shell_v04151701/new_cl_template/build/README.md) for step-by-step instructions on how to setup the scripts and run the build process.
 This [checklist](./cl/CHECKLIST_BEFORE_BUILDING_CL.md) should be consulted before you start the build process.
 
-<a name="vivadohlx"></a>
-## Vivado HLx Overview
+<a name="ipi"></a>
+## GUI Workflow with Vivado IP Integrator (IPI)
 
-The Vivado HLx allows users to use Vivado in project mode to create designs or importing designs using RTL or IP Integrator flows.
-The below documentation covers the setup, tutorials of RTL/IP Integrator flows and FAQ.  Users are recommended to read all documents before starting any design.
+Developers have the option of working in a GUI mode using Vivado IPI. With IPI you can create complex F1 custom designs on a graphical interface design canvas. The HDK development kit provides AWS FPGA IP which will help you quickly develop your custom designs by enabling you to quickly drop in IP blocks into your design.
 
-[HLx Setup README](./docs/AWS_IP_Vivado_Setup.md)
+The IPI flow isolates the Custom Logic (CL) from the shell, allowing the developer to focus on differentiating logic and leave the heavy lifting, undeferentiated hardware interfaces development to the AWS FPGA Shell. Generating a logic diagram is simplified with designer automation that connects RTL, IP, and peripherals like DDR and PCIe in a correct by construction flow. The “what you see is what you get” tool generates the equivalent code by instantiating the underlying IP and RTL with access via the Vivado project to the entire FPGA hardware design flow. A video walk through of this flow for a simple diagram is available at https://www.xilinx.com/video/hardware/using-vivado-ip-integrator-and-amazon-f1.html. This flow example is a good starting point for developers who want to quickly add IP blocks with high performance access to multiple external memories.
 
-[HLx Flows](./docs/AWS_Vivado_Flows.md)
+The IPI RTL flow enables the developer a single graphical environment to add sources and IP, simulate, synthesize the RTL, and then stitch together the Custom Logic (CL) with the Shell’s design checkpoint (DCP). For design debug, developers can easily instantiate logic analyzers or other debug logic, investigate timing and resource reports, and quickly link from implementation messages to the design view and source code when applicable. This flow is a good starting point for experts in RTL design or designs who have a minimal amount of interconnection between RTL modules.
 
-[HLx Tutorials/Examples](./docs/AWS_Tutorials_Examples.md)
+The below documentation covers the setup, tutorials of the IPI flows and IPI FAQ. Developers are advised to read all documents before starting thier first AWS FPGA design with IPI.
 
-[HLx FAQ](./docs/AWS_Vivado_FAQ.md)
+[IPI Setup](./docs/IPI_GUI_Vivado_Setup.md)
+
+[IPI Tutorials/Examples](./docs/IPI_GUI_Examples.md)
+
+[IPI Developer Flow](./docs/IPI_GUI_Flows.md)
+
+[IPI FAQ](./docs/IPI_GUI_Vivado_FAQ.md)

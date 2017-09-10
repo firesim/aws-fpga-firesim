@@ -9,7 +9,7 @@
          *    Four DDR4 RDIMM interfaces (with ECC)
          *    AXI4 protocol support on all interfaces
    *    User-defined clock frequency driving all CL to Shell interfaces
-   *	Multiple free running auxilary clocks
+   *	Multiple free running auxiliary clocks
    *    PCIE endpoint presentation to Custom Logic(CL)
          *    Management PF (physical function)
          *    Application PF
@@ -26,6 +26,13 @@
          *    1 DDR controller implemented in the SH (always available)
          *    3 DDR controllers implemented in the CL (configurable number of implemented controllers allowed)
 
+## Release 1.3.1 (See [ERRATA](./ERRATA.md) for unsupported features)
+   *    EDMA Driver release 1.0.29 - MSI-X fixes
+   *    Improved IPI documentation
+   *    Documentation updates
+   *    Build flow fixes
+   *    Public LTX files for use with hdk examples AFIs 
+
 ## Release 1.3.0 (See [ERRATA](./ERRATA.md) for unsupported features)
    *    FPGA initiated read/write over PCI (PCI-M)
    *    Redesigned Shell - improved the shell design to allow more complex place and route designs to meet timing
@@ -33,10 +40,10 @@
    *    Improved URAM utilization
    *    Improved AXI Interface checking
    *    New customer examples/workflows:  IP Integrator, VHDL and GUI
-   *    SDAccel support - More details will be communicated on AWS forum
+   *    SDAccel preview is accepting developers - See [README](sdk/SDAccel/README.md) registration  
 
 
-**During July, All AFIs created with previous HDK versions will no longer correctly load on an F1 instance**, hence a `fpga-load-local-image` command executed with an AFI created prior to 1.3.0 will return an error and not load.  Watch the forum for additional annnoucements.
+**During July, All AFIs created with previous HDK versions will no longer correctly load on an F1 instance**, hence a `fpga-load-local-image` command executed with an AFI created prior to 1.3.0 will return an error and not load.  Watch the forum for additional announcements.
 
 ## Release 1.3.0 New Features Details
 
@@ -54,7 +61,7 @@ The following major features are included in this HDK release:
 * The DMA bus toward the CL is multiplexed over sh_cl_dma_pcis AXI4 interface so the same address space can be accessed via DMA or directly via PCIe AppPF BAR4 
 * DMA usage is covered in the new [CL_DRAM_DMA example](./hdk/cl/examples/cl_dram_dma) RTL verification/simulation and Software 
 * A corresponding AWS Elastic DMA ([EDMA](./sdk/linux_kernel_drivers/edma)) driver is provided.
-* [EDMA Installation Readme](./sdk/linux_kernel_drivers/edma/edma_install.md) provides installation and usage guidlines
+* [EDMA Installation Readme](./sdk/linux_kernel_drivers/edma/edma_install.md) provides installation and usage guidelines
 * See [Kernel_Drivers_README](./sdk/linux_kernel_drivers/README.md) for more information on restrictions for this release
 
 
@@ -62,11 +69,11 @@ The following major features are included in this HDK release:
 * The PCI-M interface is fully supported for CL generated transactions to the Shell. 
 
 ### 4.	URAM 
-* Restrictions on URAM have been updated to enable 100% of the URAM with a CL to be utilized.  See documnetation on enabling URAM utilization: [URAM_options](.hdk/docs/URAM_Options.md)
+* Restrictions on URAM have been updated to enable 100% of the URAM with a CL to be utilized.  See documentation on enabling URAM utilization: [URAM_options](./hdk/docs/URAM_Options.md)
 
-### 5.	IPI
-* IPI developer flow is supported
-  
+### 5.	Vivado IP Integrator (IPI) and GUI Workflow
+* Vivado graphical design canvas and project based flow is now supported.  This flow allows developers to create CL logic as either RTL or complex subsystems based on an IP centric block diagram.  Prior experience in RTL or system block designs is recommended.  The [IP Integrator and GUI Vivado workflow](README.md#ipi) enables a unified graphical environment to guide the developer through the common steps to design, implement, and verify FGPAs.  To get started, start with the [README that will take you through getting started steps and documents on IPI](README.md#ipi)
+ 
 ### 6.	Build Flow improvments
 * See [Build_Scripts](./hdk/common/shell_v071417d3/build/scripts)
 
@@ -96,7 +103,7 @@ See example for more details [CL_HELLO_WORLD_VHDL](./hdk/cl/examples/cl_hello_wo
 * First installation of AWS FPGA SDK requires having gcc installed in the instance server. If that's not available, try `sudo yum update && sudo yum group install "Development Tools"`
 * The HDK build step requires having Xilinx's Vivado tool and Vivado License Management running.  Tools and licenses are provided with AWS FPGA Developer AMI at no additional cost
 * This release is tested and validated with Xilinx 2017.1 SDX (Vivado)
-* Developers that choose to not use the developer AMI in AWS EC2, need to have Xilinx license 'EF-VIVADO-SDX-VU9P-OP' installed on premise.  For more help, please refer to [On-premise licensing help](./hdk/docs/on_premise_licensing_help.md)
+* Developers that choose to not use the developer AMI in AWS EC2, need to have Xilinx license 'EF-VIVADO-SDX-VU9P-OP' installed on premises.  For more help, please refer to [On-premise licensing help](./hdk/docs/on_premise_licensing_help.md)
 * Vivado XSIM RTL simulator supported by the HDK
 * MentorGraphic's Questa RTL simulator supported by the HDK (but requires a purchase of separate license from MentorGraphics)
 * Synopsys' VCS RTL simulator supported by the HDK (but requires a purchase of separate license from Synopsys)
