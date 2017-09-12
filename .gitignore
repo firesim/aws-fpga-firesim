@@ -59,3 +59,5 @@ vivado*.log
 # Python compiled code
 *.pyc
 sdk/userspace/lib
+
+hdk/common/shell_v071417d3/build/debug_probes
