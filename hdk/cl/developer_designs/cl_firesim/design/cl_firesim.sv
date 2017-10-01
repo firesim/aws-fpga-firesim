@@ -366,9 +366,9 @@ wire fsimtop_s_axi_rready;
 
 );
 
-  wire [31:0] io_slave_aw_bits_addr;
   // TODO, we are skipping this for simplicity.
   // technically, all addresses will have the MSB set, but since we have access to 16GB of dram, it should still work
+  //wire [31:0] io_slave_aw_bits_addr;
   //assign cl_sh_ddr_awaddr = { 30'b0, io_slave_aw_bits_addr[30:0], 3'b0 }; // TODO: check this
 
   // THESE two are unnecessary now
@@ -386,6 +386,8 @@ wire fsimtop_s_axi_rready;
   // TODO look at this
   // assign cl_sh_ddr_awsize = 3'b110;
   // assign cl_sh_ddr_arsize = 3'b110;
+  assert ((cl_sh_ddr_awsize == 3'b110) | (!cl_sh_ddr_awvalid)) else $error("INVALID AWSIZE on DRAM IF");
+  assert ((cl_sh_ddr_arsize == 3'b110) | (!cl_sh_ddr_arvalid)) else $error("INVALID ARSIZE on DRAM IF");
 
   // this is fine.
   assign cl_sh_ddr_wid = 16'b0; // OK. not sure why this signal is exposed
@@ -532,7 +534,7 @@ axi_clock_converter_dramslim clock_convert_dramslim (
 
 /* steps to move:
  * 1) copy clock converter's M interfaces to dwidth converter's M interfaces: DONE
- * 2) create clock_converted_* signals for clock M to width adapt S
+ * 2) create clock_converted_* signals for clock M to width adapt S: DONE
  * 3) add asserts on arsize and awsize to confirm that they're always b110
 */
 
@@ -590,7 +592,6 @@ axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
   .s_axi_rready(clock_converted_axi_rready),      // input wire s_axi_rready
 
 
-    // below is done
   .m_axi_awaddr(cl_sh_ddr_awaddr),      // output wire [63 : 0] m_axi_awaddr
   .m_axi_awlen(cl_sh_ddr_awlen),        // output wire [7 : 0] m_axi_awlen
   .m_axi_awsize(cl_sh_ddr_awsize),      // output wire [2 : 0] m_axi_awsize
@@ -602,24 +603,17 @@ axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
   .m_axi_awqos(),        // output wire [3 : 0] m_axi_awqos
   .m_axi_awvalid(cl_sh_ddr_awvalid),    // output wire m_axi_awvalid
   .m_axi_awready(sh_cl_ddr_awready),    // input wire m_axi_awready
-    // above is done
 
-
-    // below is done
   .m_axi_wdata(cl_sh_ddr_wdata),        // output wire [511 : 0] m_axi_wdata
   .m_axi_wstrb(cl_sh_ddr_wstrb),        // output wire [63 : 0] m_axi_wstrb
   .m_axi_wlast(cl_sh_ddr_wlast),        // output wire m_axi_wlast
   .m_axi_wvalid(cl_sh_ddr_wvalid),      // output wire m_axi_wvalid
   .m_axi_wready(sh_cl_ddr_wready),      // input wire m_axi_wready
-    // above is done
 
-    // below is done
   .m_axi_bresp(sh_cl_ddr_bresp),        // input wire [1 : 0] m_axi_bresp
   .m_axi_bvalid(sh_cl_ddr_bvalid),      // input wire m_axi_bvalid
   .m_axi_bready(cl_sh_ddr_bready),      // output wire m_axi_bready
-    // above is done
 
-    // below is done
   .m_axi_araddr(cl_sh_ddr_araddr),      // output wire [63 : 0] m_axi_araddr
   .m_axi_arlen(cl_sh_ddr_arlen),        // output wire [7 : 0] m_axi_arlen
   .m_axi_arsize(cl_sh_ddr_arsize),      // output wire [2 : 0] m_axi_arsize
@@ -631,29 +625,13 @@ axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
   .m_axi_arqos(),        // output wire [3 : 0] m_axi_arqos
   .m_axi_arvalid(cl_sh_ddr_arvalid),    // output wire m_axi_arvalid
   .m_axi_arready(sh_cl_ddr_arready),    // input wire m_axi_arready
-    // above is done
 
-    // below is done
   .m_axi_rdata(sh_cl_ddr_rdata),        // input wire [511 : 0] m_axi_rdata
   .m_axi_rresp(sh_cl_ddr_rresp),        // input wire [1 : 0] m_axi_rresp
   .m_axi_rlast(sh_cl_ddr_rlast),        // input wire m_axi_rlast
   .m_axi_rvalid(sh_cl_ddr_rvalid),      // input wire m_axi_rvalid
   .m_axi_rready(cl_sh_ddr_rready)      // output wire m_axi_rready
-    // above is done
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //-------------------------------------------
 // Tie-Off Global Signals
