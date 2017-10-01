@@ -221,8 +221,12 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .m_axi_rready(sh_ocl_rready_q)    // output wire m_axi_rready
 );
 
+wire [31 : 0] fsimtop_s_axi_awaddr_small;
+wire [31 : 0] fsimtop_s_axi_araddr_small;
+
 wire [15 : 0] fsimtop_s_axi_awid;
 wire [63 : 0] fsimtop_s_axi_awaddr;
+assign fsimtop_s_axi_awaddr = { 32'b0, fsimtop_s_axi_awaddr };
 wire [7 : 0] fsimtop_s_axi_awlen;
 wire [2 : 0] fsimtop_s_axi_awsize;
 wire [1 : 0] fsimtop_s_axi_awburst;
@@ -247,6 +251,7 @@ wire fsimtop_s_axi_bready;
 
 wire [15 : 0] fsimtop_s_axi_arid;
 wire [63 : 0] fsimtop_s_axi_araddr;
+assign fsimtop_s_axi_araddr = { 32'b0, fsimtop_s_axi_araddr };
 wire [7 : 0] fsimtop_s_axi_arlen;
 wire [2 : 0] fsimtop_s_axi_arsize;
 wire [1 : 0] fsimtop_s_axi_arburst;
@@ -316,7 +321,7 @@ wire fsimtop_s_axi_rready;
 
    .io_slave_aw_ready(fsimtop_s_axi_awready),
    .io_slave_aw_valid(fsimtop_s_axi_awvalid),
-   .io_slave_aw_bits_addr(fsimtop_s_axi_awaddr),
+   .io_slave_aw_bits_addr(fsimtop_s_axi_awaddr_small),
    .io_slave_aw_bits_len(fsimtop_s_axi_awlen),
    .io_slave_aw_bits_size(fsimtop_s_axi_awsize),
    .io_slave_aw_bits_burst(fsimtop_s_axi_awburst), // not available on DDR IF
@@ -344,7 +349,7 @@ wire fsimtop_s_axi_rready;
 
    .io_slave_ar_ready(fsimtop_s_axi_arready),
    .io_slave_ar_valid(fsimtop_s_axi_arvalid),
-   .io_slave_ar_bits_addr(fsimtop_s_axi_araddr),
+   .io_slave_ar_bits_addr(fsimtop_s_axi_araddr_small),
    .io_slave_ar_bits_len(fsimtop_s_axi_arlen),
    .io_slave_ar_bits_size(fsimtop_s_axi_arsize),
    .io_slave_ar_bits_burst(fsimtop_s_axi_arburst), // not available on DDR IF
@@ -386,8 +391,8 @@ wire fsimtop_s_axi_rready;
   // TODO look at this
   // assign cl_sh_ddr_awsize = 3'b110;
   // assign cl_sh_ddr_arsize = 3'b110;
-  assert ((cl_sh_ddr_awsize == 3'b110) | (!cl_sh_ddr_awvalid)) else $error("INVALID AWSIZE on DRAM IF");
-  assert ((cl_sh_ddr_arsize == 3'b110) | (!cl_sh_ddr_arvalid)) else $error("INVALID ARSIZE on DRAM IF");
+  //assert ((cl_sh_ddr_awsize == 3'b110) | (!cl_sh_ddr_awvalid)) else $error("INVALID AWSIZE on DRAM IF");
+  //assert ((cl_sh_ddr_arsize == 3'b110) | (!cl_sh_ddr_arvalid)) else $error("INVALID ARSIZE on DRAM IF");
 
   // this is fine.
   assign cl_sh_ddr_wid = 16'b0; // OK. not sure why this signal is exposed
