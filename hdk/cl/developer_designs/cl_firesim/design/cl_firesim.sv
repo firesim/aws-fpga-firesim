@@ -529,7 +529,7 @@ axi_clock_converter_dramslim clock_convert_dramslim (
   .m_axi_arvalid(clock_converted_axi_arvalid),    // output wire m_axi_arvalid
   .m_axi_arready(clock_converted_axi_arready),    // input wire m_axi_arready
 
-  .m_axi_rid(clock_converted_axi_arid),            // input wire [15 : 0] m_axi_rid
+  .m_axi_rid(clock_converted_axi_rid),            // input wire [15 : 0] m_axi_rid
   .m_axi_rdata(clock_converted_axi_rdata),        // input wire [511 : 0] m_axi_rdata
   .m_axi_rresp(clock_converted_axi_rresp),        // input wire [1 : 0] m_axi_rresp
   .m_axi_rlast(clock_converted_axi_rlast),        // input wire m_axi_rlast
