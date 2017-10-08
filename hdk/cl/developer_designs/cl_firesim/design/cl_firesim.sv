@@ -147,37 +147,37 @@ always_ff @(negedge rst_main_n or posedge firesim_internal_clock)
 // PCIe DMA_PCIS to FireSim Master
 //-------------------------------------------------
 
-   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM
-   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM
-   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM
-   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM
-   logic sh_cl_dma_pcis_awvalid_FIRESIM
-   logic cl_sh_dma_pcis_awready_FIRESIM
+   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM;
+   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM;
+   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM;
+   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM;
+   logic sh_cl_dma_pcis_awvalid_FIRESIM;
+   logic cl_sh_dma_pcis_awready_FIRESIM;
 
-   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM
-   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM
-   logic sh_cl_dma_pcis_wlast_FIRESIM
-   logic sh_cl_dma_pcis_wvalid_FIRESIM
-   logic cl_sh_dma_pcis_wready_FIRESIM
+   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM;
+   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM;
+   logic sh_cl_dma_pcis_wlast_FIRESIM;
+   logic sh_cl_dma_pcis_wvalid_FIRESIM;
+   logic cl_sh_dma_pcis_wready_FIRESIM;
 
-   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM
-   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM
-   logic cl_sh_dma_pcis_bvalid_FIRESIM
-   logic sh_cl_dma_pcis_bready_FIRESIM
+   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM;
+   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM;
+   logic cl_sh_dma_pcis_bvalid_FIRESIM;
+   logic sh_cl_dma_pcis_bready_FIRESIM;
 
-   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM
-   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM
-   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM
-   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM
-   logic sh_cl_dma_pcis_arvalid_FIRESIM
-   logic cl_sh_dma_pcis_arready_FIRESIM
+   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM;
+   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM;
+   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM;
+   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM;
+   logic sh_cl_dma_pcis_arvalid_FIRESIM;
+   logic cl_sh_dma_pcis_arready_FIRESIM;
 
-   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM
-   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM
-   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM
-   logic cl_sh_dma_pcis_rlast_FIRESIM
-   logic cl_sh_dma_pcis_rvalid_FIRESIM
-   logic sh_cl_dma_pcis_rready_FIRESIM
+   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM;
+   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM;
+   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM;
+   logic cl_sh_dma_pcis_rlast_FIRESIM;
+   logic cl_sh_dma_pcis_rvalid_FIRESIM;
+   logic sh_cl_dma_pcis_rready_FIRESIM;
 
 
 axi_clock_converter_512_wide wide_pcis_clock_convert (
@@ -341,7 +341,7 @@ wire fsimtop_s_axi_rready;
    .io_master_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM),
    .io_master_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM),
    .io_master_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM),
-   .io_master_w_bits_id(12'h0),
+   .io_master_w_bits_id(6'h0),
    .io_master_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM),
    .io_master_w_bits_user(1'h0),
    .io_master_b_ready(sh_cl_dma_pcis_bready_FIRESIM),
