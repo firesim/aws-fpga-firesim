@@ -110,7 +110,7 @@ logic clock_gend_90;
 logic clock_gend_75;
 
 logic firesim_internal_clock;
-assign firesim_internal_clock = clock_gend_85;
+assign firesim_internal_clock = clock_gend_75;
  
 clk_wiz_0_firesim firesim_clocking
 (
