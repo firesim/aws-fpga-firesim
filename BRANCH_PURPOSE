@@ -1,0 +1,3 @@
+This is testing:
+1) Regular rocket chip addressing 2GB phys mem
+2) Add width adapter to go from 64-bit to 512-bit DRAM transactions
