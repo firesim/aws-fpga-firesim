@@ -58,7 +58,8 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
-  $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci
+  $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
+  $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci
 ]
 
 # Additional IP's that might be needed if using the DDR
