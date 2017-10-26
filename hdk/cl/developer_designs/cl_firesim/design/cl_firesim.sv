@@ -221,12 +221,12 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .m_axi_rready(sh_ocl_rready_q)    // output wire m_axi_rready
 );
 
-wire [31 : 0] fsimtop_s_axi_awaddr_small;
-wire [31 : 0] fsimtop_s_axi_araddr_small;
+wire [33 : 0] fsimtop_s_axi_awaddr_small;
+wire [33 : 0] fsimtop_s_axi_araddr_small;
 
 wire [15 : 0] fsimtop_s_axi_awid;
 wire [63 : 0] fsimtop_s_axi_awaddr;
-assign fsimtop_s_axi_awaddr = { 33'b0, fsimtop_s_axi_awaddr_small[30:0] };
+assign fsimtop_s_axi_awaddr = { 30'b0, fsimtop_s_axi_awaddr_small[33:0] };
 wire [7 : 0] fsimtop_s_axi_awlen;
 wire [2 : 0] fsimtop_s_axi_awsize;
 wire [1 : 0] fsimtop_s_axi_awburst;
@@ -251,7 +251,7 @@ wire fsimtop_s_axi_bready;
 
 wire [15 : 0] fsimtop_s_axi_arid;
 wire [63 : 0] fsimtop_s_axi_araddr;
-assign fsimtop_s_axi_araddr = { 33'b0, fsimtop_s_axi_araddr_small[30:0] };
+assign fsimtop_s_axi_araddr = { 30'b0, fsimtop_s_axi_araddr_small[33:0] };
 wire [7 : 0] fsimtop_s_axi_arlen;
 wire [2 : 0] fsimtop_s_axi_arsize;
 wire [1 : 0] fsimtop_s_axi_arburst;
