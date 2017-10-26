@@ -45,6 +45,9 @@ ignore_memory_requirement=0
 expected_memory_usage=30000000
 uram_option=2
 
+# Use timestamp for logs and output files
+timestamp=$(date +"%y_%m_%d-%H%M%S") 
+
 function info_msg {
   echo -e "INFO: $1"
 }
@@ -89,6 +92,9 @@ while [ "$1" != "" ]; do
                                 ;;
         -uram_option )          shift
                                 uram_option=$1
+                                ;;
+        -force_timestamp )      timestamp=$1
+                                shift
                                 ;;
         -foreground )           foreground=1
                                 ;;
@@ -199,8 +205,6 @@ then
 	exit 1
 fi
 
-# Use timestamp for logs and output files
-timestamp=$(date +"%y_%m_%d-%H%M%S") 
 logname=$timestamp.vivado.log
 ln -s -f $logname last_log
 
