@@ -46,7 +46,7 @@ expected_memory_usage=30000000
 uram_option=2
 
 # Use timestamp for logs and output files
-timestamp=$(date +"%y_%m_%d-%H%M%S") 
+timestamp=$(date +"%y_%m_%d-%H%M%S")
 
 function info_msg {
   echo -e "INFO: $1"
@@ -93,8 +93,8 @@ while [ "$1" != "" ]; do
         -uram_option )          shift
                                 uram_option=$1
                                 ;;
-        -force_timestamp )      timestamp=$1
-                                shift
+        -force_timestamp )      shift
+                                timestamp=$1
                                 ;;
         -foreground )           foreground=1
                                 ;;
@@ -233,7 +233,7 @@ subsystem_vendor_id="0x${id1_version:4:4}";
 cmd="vivado -mode batch -nojournal -log $logname -source $vivado_script -tclargs $timestamp $strategy $hdk_version $shell_version $device_id $vendor_id $subsystem_id $subsystem_vendor_id $clock_recipe_a $clock_recipe_b $clock_recipe_c $uram_option $notify"
 if [[ "$foreground" == "0" ]]; then
   nohup $cmd > $timestamp.nohup.out 2>&1 &
-  
+
   info_msg "Build through Vivado is running as background process, this may take few hours."
   info_msg "Output is being redirected to $timestamp.nohup.out"
   info_msg "If you have set your EMAIL environment variable and -notify is specified, you will receive a notification when complete."
