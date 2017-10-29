@@ -38,7 +38,7 @@ logic rst_extra1_n_sync;
 // remove it from the end of the file
 
 `include "unused_flr_template.inc"
-`include "unused_ddr_a_b_d_template.inc"
+//`include "unused_ddr_a_b_d_template.inc"
 `include "unused_pcim_template.inc"
 `include "unused_dma_pcis_template.inc"
 `include "unused_cl_sda_template.inc"
@@ -437,7 +437,7 @@ lib_pipe #(.WIDTH(1+1+8+32), .STAGES(NUM_CFG_STGS_CL_DDR_ATG)) PIPE_DDR_STAT2 (.
                                                );
 
 
-lib_pipe #(.WIDTH(1+8+32), .STAGES(NUM_CFG_STGS_CL_DDR_ATG)) PIPE_DDR_STAT_ACK2 (.clk(clk_main_a0), .rst_n(sync_rst_n),
+lib_pipe #(.WIDTH(1+8+32), .STAGES(NUM_CFG_STGS_CL_DDR_ATG)) PIPE_DDR_STAT_ACK2 (.clk(clk_main_a0), .rst_n(rst_main_n_sync),
                                                .in_bus({ddr_sh_stat_ack_q[2], ddr_sh_stat_int_q[2], ddr_sh_stat_rdata_q[2]}),
                                                .out_bus({ddr_sh_stat_ack2, ddr_sh_stat_int2, ddr_sh_stat_rdata2})
                                                ); 
@@ -510,13 +510,13 @@ assign {mc_ddr_s_3_axi_rvalid, mc_ddr_s_2_axi_rvalid, mc_ddr_s_1_axi_rvalid} = s
 assign cl_sh_ddr_rready_2d = {mc_ddr_s_3_axi_rready, mc_ddr_s_2_axi_rready, mc_ddr_s_1_axi_rready};
 
 (* dont_touch = "true" *) logic sh_ddr_sync_rst_n;
-lib_pipe #(.WIDTH(1), .STAGES(4)) SH_DDR_SLC_RST_N (.clk(clk_main_a0), .rst_n(1'b1), .in_bus(sync_rst_n), .out_bus(sh_ddr_sync_rst_n));
+lib_pipe #(.WIDTH(1), .STAGES(4)) SH_DDR_SLC_RST_N (.clk(clk_main_a0), .rst_n(1'b1), .in_bus(rst_main_n_sync), .out_bus(sh_ddr_sync_rst_n));
 sh_ddr #(
          .DDR_A_PRESENT(DDR_A_PRESENT),
          .DDR_A_IO(1),
          .DDR_B_PRESENT(DDR_B_PRESENT),
          .DDR_D_PRESENT(DDR_D_PRESENT)
-   ) SH_DDR_1
+   ) SH_DDR
    (
    .clk(clk_main_a0),
    .rst_n(sh_ddr_sync_rst_n),
