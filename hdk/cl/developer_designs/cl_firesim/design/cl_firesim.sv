@@ -251,7 +251,7 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
  
  
    .m_axi_aclk(clk_extra_a1),             // input wire m_axi_aclk
-   .m_axi_aresetn(rst_firesim_n_sync),    // input wire m_axi_aresetn
+   .m_axi_aresetn(rst_extra_n_sync),    // input wire m_axi_aresetn
  
    .m_axi_awid(sh_cl_dma_pcis_awid_FIRESIM),          // output wire [5 : 0] m_axi_awid
    .m_axi_awaddr(sh_cl_dma_pcis_awaddr_FIRESIM),      // output wire [63 : 0] m_axi_awaddr
