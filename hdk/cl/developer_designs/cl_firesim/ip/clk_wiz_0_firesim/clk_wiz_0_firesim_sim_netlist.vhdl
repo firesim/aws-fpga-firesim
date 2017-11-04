@@ -1,10 +1,10 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.1_sdxop (lin64) Build 1933108 Fri Jul 14 11:54:19 MDT 2017
--- Date        : Thu Oct 19 18:46:07 2017
--- Host        : ip-172-31-15-233.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
+-- Date        : Sat Nov  4 04:22:52 2017
+-- Host        : ip-172-31-8-190.ec2.internal running 64-bit CentOS Linux release 7.4.1708 (Core)
 -- Command     : write_vhdl -force -mode funcsim
---               /home/centos/firesim-push-timing/platforms/f1/aws-fpga/hdk/cl/developer_designs/cl_firesim/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.vhdl
+--               /benchmarks/firesim-build2/platforms/f1/aws-fpga/hdk/cl/developer_designs/cl_firesim/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.vhdl
 -- Design      : clk_wiz_0_firesim
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -19,6 +19,8 @@ entity clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
     clk_out1 : out STD_LOGIC;
     clk_out2 : out STD_LOGIC;
     clk_out3 : out STD_LOGIC;
+    clk_out4 : out STD_LOGIC;
+    clk_out5 : out STD_LOGIC;
     reset : in STD_LOGIC;
     locked : out STD_LOGIC;
     clk_in1 : in STD_LOGIC
@@ -32,6 +34,8 @@ architecture STRUCTURE of clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
   signal clk_out1_clk_wiz_0_firesim : STD_LOGIC;
   signal clk_out2_clk_wiz_0_firesim : STD_LOGIC;
   signal clk_out3_clk_wiz_0_firesim : STD_LOGIC;
+  signal clk_out4_clk_wiz_0_firesim : STD_LOGIC;
+  signal clk_out5_clk_wiz_0_firesim : STD_LOGIC;
   signal clkfbout_buf_clk_wiz_0_firesim : STD_LOGIC;
   signal clkfbout_clk_wiz_0_firesim : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CDDCDONE_UNCONNECTED : STD_LOGIC;
@@ -41,9 +45,7 @@ architecture STRUCTURE of clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
   signal NLW_mmcme3_adv_inst_CLKOUT0B_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CLKOUT1B_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CLKOUT2B_UNCONNECTED : STD_LOGIC;
-  signal NLW_mmcme3_adv_inst_CLKOUT3_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CLKOUT3B_UNCONNECTED : STD_LOGIC;
-  signal NLW_mmcme3_adv_inst_CLKOUT4_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CLKOUT5_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_CLKOUT6_UNCONNECTED : STD_LOGIC;
   signal NLW_mmcme3_adv_inst_DRDY_UNCONNECTED : STD_LOGIC;
@@ -66,6 +68,10 @@ architecture STRUCTURE of clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
   attribute XILINX_LEGACY_PRIM of clkout2_buf : label is "BUFG";
   attribute BOX_TYPE of clkout3_buf : label is "PRIMITIVE";
   attribute XILINX_LEGACY_PRIM of clkout3_buf : label is "BUFG";
+  attribute BOX_TYPE of clkout4_buf : label is "PRIMITIVE";
+  attribute XILINX_LEGACY_PRIM of clkout4_buf : label is "BUFG";
+  attribute BOX_TYPE of clkout5_buf : label is "PRIMITIVE";
+  attribute XILINX_LEGACY_PRIM of clkout5_buf : label is "BUFG";
   attribute BOX_TYPE of mmcme3_adv_inst : label is "PRIMITIVE";
 begin
 clkf_buf: unisim.vcomponents.BUFGCE
@@ -112,32 +118,50 @@ clkout3_buf: unisim.vcomponents.BUFGCE
       I => clk_out3_clk_wiz_0_firesim,
       O => clk_out3
     );
+clkout4_buf: unisim.vcomponents.BUFGCE
+    generic map(
+      CE_TYPE => "ASYNC"
+    )
+        port map (
+      CE => '1',
+      I => clk_out4_clk_wiz_0_firesim,
+      O => clk_out4
+    );
+clkout5_buf: unisim.vcomponents.BUFGCE
+    generic map(
+      CE_TYPE => "ASYNC"
+    )
+        port map (
+      CE => '1',
+      I => clk_out5_clk_wiz_0_firesim,
+      O => clk_out5
+    );
 mmcme3_adv_inst: unisim.vcomponents.MMCME4_ADV
     generic map(
       BANDWIDTH => "OPTIMIZED",
-      CLKFBOUT_MULT_F => 33.625000,
+      CLKFBOUT_MULT_F => 37.625000,
       CLKFBOUT_PHASE => 0.000000,
       CLKFBOUT_USE_FINE_PS => "FALSE",
       CLKIN1_PERIOD => 8.000000,
       CLKIN2_PERIOD => 0.000000,
-      CLKOUT0_DIVIDE_F => 7.375000,
+      CLKOUT0_DIVIDE_F => 8.250000,
       CLKOUT0_DUTY_CYCLE => 0.500000,
       CLKOUT0_PHASE => 0.000000,
       CLKOUT0_USE_FINE_PS => "FALSE",
-      CLKOUT1_DIVIDE => 8,
+      CLKOUT1_DIVIDE => 9,
       CLKOUT1_DUTY_CYCLE => 0.500000,
       CLKOUT1_PHASE => 0.000000,
       CLKOUT1_USE_FINE_PS => "FALSE",
-      CLKOUT2_DIVIDE => 9,
+      CLKOUT2_DIVIDE => 10,
       CLKOUT2_DUTY_CYCLE => 0.500000,
       CLKOUT2_PHASE => 0.000000,
       CLKOUT2_USE_FINE_PS => "FALSE",
-      CLKOUT3_DIVIDE => 1,
+      CLKOUT3_DIVIDE => 11,
       CLKOUT3_DUTY_CYCLE => 0.500000,
       CLKOUT3_PHASE => 0.000000,
       CLKOUT3_USE_FINE_PS => "FALSE",
       CLKOUT4_CASCADE => "FALSE",
-      CLKOUT4_DIVIDE => 1,
+      CLKOUT4_DIVIDE => 12,
       CLKOUT4_DUTY_CYCLE => 0.500000,
       CLKOUT4_PHASE => 0.000000,
       CLKOUT4_USE_FINE_PS => "FALSE",
@@ -183,9 +207,9 @@ mmcme3_adv_inst: unisim.vcomponents.MMCME4_ADV
       CLKOUT1B => NLW_mmcme3_adv_inst_CLKOUT1B_UNCONNECTED,
       CLKOUT2 => clk_out3_clk_wiz_0_firesim,
       CLKOUT2B => NLW_mmcme3_adv_inst_CLKOUT2B_UNCONNECTED,
-      CLKOUT3 => NLW_mmcme3_adv_inst_CLKOUT3_UNCONNECTED,
+      CLKOUT3 => clk_out4_clk_wiz_0_firesim,
       CLKOUT3B => NLW_mmcme3_adv_inst_CLKOUT3B_UNCONNECTED,
-      CLKOUT4 => NLW_mmcme3_adv_inst_CLKOUT4_UNCONNECTED,
+      CLKOUT4 => clk_out5_clk_wiz_0_firesim,
       CLKOUT5 => NLW_mmcme3_adv_inst_CLKOUT5_UNCONNECTED,
       CLKOUT6 => NLW_mmcme3_adv_inst_CLKOUT6_UNCONNECTED,
       DADDR(6 downto 0) => B"0000000",
@@ -213,6 +237,8 @@ entity clk_wiz_0_firesim is
     clk_out1 : out STD_LOGIC;
     clk_out2 : out STD_LOGIC;
     clk_out3 : out STD_LOGIC;
+    clk_out4 : out STD_LOGIC;
+    clk_out5 : out STD_LOGIC;
     reset : in STD_LOGIC;
     locked : out STD_LOGIC;
     clk_in1 : in STD_LOGIC
@@ -229,6 +255,8 @@ inst: entity work.clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz
       clk_out1 => clk_out1,
       clk_out2 => clk_out2,
       clk_out3 => clk_out3,
+      clk_out4 => clk_out4,
+      clk_out5 => clk_out5,
       locked => locked,
       reset => reset
     );

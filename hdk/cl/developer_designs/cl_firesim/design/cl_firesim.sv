@@ -91,27 +91,28 @@ always_ff @(negedge rst_main_n or posedge clk_extra_a1)
 //---------------------------
 // new clocking
 //-------------------
-// None
-//
 //----------------------------------------------------------------------------
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// clk_out1___189.972______0.000______50.0______111.845____141.450
-// clk_out2___175.130______0.000______50.0______113.271____141.450
-// clk_out3___155.671______0.000______50.0______115.371____141.450
+// clk_out1___190.025______0.000______50.0______100.051____130.256
+// clk_out2___174.190______0.000______50.0______101.370____130.256
+// clk_out3___156.771______0.000______50.0______102.992____130.256
+// clk_out4___142.519______0.000______50.0______104.485____130.256
+// clk_out5___130.642______0.000______50.0______105.869____130.256
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
 //----------------------------------------------------------------------------
 // __primary_________125.000____________0.010
-
 logic clock_gend_190;
 logic clock_gend_175;
 logic clock_gend_160;
+logic clock_gend_145;
+logic clock_gend_130;
 
 logic firesim_internal_clock;
-assign firesim_internal_clock = clock_gend_190;
+assign firesim_internal_clock = clock_gend_145;
 
 clk_wiz_0_firesim firesim_clocking
 (
@@ -119,6 +120,8 @@ clk_wiz_0_firesim firesim_clocking
     .clk_out1(clock_gend_190),     // output clk_out1
     .clk_out2(clock_gend_175),     // output clk_out2
     .clk_out3(clock_gend_160),     // output clk_out3
+    .clk_out4(clock_gend_145),     // output clk_out4
+    .clk_out5(clock_gend_130),     // output clk_out5
     // Status and control signals
     .reset(!rst_extra1_n_sync), // input reset
     .locked(),       // output locked
