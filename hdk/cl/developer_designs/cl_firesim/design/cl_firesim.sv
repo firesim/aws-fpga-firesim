@@ -241,8 +241,8 @@ wire mc_ddr_s_1_axi_awvalid;
 wire mc_ddr_s_1_axi_awready;
 
 //wire [15 : 0] mc_ddr_s_1_axi_wid;
-wire [63 : 0] mc_ddr_s_1_axi_wdata;
-wire [7 : 0] mc_ddr_s_1_axi_wstrb;
+wire [511 : 0] mc_ddr_s_1_axi_wdata;
+wire [63 : 0] mc_ddr_s_1_axi_wstrb;
 wire mc_ddr_s_1_axi_wlast;
 wire mc_ddr_s_1_axi_wvalid;
 wire mc_ddr_s_1_axi_wready;
@@ -286,8 +286,8 @@ wire mc_ddr_s_2_axi_awvalid;
 wire mc_ddr_s_2_axi_awready;
 
 //wire [15 : 0] mc_ddr_s_2_axi_wid;
-wire [63 : 0] mc_ddr_s_2_axi_wdata;
-wire [7 : 0] mc_ddr_s_2_axi_wstrb;
+wire [511 : 0] mc_ddr_s_2_axi_wdata;
+wire [63 : 0] mc_ddr_s_2_axi_wstrb;
 wire mc_ddr_s_2_axi_wlast;
 wire mc_ddr_s_2_axi_wvalid;
 wire mc_ddr_s_2_axi_wready;
@@ -331,8 +331,8 @@ wire mc_ddr_s_3_axi_awvalid;
 wire mc_ddr_s_3_axi_awready;
 
 //wire [15 : 0] mc_ddr_s_3_axi_wid;
-wire [63 : 0] mc_ddr_s_3_axi_wdata;
-wire [7 : 0] mc_ddr_s_3_axi_wstrb;
+wire [511 : 0] mc_ddr_s_3_axi_wdata;
+wire [63 : 0] mc_ddr_s_3_axi_wstrb;
 wire mc_ddr_s_3_axi_wlast;
 wire mc_ddr_s_3_axi_wvalid;
 wire mc_ddr_s_3_axi_wready;
