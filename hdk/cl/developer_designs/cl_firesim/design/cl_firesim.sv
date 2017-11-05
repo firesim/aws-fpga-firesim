@@ -266,7 +266,7 @@ wire mc_ddr_s_1_axi_arvalid;
 wire mc_ddr_s_1_axi_arready;
 
 wire [15 : 0] mc_ddr_s_1_axi_rid;
-wire [63 : 0] mc_ddr_s_1_axi_rdata;
+wire [511 : 0] mc_ddr_s_1_axi_rdata;
 wire [1 : 0] mc_ddr_s_1_axi_rresp;
 wire mc_ddr_s_1_axi_rlast;
 wire mc_ddr_s_1_axi_rvalid;
@@ -311,7 +311,7 @@ wire mc_ddr_s_2_axi_arvalid;
 wire mc_ddr_s_2_axi_arready;
 
 wire [15 : 0] mc_ddr_s_2_axi_rid;
-wire [63 : 0] mc_ddr_s_2_axi_rdata;
+wire [511 : 0] mc_ddr_s_2_axi_rdata;
 wire [1 : 0] mc_ddr_s_2_axi_rresp;
 wire mc_ddr_s_2_axi_rlast;
 wire mc_ddr_s_2_axi_rvalid;
@@ -356,7 +356,7 @@ wire mc_ddr_s_3_axi_arvalid;
 wire mc_ddr_s_3_axi_arready;
 
 wire [15 : 0] mc_ddr_s_3_axi_rid;
-wire [63 : 0] mc_ddr_s_3_axi_rdata;
+wire [511 : 0] mc_ddr_s_3_axi_rdata;
 wire [1 : 0] mc_ddr_s_3_axi_rresp;
 wire mc_ddr_s_3_axi_rlast;
 wire mc_ddr_s_3_axi_rvalid;
