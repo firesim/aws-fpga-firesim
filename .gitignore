@@ -61,3 +61,12 @@ vivado*.log
 sdk/userspace/lib
 
 hdk/common/shell_v071417d3/build/debug_probes
+
+sdk/linux_kernel_drivers/edma/.edma-drv.ko.cmd
+sdk/linux_kernel_drivers/edma/.edma-drv.mod.o.cmd
+sdk/linux_kernel_drivers/edma/.edma-drv.o.cmd
+sdk/linux_kernel_drivers/edma/.edma.o.cmd
+sdk/linux_kernel_drivers/edma/.edma_backend_xdma.o.cmd
+sdk/linux_kernel_drivers/edma/.edma_dev.o.cmd
+sdk/linux_kernel_drivers/edma/.libxdma.o.cmd
+sdk/linux_kernel_drivers/edma/.tmp_versions/

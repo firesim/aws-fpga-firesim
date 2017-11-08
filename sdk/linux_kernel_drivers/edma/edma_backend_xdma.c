@@ -23,7 +23,7 @@
 #define XDMA_WORKER_STOP_REQUEST_BIT                            (3)
 #define REQUEST_SLEEP_MSEC                                      (10)
 #define PCI_VENDOR_ID_AMAZON                                    (0x1d0f)
-#define PCI_DEVICE_ID_FPGA                                      (0xf001)
+#define PCI_DEVICE_ID_FPGA                                      (0xf000)
 #define XMDA_NUMBER_OF_USER_EVENTS                              (1)
 #define XDMA_LIMIT_NUMBER_OF_QUEUES                             (1)
 #define CLASS_NAME                                              "edma"

@@ -1,9 +1,10 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.1_sdxop (lin64) Build 1933108 Fri Jul 14 11:54:19 MDT 2017
--- Date        : Tue Aug 15 14:14:17 2017
--- Host        : ip-172-31-30-89.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
--- Command     : write_vhdl -force -mode funcsim /home/centos/clock_ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.vhdl
+-- Date        : Thu Oct 19 18:46:07 2017
+-- Host        : ip-172-31-15-233.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
+-- Command     : write_vhdl -force -mode funcsim
+--               /home/centos/firesim-push-timing/platforms/f1/aws-fpga/hdk/cl/developer_designs/cl_firesim/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.vhdl
 -- Design      : clk_wiz_0_firesim
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -13,7 +14,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz is
+entity clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
   port (
     clk_out1 : out STD_LOGIC;
     clk_out2 : out STD_LOGIC;
@@ -23,10 +24,10 @@ entity clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz is
     clk_in1 : in STD_LOGIC
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz : entity is "clk_wiz_0_firesim_clk_wiz";
-end clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz;
+  attribute ORIG_REF_NAME of clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz : entity is "clk_wiz_0_firesim_clk_wiz";
+end clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz;
 
-architecture STRUCTURE of clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz is
+architecture STRUCTURE of clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz is
   signal clk_in1_clk_wiz_0_firesim : STD_LOGIC;
   signal clk_out1_clk_wiz_0_firesim : STD_LOGIC;
   signal clk_out2_clk_wiz_0_firesim : STD_LOGIC;
@@ -114,20 +115,20 @@ clkout3_buf: unisim.vcomponents.BUFGCE
 mmcme3_adv_inst: unisim.vcomponents.MMCME4_ADV
     generic map(
       BANDWIDTH => "OPTIMIZED",
-      CLKFBOUT_MULT_F => 118.750000,
+      CLKFBOUT_MULT_F => 33.625000,
       CLKFBOUT_PHASE => 0.000000,
       CLKFBOUT_USE_FINE_PS => "FALSE",
       CLKIN1_PERIOD => 8.000000,
       CLKIN2_PERIOD => 0.000000,
-      CLKOUT0_DIVIDE_F => 15.875000,
+      CLKOUT0_DIVIDE_F => 7.375000,
       CLKOUT0_DUTY_CYCLE => 0.500000,
       CLKOUT0_PHASE => 0.000000,
       CLKOUT0_USE_FINE_PS => "FALSE",
-      CLKOUT1_DIVIDE => 15,
+      CLKOUT1_DIVIDE => 8,
       CLKOUT1_DUTY_CYCLE => 0.500000,
       CLKOUT1_PHASE => 0.000000,
       CLKOUT1_USE_FINE_PS => "FALSE",
-      CLKOUT2_DIVIDE => 18,
+      CLKOUT2_DIVIDE => 9,
       CLKOUT2_DUTY_CYCLE => 0.500000,
       CLKOUT2_PHASE => 0.000000,
       CLKOUT2_USE_FINE_PS => "FALSE",
@@ -149,7 +150,7 @@ mmcme3_adv_inst: unisim.vcomponents.MMCME4_ADV
       CLKOUT6_PHASE => 0.000000,
       CLKOUT6_USE_FINE_PS => "FALSE",
       COMPENSATION => "ZHOLD",
-      DIVCLK_DIVIDE => 11,
+      DIVCLK_DIVIDE => 3,
       IS_CLKFBIN_INVERTED => '0',
       IS_CLKIN1_INVERTED => '0',
       IS_CLKIN2_INVERTED => '0',
@@ -222,7 +223,7 @@ end clk_wiz_0_firesim;
 
 architecture STRUCTURE of clk_wiz_0_firesim is
 begin
-inst: entity work.clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz
+inst: entity work.clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz
      port map (
       clk_in1 => clk_in1,
       clk_out1 => clk_out1,

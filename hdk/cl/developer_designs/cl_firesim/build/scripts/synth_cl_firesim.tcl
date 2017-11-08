@@ -69,6 +69,7 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
+  $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
   $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci
 ]
 
