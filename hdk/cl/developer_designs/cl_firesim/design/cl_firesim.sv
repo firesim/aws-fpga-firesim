@@ -220,8 +220,6 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .m_axi_rready(sh_ocl_rready_q)    // output wire m_axi_rready
 );
 
-
-<<<<<<< HEAD
 //----------------------------------------- 
 // DDR controller instantiation   
 //-----------------------------------------
@@ -826,7 +824,6 @@ wire fsimtop_s_3_axi_rlast;
 wire fsimtop_s_3_axi_rvalid;
 wire fsimtop_s_3_axi_rready;
 
-=======
 //-------------------------------------------------
 // PCIe DMA_PCIS to FireSim Master
 //-------------------------------------------------
