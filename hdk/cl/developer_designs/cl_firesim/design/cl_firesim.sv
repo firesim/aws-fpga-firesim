@@ -864,6 +864,7 @@ wire fsimtop_s_3_axi_rready;
    logic sh_cl_dma_pcis_rready_FIRESIM;
 
 
+
 axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
   .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
@@ -960,6 +961,294 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .m_axi_rvalid(cl_sh_dma_pcis_rvalid_FIRESIM),      // input wire m_axi_rvalid
   .m_axi_rready(sh_cl_dma_pcis_rready_FIRESIM)      // output wire m_axi_rready
 );
+
+
+   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM_0;
+   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM_0;
+   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM_0;
+   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM_0;
+   logic sh_cl_dma_pcis_awvalid_FIRESIM_0;
+   logic cl_sh_dma_pcis_awready_FIRESIM_0;
+
+   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM_0;
+   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM_0;
+   logic sh_cl_dma_pcis_wlast_FIRESIM_0;
+   logic sh_cl_dma_pcis_wvalid_FIRESIM_0;
+   logic cl_sh_dma_pcis_wready_FIRESIM_0;
+
+   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM_0;
+   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM_0;
+   logic cl_sh_dma_pcis_bvalid_FIRESIM_0;
+   logic sh_cl_dma_pcis_bready_FIRESIM_0;
+
+   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM_0;
+   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM_0;
+   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM_0;
+   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM_0;
+   logic sh_cl_dma_pcis_arvalid_FIRESIM_0;
+   logic cl_sh_dma_pcis_arready_FIRESIM_0;
+
+   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM_0;
+   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM_0;
+   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM_0;
+   logic cl_sh_dma_pcis_rlast_FIRESIM_0;
+   logic cl_sh_dma_pcis_rvalid_FIRESIM_0;
+   logic sh_cl_dma_pcis_rready_FIRESIM_0;
+
+
+
+   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM_1;
+   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM_1;
+   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM_1;
+   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM_1;
+   logic sh_cl_dma_pcis_awvalid_FIRESIM_1;
+   logic cl_sh_dma_pcis_awready_FIRESIM_1;
+
+   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM_1;
+   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM_1;
+   logic sh_cl_dma_pcis_wlast_FIRESIM_1;
+   logic sh_cl_dma_pcis_wvalid_FIRESIM_1;
+   logic cl_sh_dma_pcis_wready_FIRESIM_1;
+
+   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM_1;
+   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM_1;
+   logic cl_sh_dma_pcis_bvalid_FIRESIM_1;
+   logic sh_cl_dma_pcis_bready_FIRESIM_1;
+
+   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM_1;
+   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM_1;
+   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM_1;
+   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM_1;
+   logic sh_cl_dma_pcis_arvalid_FIRESIM_1;
+   logic cl_sh_dma_pcis_arready_FIRESIM_1;
+
+   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM_1;
+   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM_1;
+   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM_1;
+   logic cl_sh_dma_pcis_rlast_FIRESIM_1;
+   logic cl_sh_dma_pcis_rvalid_FIRESIM_1;
+   logic sh_cl_dma_pcis_rready_FIRESIM_1;
+
+
+   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM_2;
+   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM_2;
+   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM_2;
+   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM_2;
+   logic sh_cl_dma_pcis_awvalid_FIRESIM_2;
+   logic cl_sh_dma_pcis_awready_FIRESIM_2;
+
+   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM_2;
+   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM_2;
+   logic sh_cl_dma_pcis_wlast_FIRESIM_2;
+   logic sh_cl_dma_pcis_wvalid_FIRESIM_2;
+   logic cl_sh_dma_pcis_wready_FIRESIM_2;
+
+   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM_2;
+   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM_2;
+   logic cl_sh_dma_pcis_bvalid_FIRESIM_2;
+   logic sh_cl_dma_pcis_bready_FIRESIM_2;
+
+   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM_2;
+   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM_2;
+   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM_2;
+   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM_2;
+   logic sh_cl_dma_pcis_arvalid_FIRESIM_2;
+   logic cl_sh_dma_pcis_arready_FIRESIM_2;
+
+   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM_2;
+   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM_2;
+   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM_2;
+   logic cl_sh_dma_pcis_rlast_FIRESIM_2;
+   logic cl_sh_dma_pcis_rvalid_FIRESIM_2;
+   logic sh_cl_dma_pcis_rready_FIRESIM_2;
+
+
+   logic [5:0] sh_cl_dma_pcis_awid_FIRESIM_3;
+   logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM_3;
+   logic [7:0] sh_cl_dma_pcis_awlen_FIRESIM_3;
+   logic [2:0] sh_cl_dma_pcis_awsize_FIRESIM_3;
+   logic sh_cl_dma_pcis_awvalid_FIRESIM_3;
+   logic cl_sh_dma_pcis_awready_FIRESIM_3;
+
+   logic [511:0] sh_cl_dma_pcis_wdata_FIRESIM_3;
+   logic [63:0] sh_cl_dma_pcis_wstrb_FIRESIM_3;
+   logic sh_cl_dma_pcis_wlast_FIRESIM_3;
+   logic sh_cl_dma_pcis_wvalid_FIRESIM_3;
+   logic cl_sh_dma_pcis_wready_FIRESIM_3;
+
+   logic [5:0] cl_sh_dma_pcis_bid_FIRESIM_3;
+   logic [1:0] cl_sh_dma_pcis_bresp_FIRESIM_3;
+   logic cl_sh_dma_pcis_bvalid_FIRESIM_3;
+   logic sh_cl_dma_pcis_bready_FIRESIM_3;
+
+   logic [5:0] sh_cl_dma_pcis_arid_FIRESIM_3;
+   logic [63:0] sh_cl_dma_pcis_araddr_FIRESIM_3;
+   logic [7:0] sh_cl_dma_pcis_arlen_FIRESIM_3;
+   logic [2:0] sh_cl_dma_pcis_arsize_FIRESIM_3;
+   logic sh_cl_dma_pcis_arvalid_FIRESIM_3;
+   logic cl_sh_dma_pcis_arready_FIRESIM_3;
+
+   logic [5:0] cl_sh_dma_pcis_rid_FIRESIM_3;
+   logic [511:0] cl_sh_dma_pcis_rdata_FIRESIM_3;
+   logic [1:0] cl_sh_dma_pcis_rresp_FIRESIM_3;
+   logic cl_sh_dma_pcis_rlast_FIRESIM_3;
+   logic cl_sh_dma_pcis_rvalid_FIRESIM_3;
+   logic sh_cl_dma_pcis_rready_FIRESIM_3;
+
+
+   logic [23:0] sh_cl_dma_pcis_awid_FIRESIM_2d;
+   logic [255:0] sh_cl_dma_pcis_awaddr_FIRESIM_2d;
+   logic [31:0] sh_cl_dma_pcis_awlen_FIRESIM_2d;
+   logic [11:0] sh_cl_dma_pcis_awsize_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_awvalid_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_awready_FIRESIM_2d;
+
+   logic [2047:0] sh_cl_dma_pcis_wdata_FIRESIM_2d;
+   logic [255:0] sh_cl_dma_pcis_wstrb_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_wlast_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_wvalid_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_wready_FIRESIM_2d;
+
+   logic [23:0] cl_sh_dma_pcis_bid_FIRESIM_2d;
+   logic [7:0] cl_sh_dma_pcis_bresp_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_bvalid_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_bready_FIRESIM_2d;
+
+   logic [23:0] sh_cl_dma_pcis_arid_FIRESIM_2d;
+   logic [255:0] sh_cl_dma_pcis_araddr_FIRESIM_2d;
+   logic [311:0] sh_cl_dma_pcis_arlen_FIRESIM_2d;
+   logic [11:0] sh_cl_dma_pcis_arsize_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_arvalid_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_arready_FIRESIM_2d;
+
+   logic [23:0] cl_sh_dma_pcis_rid_FIRESIM_2d;
+   logic [2047:0] cl_sh_dma_pcis_rdata_FIRESIM_2d;
+   logic [7:0] cl_sh_dma_pcis_rresp_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_rlast_FIRESIM_2d;
+   logic [3:0] cl_sh_dma_pcis_rvalid_FIRESIM_2d;
+   logic [3:0] sh_cl_dma_pcis_rready_FIRESIM_2d;
+
+
+   assign {sh_cl_dma_pcis_awid_FIRESIM_3,sh_cl_dma_pcis_awid_FIRESIM_2,sh_cl_dma_pcis_awid_FIRESIM_1,sh_cl_dma_pcis_awid_FIRESIM_0} = sh_cl_dma_pcis_awid_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_awaddr_FIRESIM_3,sh_cl_dma_pcis_awaddr_FIRESIM_2,sh_cl_dma_pcis_awaddr_FIRESIM_1,sh_cl_dma_pcis_awaddr_FIRESIM_0} = sh_cl_dma_pcis_awaddr_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_awlen_FIRESIM_3,sh_cl_dma_pcis_awlen_FIRESIM_2,sh_cl_dma_pcis_awlen_FIRESIM_1,sh_cl_dma_pcis_awlen_FIRESIM_0} = sh_cl_dma_pcis_awlen_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_awsize_FIRESIM_3,sh_cl_dma_pcis_awsize_FIRESIM_2,sh_cl_dma_pcis_awsize_FIRESIM_1,sh_cl_dma_pcis_awsize_FIRESIM_0} = sh_cl_dma_pcis_awsize_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_awvalid_FIRESIM_3,sh_cl_dma_pcis_awvalid_FIRESIM_2,sh_cl_dma_pcis_awvalid_FIRESIM_1,sh_cl_dma_pcis_awvalid_FIRESIM_0} = sh_cl_dma_pcis_awvalid_FIRESIM_2d;
+   assign cl_sh_dma_pcis_awready_FIRESIM_2d = {cl_sh_dma_pcis_awready_FIRESIM_3,cl_sh_dma_pcis_awready_FIRESIM_2,cl_sh_dma_pcis_awready_FIRESIM_1,cl_sh_dma_pcis_awready_FIRESIM_0};
+
+   assign {sh_cl_dma_pcis_wdata_FIRESIM_3,sh_cl_dma_pcis_wdata_FIRESIM_2,sh_cl_dma_pcis_wdata_FIRESIM_1,sh_cl_dma_pcis_wdata_FIRESIM_0} = sh_cl_dma_pcis_wdata_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_wstrb_FIRESIM_3,sh_cl_dma_pcis_wstrb_FIRESIM_2,sh_cl_dma_pcis_wstrb_FIRESIM_1,sh_cl_dma_pcis_wstrb_FIRESIM_0} = sh_cl_dma_pcis_wstrb_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_wlast_FIRESIM_3,sh_cl_dma_pcis_wlast_FIRESIM_2,sh_cl_dma_pcis_wlast_FIRESIM_1,sh_cl_dma_pcis_wlast_FIRESIM_0} = sh_cl_dma_pcis_wlast_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_wvalid_FIRESIM_3,sh_cl_dma_pcis_wvalid_FIRESIM_2,sh_cl_dma_pcis_wvalid_FIRESIM_1,sh_cl_dma_pcis_wvalid_FIRESIM_0} = sh_cl_dma_pcis_wvalid_FIRESIM_2d;
+   assign cl_sh_dma_pcis_wready_FIRESIM_2d = {cl_sh_dma_pcis_wready_FIRESIM_3,cl_sh_dma_pcis_wready_FIRESIM_2,cl_sh_dma_pcis_wready_FIRESIM_1,cl_sh_dma_pcis_wready_FIRESIM_0};
+
+   assign cl_sh_dma_pcis_bid_FIRESIM_2d = {cl_sh_dma_pcis_bid_FIRESIM_3,cl_sh_dma_pcis_bid_FIRESIM_2,cl_sh_dma_pcis_bid_FIRESIM_1,cl_sh_dma_pcis_bid_FIRESIM_0};
+   assign cl_sh_dma_pcis_bresp_FIRESIM_2d = {cl_sh_dma_pcis_bresp_FIRESIM_3,cl_sh_dma_pcis_bresp_FIRESIM_2,cl_sh_dma_pcis_bresp_FIRESIM_1,cl_sh_dma_pcis_bresp_FIRESIM_0};
+   assign cl_sh_dma_pcis_bvalid_FIRESIM_2d = {cl_sh_dma_pcis_bvalid_FIRESIM_3,cl_sh_dma_pcis_bvalid_FIRESIM_2,cl_sh_dma_pcis_bvalid_FIRESIM_1,cl_sh_dma_pcis_bvalid_FIRESIM_0};
+   assign {sh_cl_dma_pcis_bready_FIRESIM_3,sh_cl_dma_pcis_bready_FIRESIM_2,sh_cl_dma_pcis_bready_FIRESIM_1,sh_cl_dma_pcis_bready_FIRESIM_0} = sh_cl_dma_pcis_bready_FIRESIM_2d;
+
+   assign {sh_cl_dma_pcis_arid_FIRESIM_3,sh_cl_dma_pcis_arid_FIRESIM_2,sh_cl_dma_pcis_arid_FIRESIM_1,sh_cl_dma_pcis_arid_FIRESIM_0} = sh_cl_dma_pcis_arid_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_araddr_FIRESIM_3,sh_cl_dma_pcis_araddr_FIRESIM_2,sh_cl_dma_pcis_araddr_FIRESIM_1,sh_cl_dma_pcis_araddr_FIRESIM_0} = sh_cl_dma_pcis_araddr_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_arlen_FIRESIM_3,sh_cl_dma_pcis_arlen_FIRESIM_2,sh_cl_dma_pcis_arlen_FIRESIM_1,sh_cl_dma_pcis_arlen_FIRESIM_0} = sh_cl_dma_pcis_arlen_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_arsize_FIRESIM_3,sh_cl_dma_pcis_arsize_FIRESIM_2,sh_cl_dma_pcis_arsize_FIRESIM_1,sh_cl_dma_pcis_arsize_FIRESIM_0} = sh_cl_dma_pcis_arsize_FIRESIM_2d;
+   assign {sh_cl_dma_pcis_arvalid_FIRESIM_3,sh_cl_dma_pcis_arvalid_FIRESIM_2,sh_cl_dma_pcis_arvalid_FIRESIM_1,sh_cl_dma_pcis_arvalid_FIRESIM_0} = sh_cl_dma_pcis_arvalid_FIRESIM_2d;
+   assign cl_sh_dma_pcis_arready_FIRESIM_2d = {cl_sh_dma_pcis_arready_FIRESIM_3,cl_sh_dma_pcis_arready_FIRESIM_2,cl_sh_dma_pcis_arready_FIRESIM_1,cl_sh_dma_pcis_arready_FIRESIM_0};
+
+   assign cl_sh_dma_pcis_rid_FIRESIM_2d = {cl_sh_dma_pcis_rid_FIRESIM_3,cl_sh_dma_pcis_rid_FIRESIM_2,cl_sh_dma_pcis_rid_FIRESIM_1,cl_sh_dma_pcis_rid_FIRESIM_0};
+   assign cl_sh_dma_pcis_rdata_FIRESIM_2d = {cl_sh_dma_pcis_rdata_FIRESIM_3,cl_sh_dma_pcis_rdata_FIRESIM_2,cl_sh_dma_pcis_rdata_FIRESIM_1,cl_sh_dma_pcis_rdata_FIRESIM_0};
+   assign cl_sh_dma_pcis_rresp_FIRESIM_2d = {cl_sh_dma_pcis_rresp_FIRESIM_3,cl_sh_dma_pcis_rresp_FIRESIM_2,cl_sh_dma_pcis_rresp_FIRESIM_1,cl_sh_dma_pcis_rresp_FIRESIM_0};
+   assign cl_sh_dma_pcis_rlast_FIRESIM_2d = {cl_sh_dma_pcis_rlast_FIRESIM_3,cl_sh_dma_pcis_rlast_FIRESIM_2,cl_sh_dma_pcis_rlast_FIRESIM_1,cl_sh_dma_pcis_rlast_FIRESIM_0};
+   assign cl_sh_dma_pcis_rvalid_FIRESIM_2d = {cl_sh_dma_pcis_rvalid_FIRESIM_3,cl_sh_dma_pcis_rvalid_FIRESIM_2,cl_sh_dma_pcis_rvalid_FIRESIM_1,cl_sh_dma_pcis_rvalid_FIRESIM_0};
+   assign {sh_cl_dma_pcis_rready_FIRESIM_3,sh_cl_dma_pcis_rready_FIRESIM_2,sh_cl_dma_pcis_rready_FIRESIM_1,sh_cl_dma_pcis_rready_FIRESIM_0} = sh_cl_dma_pcis_rready_FIRESIM_2d;
+
+
+nic_axi_crossbar_1 multinode_nic_interconnect (
+  .aclk(firesim_internal_clock),                      // input wire aclk
+  .aresetn(rst_firesim_n_sync),                // input wire aresetn
+  .s_axi_awid(sh_cl_dma_pcis_awid_FIRESIM),          // input wire [5 : 0] s_axi_awid
+  .s_axi_awaddr(sh_cl_dma_pcis_awaddr_FIRESIM),      // input wire [63 : 0] s_axi_awaddr
+  .s_axi_awlen(sh_cl_dma_pcis_awlen_FIRESIM),        // input wire [7 : 0] s_axi_awlen
+  .s_axi_awsize(sh_cl_dma_pcis_awsize_FIRESIM),      // input wire [2 : 0] s_axi_awsize
+  .s_axi_awburst(),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awlock(),      // input wire [0 : 0] s_axi_awlock
+  .s_axi_awcache(),    // input wire [3 : 0] s_axi_awcache
+  .s_axi_awprot(),      // input wire [2 : 0] s_axi_awprot
+  .s_axi_awqos(),        // input wire [3 : 0] s_axi_awqos
+  .s_axi_awvalid(sh_cl_dma_pcis_awvalid_FIRESIM),    // input wire [0 : 0] s_axi_awvalid
+  .s_axi_awready(cl_sh_dma_pcis_awready_FIRESIM),    // output wire [0 : 0] s_axi_awready
+  .s_axi_wdata(sh_cl_dma_pcis_wdata_FIRESIM),        // input wire [511 : 0] s_axi_wdata
+  .s_axi_wstrb(sh_cl_dma_pcis_wstrb_FIRESIM),        // input wire [63 : 0] s_axi_wstrb
+  .s_axi_wlast(sh_cl_dma_pcis_wlast_FIRESIM),        // input wire [0 : 0] s_axi_wlast
+  .s_axi_wvalid(sh_cl_dma_pcis_wvalid_FIRESIM),      // input wire [0 : 0] s_axi_wvalid
+  .s_axi_wready(cl_sh_dma_pcis_wready_FIRESIM),      // output wire [0 : 0] s_axi_wready
+  .s_axi_bid(cl_sh_dma_pcis_bid_FIRESIM),            // output wire [5 : 0] s_axi_bid
+  .s_axi_bresp(cl_sh_dma_pcis_bresp_FIRESIM),        // output wire [1 : 0] s_axi_bresp
+  .s_axi_bvalid(cl_sh_dma_pcis_bvalid_FIRESIM),      // output wire [0 : 0] s_axi_bvalid
+  .s_axi_bready(sh_cl_dma_pcis_bready_FIRESIM),      // input wire [0 : 0] s_axi_bready
+  .s_axi_arid(sh_cl_dma_pcis_arid_FIRESIM),          // input wire [5 : 0] s_axi_arid
+  .s_axi_araddr(sh_cl_dma_pcis_araddr_FIRESIM),      // input wire [63 : 0] s_axi_araddr
+  .s_axi_arlen(sh_cl_dma_pcis_arlen_FIRESIM),        // input wire [7 : 0] s_axi_arlen
+  .s_axi_arsize(sh_cl_dma_pcis_arsize_FIRESIM),      // input wire [2 : 0] s_axi_arsize
+  .s_axi_arburst(),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arlock(),      // input wire [0 : 0] s_axi_arlock
+  .s_axi_arcache(),    // input wire [3 : 0] s_axi_arcache
+  .s_axi_arprot(),      // input wire [2 : 0] s_axi_arprot
+  .s_axi_arqos(),        // input wire [3 : 0] s_axi_arqos
+  .s_axi_arvalid(sh_cl_dma_pcis_arvalid_FIRESIM),    // input wire [0 : 0] s_axi_arvalid
+  .s_axi_arready(cl_sh_dma_pcis_arready_FIRESIM),    // output wire [0 : 0] s_axi_arready
+  .s_axi_rid(cl_sh_dma_pcis_rid_FIRESIM),            // output wire [5 : 0] s_axi_rid
+  .s_axi_rdata(cl_sh_dma_pcis_rdata_FIRESIM),        // output wire [511 : 0] s_axi_rdata
+  .s_axi_rresp(cl_sh_dma_pcis_rresp_FIRESIM),        // output wire [1 : 0] s_axi_rresp
+  .s_axi_rlast(cl_sh_dma_pcis_rlast_FIRESIM),        // output wire [0 : 0] s_axi_rlast
+  .s_axi_rvalid(cl_sh_dma_pcis_rvalid_FIRESIM),      // output wire [0 : 0] s_axi_rvalid
+  .s_axi_rready(sh_cl_dma_pcis_rready_FIRESIM),      // input wire [0 : 0] s_axi_rready
+  .m_axi_awid(sh_cl_dma_pcis_awid_FIRESIM_2d),          // output wire [23 : 0] m_axi_awid
+  .m_axi_awaddr(sh_cl_dma_pcis_awaddr_FIRESIM_2d),      // output wire [255 : 0] m_axi_awaddr
+  .m_axi_awlen(sh_cl_dma_pcis_awlen_FIRESIM_2d),        // output wire [31 : 0] m_axi_awlen
+  .m_axi_awsize(sh_cl_dma_pcis_awsize_FIRESIM_2d),      // output wire [11 : 0] m_axi_awsize
+  .m_axi_awburst(),    // output wire [7 : 0] m_axi_awburst
+  .m_axi_awlock(),      // output wire [3 : 0] m_axi_awlock
+  .m_axi_awcache(),    // output wire [15 : 0] m_axi_awcache
+  .m_axi_awprot(),      // output wire [11 : 0] m_axi_awprot
+  .m_axi_awregion(),  // output wire [15 : 0] m_axi_awregion
+  .m_axi_awqos(),        // output wire [15 : 0] m_axi_awqos
+  .m_axi_awvalid(sh_cl_dma_pcis_awvalid_FIRESIM_2d),    // output wire [3 : 0] m_axi_awvalid
+  .m_axi_awready(cl_sh_dma_pcis_awready_FIRESIM_2d),    // input wire [3 : 0] m_axi_awready
+  .m_axi_wdata(sh_cl_dma_pcis_wdata_FIRESIM_2d),        // output wire [2047 : 0] m_axi_wdata
+  .m_axi_wstrb(sh_cl_dma_pcis_wstrb_FIRESIM_2d),        // output wire [255 : 0] m_axi_wstrb
+  .m_axi_wlast(sh_cl_dma_pcis_wlast_FIRESIM_2d),        // output wire [3 : 0] m_axi_wlast
+  .m_axi_wvalid(sh_cl_dma_pcis_wvalid_FIRESIM_2d),      // output wire [3 : 0] m_axi_wvalid
+  .m_axi_wready(cl_sh_dma_pcis_wready_FIRESIM_2d),      // input wire [3 : 0] m_axi_wready
+  .m_axi_bid(cl_sh_dma_pcis_bid_FIRESIM_2d),            // input wire [23 : 0] m_axi_bid
+  .m_axi_bresp(cl_sh_dma_pcis_bresp_FIRESIM_2d),        // input wire [7 : 0] m_axi_bresp
+  .m_axi_bvalid(cl_sh_dma_pcis_bvalid_FIRESIM_2d),      // input wire [3 : 0] m_axi_bvalid
+  .m_axi_bready(sh_cl_dma_pcis_bready_FIRESIM_2d),      // output wire [3 : 0] m_axi_bready
+  .m_axi_arid(sh_cl_dma_pcis_arid_FIRESIM_2d),          // output wire [23 : 0] m_axi_arid
+  .m_axi_araddr(sh_cl_dma_pcis_araddr_FIRESIM_2d),      // output wire [255 : 0] m_axi_araddr
+  .m_axi_arlen(sh_cl_dma_pcis_arlen_FIRESIM_2d),        // output wire [31 : 0] m_axi_arlen
+  .m_axi_arsize(sh_cl_dma_pcis_arsize_FIRESIM_2d),      // output wire [11 : 0] m_axi_arsize
+  .m_axi_arburst(),    // output wire [7 : 0] m_axi_arburst
+  .m_axi_arlock(),      // output wire [3 : 0] m_axi_arlock
+  .m_axi_arcache(),    // output wire [15 : 0] m_axi_arcache
+  .m_axi_arprot(),      // output wire [11 : 0] m_axi_arprot
+  .m_axi_arregion(),  // output wire [15 : 0] m_axi_arregion
+  .m_axi_arqos(),        // output wire [15 : 0] m_axi_arqos
+  .m_axi_arvalid(sh_cl_dma_pcis_arvalid_FIRESIM_2d),    // output wire [3 : 0] m_axi_arvalid
+  .m_axi_arready(cl_sh_dma_pcis_arready_FIRESIM_2d),    // input wire [3 : 0] m_axi_arready
+  .m_axi_rid(cl_sh_dma_pcis_rid_FIRESIM_2d),            // input wire [23 : 0] m_axi_rid
+  .m_axi_rdata(cl_sh_dma_pcis_rdata_FIRESIM_2d),        // input wire [2047 : 0] m_axi_rdata
+  .m_axi_rresp(cl_sh_dma_pcis_rresp_FIRESIM_2d),        // input wire [7 : 0] m_axi_rresp
+  .m_axi_rlast(cl_sh_dma_pcis_rlast_FIRESIM_2d),        // input wire [3 : 0] m_axi_rlast
+  .m_axi_rvalid(cl_sh_dma_pcis_rvalid_FIRESIM_2d),      // input wire [3 : 0] m_axi_rvalid
+  .m_axi_rready(sh_cl_dma_pcis_rready_FIRESIM_2d)      // output wire [3 : 0] m_axi_rready
+);
+
+
+
+
+//-------------------------------------------------------------------------------
+//================================================================================
+//------------------------------------------------------------------------------
 
 wire [15 : 0] fsimtop_s_axi_awid;
 wire [63 : 0] fsimtop_s_axi_awaddr;
@@ -1255,55 +1544,192 @@ wire fsimtop_s_axi_rready;
    .io_slave_3_r_bits_data(fsimtop_s_3_axi_rdata),
    .io_slave_3_r_bits_last(fsimtop_s_3_axi_rlast),
    .io_slave_3_r_bits_id(fsimtop_s_3_axi_rid),
-   .io_slave_3_r_bits_user(1'b0) // TODO check this
+   .io_slave_3_r_bits_user(1'b0), // TODO check this
     
     // special NIC master interface
-   .io_NICmaster_aw_ready(cl_sh_dma_pcis_awready_FIRESIM),
-   .io_NICmaster_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM),
-   .io_NICmaster_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM),
-   .io_NICmaster_aw_bits_len(sh_cl_dma_pcis_awlen_FIRESIM),
-   .io_NICmaster_aw_bits_size(sh_cl_dma_pcis_awsize_FIRESIM),
-   .io_NICmaster_aw_bits_burst(2'h1),
-   .io_NICmaster_aw_bits_lock(1'h0),
-   .io_NICmaster_aw_bits_cache(4'h0),
-   .io_NICmaster_aw_bits_prot(3'h0), //unused? (could connect?)
-   .io_NICmaster_aw_bits_qos(4'h0),
-   .io_NICmaster_aw_bits_region(4'h0),
-   .io_NICmaster_aw_bits_id(sh_cl_dma_pcis_awid_FIRESIM),
-   .io_NICmaster_aw_bits_user(1'h0),
-   .io_NICmaster_w_ready(cl_sh_dma_pcis_wready_FIRESIM),
-   .io_NICmaster_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM),
-   .io_NICmaster_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM),
-   .io_NICmaster_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM),
-   .io_NICmaster_w_bits_id(6'h0),
-   .io_NICmaster_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM),
-   .io_NICmaster_w_bits_user(1'h0),
-   .io_NICmaster_b_ready(sh_cl_dma_pcis_bready_FIRESIM),
-   .io_NICmaster_b_valid(cl_sh_dma_pcis_bvalid_FIRESIM),
-   .io_NICmaster_b_bits_resp(cl_sh_dma_pcis_bresp_FIRESIM),
-   .io_NICmaster_b_bits_id(cl_sh_dma_pcis_bid_FIRESIM),
-   .io_NICmaster_b_bits_user(),    // UNUSED at top level
-   .io_NICmaster_ar_ready(cl_sh_dma_pcis_arready_FIRESIM),
-   .io_NICmaster_ar_valid(sh_cl_dma_pcis_arvalid_FIRESIM),
-   .io_NICmaster_ar_bits_addr(sh_cl_dma_pcis_araddr_FIRESIM),
-   .io_NICmaster_ar_bits_len(sh_cl_dma_pcis_arlen_FIRESIM),
-   .io_NICmaster_ar_bits_size(sh_cl_dma_pcis_arsize_FIRESIM),
-   .io_NICmaster_ar_bits_burst(2'h1),
-   .io_NICmaster_ar_bits_lock(1'h0),
-   .io_NICmaster_ar_bits_cache(4'h0),
-   .io_NICmaster_ar_bits_prot(3'h0),
-   .io_NICmaster_ar_bits_qos(4'h0),
-   .io_NICmaster_ar_bits_region(4'h0),
-   .io_NICmaster_ar_bits_id(sh_cl_dma_pcis_arid_FIRESIM),
-   .io_NICmaster_ar_bits_user(1'h0),
-   .io_NICmaster_r_ready(sh_cl_dma_pcis_rready_FIRESIM),
-   .io_NICmaster_r_valid(cl_sh_dma_pcis_rvalid_FIRESIM),
-   .io_NICmaster_r_bits_resp(cl_sh_dma_pcis_rresp_FIRESIM),
-   .io_NICmaster_r_bits_data(cl_sh_dma_pcis_rdata_FIRESIM),
-   .io_NICmaster_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM),
-   .io_NICmaster_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM),
-   .io_NICmaster_r_bits_user(),    // UNUSED at top level
+   .io_NICmaster_0_aw_ready(cl_sh_dma_pcis_awready_FIRESIM_0),
+   .io_NICmaster_0_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM_0),
+   .io_NICmaster_0_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM_0),
+   .io_NICmaster_0_aw_bits_len(sh_cl_dma_pcis_awlen_FIRESIM_0),
+   .io_NICmaster_0_aw_bits_size(sh_cl_dma_pcis_awsize_FIRESIM_0),
+   .io_NICmaster_0_aw_bits_burst(2'h1),
+   .io_NICmaster_0_aw_bits_lock(1'h0),
+   .io_NICmaster_0_aw_bits_cache(4'h0),
+   .io_NICmaster_0_aw_bits_prot(3'h0), //unused? (could connect?)
+   .io_NICmaster_0_aw_bits_qos(4'h0),
+   .io_NICmaster_0_aw_bits_region(4'h0),
+   .io_NICmaster_0_aw_bits_id(sh_cl_dma_pcis_awid_FIRESIM_0),
+   .io_NICmaster_0_aw_bits_user(1'h0),
+   .io_NICmaster_0_w_ready(cl_sh_dma_pcis_wready_FIRESIM_0),
+   .io_NICmaster_0_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM_0),
+   .io_NICmaster_0_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM_0),
+   .io_NICmaster_0_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM_0),
+   .io_NICmaster_0_w_bits_id(6'h0),
+   .io_NICmaster_0_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM_0),
+   .io_NICmaster_0_w_bits_user(1'h0),
+   .io_NICmaster_0_b_ready(sh_cl_dma_pcis_bready_FIRESIM_0),
+   .io_NICmaster_0_b_valid(cl_sh_dma_pcis_bvalid_FIRESIM_0),
+   .io_NICmaster_0_b_bits_resp(cl_sh_dma_pcis_bresp_FIRESIM_0),
+   .io_NICmaster_0_b_bits_id(cl_sh_dma_pcis_bid_FIRESIM_0),
+   .io_NICmaster_0_b_bits_user(),    // UNUSED at top level
+   .io_NICmaster_0_ar_ready(cl_sh_dma_pcis_arready_FIRESIM_0),
+   .io_NICmaster_0_ar_valid(sh_cl_dma_pcis_arvalid_FIRESIM_0),
+   .io_NICmaster_0_ar_bits_addr(sh_cl_dma_pcis_araddr_FIRESIM_0),
+   .io_NICmaster_0_ar_bits_len(sh_cl_dma_pcis_arlen_FIRESIM_0),
+   .io_NICmaster_0_ar_bits_size(sh_cl_dma_pcis_arsize_FIRESIM_0),
+   .io_NICmaster_0_ar_bits_burst(2'h1),
+   .io_NICmaster_0_ar_bits_lock(1'h0),
+   .io_NICmaster_0_ar_bits_cache(4'h0),
+   .io_NICmaster_0_ar_bits_prot(3'h0),
+   .io_NICmaster_0_ar_bits_qos(4'h0),
+   .io_NICmaster_0_ar_bits_region(4'h0),
+   .io_NICmaster_0_ar_bits_id(sh_cl_dma_pcis_arid_FIRESIM_0),
+   .io_NICmaster_0_ar_bits_user(1'h0),
+   .io_NICmaster_0_r_ready(sh_cl_dma_pcis_rready_FIRESIM_0),
+   .io_NICmaster_0_r_valid(cl_sh_dma_pcis_rvalid_FIRESIM_0),
+   .io_NICmaster_0_r_bits_resp(cl_sh_dma_pcis_rresp_FIRESIM_0),
+   .io_NICmaster_0_r_bits_data(cl_sh_dma_pcis_rdata_FIRESIM_0),
+   .io_NICmaster_0_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM_0),
+   .io_NICmaster_0_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM_0),
+   .io_NICmaster_0_r_bits_user(),    // UNUSED at top level
 
+   .io_NICmaster_1_aw_ready(cl_sh_dma_pcis_awready_FIRESIM_1),
+   .io_NICmaster_1_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM_1),
+   .io_NICmaster_1_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM_1),
+   .io_NICmaster_1_aw_bits_len(sh_cl_dma_pcis_awlen_FIRESIM_1),
+   .io_NICmaster_1_aw_bits_size(sh_cl_dma_pcis_awsize_FIRESIM_1),
+   .io_NICmaster_1_aw_bits_burst(2'h1),
+   .io_NICmaster_1_aw_bits_lock(1'h0),
+   .io_NICmaster_1_aw_bits_cache(4'h0),
+   .io_NICmaster_1_aw_bits_prot(3'h0), //unused? (could connect?)
+   .io_NICmaster_1_aw_bits_qos(4'h0),
+   .io_NICmaster_1_aw_bits_region(4'h0),
+   .io_NICmaster_1_aw_bits_id(sh_cl_dma_pcis_awid_FIRESIM_1),
+   .io_NICmaster_1_aw_bits_user(1'h0),
+   .io_NICmaster_1_w_ready(cl_sh_dma_pcis_wready_FIRESIM_1),
+   .io_NICmaster_1_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM_1),
+   .io_NICmaster_1_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM_1),
+   .io_NICmaster_1_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM_1),
+   .io_NICmaster_1_w_bits_id(6'h0),
+   .io_NICmaster_1_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM_1),
+   .io_NICmaster_1_w_bits_user(1'h0),
+   .io_NICmaster_1_b_ready(sh_cl_dma_pcis_bready_FIRESIM_1),
+   .io_NICmaster_1_b_valid(cl_sh_dma_pcis_bvalid_FIRESIM_1),
+   .io_NICmaster_1_b_bits_resp(cl_sh_dma_pcis_bresp_FIRESIM_1),
+   .io_NICmaster_1_b_bits_id(cl_sh_dma_pcis_bid_FIRESIM_1),
+   .io_NICmaster_1_b_bits_user(),    // UNUSED at top level
+   .io_NICmaster_1_ar_ready(cl_sh_dma_pcis_arready_FIRESIM_1),
+   .io_NICmaster_1_ar_valid(sh_cl_dma_pcis_arvalid_FIRESIM_1),
+   .io_NICmaster_1_ar_bits_addr(sh_cl_dma_pcis_araddr_FIRESIM_1),
+   .io_NICmaster_1_ar_bits_len(sh_cl_dma_pcis_arlen_FIRESIM_1),
+   .io_NICmaster_1_ar_bits_size(sh_cl_dma_pcis_arsize_FIRESIM_1),
+   .io_NICmaster_1_ar_bits_burst(2'h1),
+   .io_NICmaster_1_ar_bits_lock(1'h0),
+   .io_NICmaster_1_ar_bits_cache(4'h0),
+   .io_NICmaster_1_ar_bits_prot(3'h0),
+   .io_NICmaster_1_ar_bits_qos(4'h0),
+   .io_NICmaster_1_ar_bits_region(4'h0),
+   .io_NICmaster_1_ar_bits_id(sh_cl_dma_pcis_arid_FIRESIM_1),
+   .io_NICmaster_1_ar_bits_user(1'h0),
+   .io_NICmaster_1_r_ready(sh_cl_dma_pcis_rready_FIRESIM_1),
+   .io_NICmaster_1_r_valid(cl_sh_dma_pcis_rvalid_FIRESIM_1),
+   .io_NICmaster_1_r_bits_resp(cl_sh_dma_pcis_rresp_FIRESIM_1),
+   .io_NICmaster_1_r_bits_data(cl_sh_dma_pcis_rdata_FIRESIM_1),
+   .io_NICmaster_1_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM_1),
+   .io_NICmaster_1_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM_1),
+   .io_NICmaster_1_r_bits_user(),    // UNUSED at top level
+
+   .io_NICmaster_2_aw_ready(cl_sh_dma_pcis_awready_FIRESIM_2),
+   .io_NICmaster_2_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM_2),
+   .io_NICmaster_2_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM_2),
+   .io_NICmaster_2_aw_bits_len(sh_cl_dma_pcis_awlen_FIRESIM_2),
+   .io_NICmaster_2_aw_bits_size(sh_cl_dma_pcis_awsize_FIRESIM_2),
+   .io_NICmaster_2_aw_bits_burst(2'h1),
+   .io_NICmaster_2_aw_bits_lock(1'h0),
+   .io_NICmaster_2_aw_bits_cache(4'h0),
+   .io_NICmaster_2_aw_bits_prot(3'h0), //unused? (could connect?)
+   .io_NICmaster_2_aw_bits_qos(4'h0),
+   .io_NICmaster_2_aw_bits_region(4'h0),
+   .io_NICmaster_2_aw_bits_id(sh_cl_dma_pcis_awid_FIRESIM_2),
+   .io_NICmaster_2_aw_bits_user(1'h0),
+   .io_NICmaster_2_w_ready(cl_sh_dma_pcis_wready_FIRESIM_2),
+   .io_NICmaster_2_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM_2),
+   .io_NICmaster_2_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM_2),
+   .io_NICmaster_2_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM_2),
+   .io_NICmaster_2_w_bits_id(6'h0),
+   .io_NICmaster_2_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM_2),
+   .io_NICmaster_2_w_bits_user(1'h0),
+   .io_NICmaster_2_b_ready(sh_cl_dma_pcis_bready_FIRESIM_2),
+   .io_NICmaster_2_b_valid(cl_sh_dma_pcis_bvalid_FIRESIM_2),
+   .io_NICmaster_2_b_bits_resp(cl_sh_dma_pcis_bresp_FIRESIM_2),
+   .io_NICmaster_2_b_bits_id(cl_sh_dma_pcis_bid_FIRESIM_2),
+   .io_NICmaster_2_b_bits_user(),    // UNUSED at top level
+   .io_NICmaster_2_ar_ready(cl_sh_dma_pcis_arready_FIRESIM_2),
+   .io_NICmaster_2_ar_valid(sh_cl_dma_pcis_arvalid_FIRESIM_2),
+   .io_NICmaster_2_ar_bits_addr(sh_cl_dma_pcis_araddr_FIRESIM_2),
+   .io_NICmaster_2_ar_bits_len(sh_cl_dma_pcis_arlen_FIRESIM_2),
+   .io_NICmaster_2_ar_bits_size(sh_cl_dma_pcis_arsize_FIRESIM_2),
+   .io_NICmaster_2_ar_bits_burst(2'h1),
+   .io_NICmaster_2_ar_bits_lock(1'h0),
+   .io_NICmaster_2_ar_bits_cache(4'h0),
+   .io_NICmaster_2_ar_bits_prot(3'h0),
+   .io_NICmaster_2_ar_bits_qos(4'h0),
+   .io_NICmaster_2_ar_bits_region(4'h0),
+   .io_NICmaster_2_ar_bits_id(sh_cl_dma_pcis_arid_FIRESIM_2),
+   .io_NICmaster_2_ar_bits_user(1'h0),
+   .io_NICmaster_2_r_ready(sh_cl_dma_pcis_rready_FIRESIM_2),
+   .io_NICmaster_2_r_valid(cl_sh_dma_pcis_rvalid_FIRESIM_2),
+   .io_NICmaster_2_r_bits_resp(cl_sh_dma_pcis_rresp_FIRESIM_2),
+   .io_NICmaster_2_r_bits_data(cl_sh_dma_pcis_rdata_FIRESIM_2),
+   .io_NICmaster_2_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM_2),
+   .io_NICmaster_2_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM_2),
+   .io_NICmaster_2_r_bits_user(),    // UNUSED at top level
+
+   .io_NICmaster_3_aw_ready(cl_sh_dma_pcis_awready_FIRESIM_3),
+   .io_NICmaster_3_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM_3),
+   .io_NICmaster_3_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM_3),
+   .io_NICmaster_3_aw_bits_len(sh_cl_dma_pcis_awlen_FIRESIM_3),
+   .io_NICmaster_3_aw_bits_size(sh_cl_dma_pcis_awsize_FIRESIM_3),
+   .io_NICmaster_3_aw_bits_burst(2'h1),
+   .io_NICmaster_3_aw_bits_lock(1'h0),
+   .io_NICmaster_3_aw_bits_cache(4'h0),
+   .io_NICmaster_3_aw_bits_prot(3'h0), //unused? (could connect?)
+   .io_NICmaster_3_aw_bits_qos(4'h0),
+   .io_NICmaster_3_aw_bits_region(4'h0),
+   .io_NICmaster_3_aw_bits_id(sh_cl_dma_pcis_awid_FIRESIM_3),
+   .io_NICmaster_3_aw_bits_user(1'h0),
+   .io_NICmaster_3_w_ready(cl_sh_dma_pcis_wready_FIRESIM_3),
+   .io_NICmaster_3_w_valid(sh_cl_dma_pcis_wvalid_FIRESIM_3),
+   .io_NICmaster_3_w_bits_data(sh_cl_dma_pcis_wdata_FIRESIM_3),
+   .io_NICmaster_3_w_bits_last(sh_cl_dma_pcis_wlast_FIRESIM_3),
+   .io_NICmaster_3_w_bits_id(6'h0),
+   .io_NICmaster_3_w_bits_strb(sh_cl_dma_pcis_wstrb_FIRESIM_3),
+   .io_NICmaster_3_w_bits_user(1'h0),
+   .io_NICmaster_3_b_ready(sh_cl_dma_pcis_bready_FIRESIM_3),
+   .io_NICmaster_3_b_valid(cl_sh_dma_pcis_bvalid_FIRESIM_3),
+   .io_NICmaster_3_b_bits_resp(cl_sh_dma_pcis_bresp_FIRESIM_3),
+   .io_NICmaster_3_b_bits_id(cl_sh_dma_pcis_bid_FIRESIM_3),
+   .io_NICmaster_3_b_bits_user(),    // UNUSED at top level
+   .io_NICmaster_3_ar_ready(cl_sh_dma_pcis_arready_FIRESIM_3),
+   .io_NICmaster_3_ar_valid(sh_cl_dma_pcis_arvalid_FIRESIM_3),
+   .io_NICmaster_3_ar_bits_addr(sh_cl_dma_pcis_araddr_FIRESIM_3),
+   .io_NICmaster_3_ar_bits_len(sh_cl_dma_pcis_arlen_FIRESIM_3),
+   .io_NICmaster_3_ar_bits_size(sh_cl_dma_pcis_arsize_FIRESIM_3),
+   .io_NICmaster_3_ar_bits_burst(2'h1),
+   .io_NICmaster_3_ar_bits_lock(1'h0),
+   .io_NICmaster_3_ar_bits_cache(4'h0),
+   .io_NICmaster_3_ar_bits_prot(3'h0),
+   .io_NICmaster_3_ar_bits_qos(4'h0),
+   .io_NICmaster_3_ar_bits_region(4'h0),
+   .io_NICmaster_3_ar_bits_id(sh_cl_dma_pcis_arid_FIRESIM_3),
+   .io_NICmaster_3_ar_bits_user(1'h0),
+   .io_NICmaster_3_r_ready(sh_cl_dma_pcis_rready_FIRESIM_3),
+   .io_NICmaster_3_r_valid(cl_sh_dma_pcis_rvalid_FIRESIM_3),
+   .io_NICmaster_3_r_bits_resp(cl_sh_dma_pcis_rresp_FIRESIM_3),
+   .io_NICmaster_3_r_bits_data(cl_sh_dma_pcis_rdata_FIRESIM_3),
+   .io_NICmaster_3_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM_3),
+   .io_NICmaster_3_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM_3),
+   .io_NICmaster_3_r_bits_user()    // UNUSED at top level
 
 );
 
