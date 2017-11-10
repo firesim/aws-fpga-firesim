@@ -1,10 +1,9 @@
 // Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2017.1_sdxop (lin64) Build 1933108 Fri Jul 14 11:54:19 MDT 2017
-// Date        : Thu Oct 19 18:46:07 2017
-// Host        : ip-172-31-15-233.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
-// Command     : write_verilog -force -mode funcsim
-//               /home/centos/firesim-push-timing/platforms/f1/aws-fpga/hdk/cl/developer_designs/cl_firesim/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
+// Date        : Tue Aug 15 14:14:17 2017
+// Host        : ip-172-31-30-89.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
+// Command     : write_verilog -force -mode funcsim /home/centos/clock_ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
 // Design      : clk_wiz_0_firesim
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -34,7 +33,7 @@ module clk_wiz_0_firesim
   wire locked;
   wire reset;
 
-  clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz inst
+  clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz inst
        (.clk_in1(clk_in1),
         .clk_out1(clk_out1),
         .clk_out2(clk_out2),
@@ -44,7 +43,7 @@ module clk_wiz_0_firesim
 endmodule
 
 (* ORIG_REF_NAME = "clk_wiz_0_firesim_clk_wiz" *) 
-module clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz
+module clk_wiz_0_firesim_clk_wiz_0_firesim_clk_wiz
    (clk_out1,
     clk_out2,
     clk_out3,
@@ -130,20 +129,20 @@ module clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz
   (* BOX_TYPE = "PRIMITIVE" *) 
   MMCME4_ADV #(
     .BANDWIDTH("OPTIMIZED"),
-    .CLKFBOUT_MULT_F(33.625000),
+    .CLKFBOUT_MULT_F(118.750000),
     .CLKFBOUT_PHASE(0.000000),
     .CLKFBOUT_USE_FINE_PS("FALSE"),
     .CLKIN1_PERIOD(8.000000),
     .CLKIN2_PERIOD(0.000000),
-    .CLKOUT0_DIVIDE_F(7.375000),
+    .CLKOUT0_DIVIDE_F(15.875000),
     .CLKOUT0_DUTY_CYCLE(0.500000),
     .CLKOUT0_PHASE(0.000000),
     .CLKOUT0_USE_FINE_PS("FALSE"),
-    .CLKOUT1_DIVIDE(8),
+    .CLKOUT1_DIVIDE(15),
     .CLKOUT1_DUTY_CYCLE(0.500000),
     .CLKOUT1_PHASE(0.000000),
     .CLKOUT1_USE_FINE_PS("FALSE"),
-    .CLKOUT2_DIVIDE(9),
+    .CLKOUT2_DIVIDE(18),
     .CLKOUT2_DUTY_CYCLE(0.500000),
     .CLKOUT2_PHASE(0.000000),
     .CLKOUT2_USE_FINE_PS("FALSE"),
@@ -165,7 +164,7 @@ module clk_wiz_0_firesimclk_wiz_0_firesim_clk_wiz
     .CLKOUT6_PHASE(0.000000),
     .CLKOUT6_USE_FINE_PS("FALSE"),
     .COMPENSATION("ZHOLD"),
-    .DIVCLK_DIVIDE(3),
+    .DIVCLK_DIVIDE(11),
     .IS_CLKFBIN_INVERTED(1'b0),
     .IS_CLKIN1_INVERTED(1'b0),
     .IS_CLKIN2_INVERTED(1'b0),
