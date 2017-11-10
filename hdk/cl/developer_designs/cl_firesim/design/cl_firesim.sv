@@ -2204,7 +2204,7 @@ logic zeroila;
 assign zeroila = 64'b0;
 
 // Integrated Logic Analyzers (ILA)
-/*
+
    ila_0 CL_ILA_0 (
                    .clk    (clk_main_a0),
                    .probe0 (zeroila),
@@ -2224,8 +2224,8 @@ assign zeroila = 64'b0;
                    .probe4 (zeroila),
                    .probe5 (zeroila)
                    );
-*/
 
+/*
    ila_0 CL_ILA_0 (
                    .clk    (firesim_internal_clock),
                    .probe0 (sh_ocl_awvalid_q),
@@ -2245,7 +2245,7 @@ assign zeroila = 64'b0;
                    .probe4 ({32'b0,ocl_sh_rdata_q[31:0]}),
                    .probe5 (sh_ocl_rready_q)
                    );
-
+*/
 
 // Debug Bridge 
  cl_debug_bridge CL_DEBUG_BRIDGE (
@@ -2264,7 +2264,7 @@ assign zeroila = 64'b0;
       .S_BSCAN_bscanid_en(bscanid_en)
    );
 
-
+/*
    ila_1 CL_DDR_ILA_0 (
                    .clk    (firesim_internal_clock),
                    .probe0 (fsimtop_s_0_axi_awvalid),
@@ -2653,7 +2653,7 @@ assign zeroila = 64'b0;
                    .probe42 (1'b0),
                    .probe43 (1'b0)
                    );
-
+*/
 
 
 //-----------------------------------------------

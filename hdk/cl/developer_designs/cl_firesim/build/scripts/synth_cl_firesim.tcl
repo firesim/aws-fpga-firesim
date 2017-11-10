@@ -70,7 +70,7 @@ read_ip [ list \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
-  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci
+  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci \
   $CL_DIR/ip/nic_axi_crossbar_1/nic_axi_crossbar_1.xci
 ]
 
