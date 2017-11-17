@@ -1,11 +1,11 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.1_sdxop (lin64) Build 1933108 Fri Jul 14 11:54:19 MDT 2017
--- Date        : Thu Nov  9 02:20:40 2017
+-- Date        : Thu Nov 16 07:38:10 2017
 -- Host        : ip-172-31-35-9.ec2.internal running 64-bit CentOS Linux release 7.4.1708 (Core)
--- Command     : write_vhdl -force -mode synth_stub -rename_top nic_axi_crossbar_1 -prefix
---               nic_axi_crossbar_1_ axi_crossbar_0_stub.vhdl
--- Design      : axi_crossbar_0
+-- Command     : write_vhdl -force -mode synth_stub
+--               /home/centos/firesim-ip2/nic_axi_crossbar_1/nic_axi_crossbar_1_stub.vhdl
+-- Design      : nic_axi_crossbar_1
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xcvu9p-flgb2104-2-i
 -- --------------------------------------------------------------------------------

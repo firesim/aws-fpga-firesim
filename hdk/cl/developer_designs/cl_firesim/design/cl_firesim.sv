@@ -871,12 +871,12 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_awaddr(sh_cl_dma_pcis_awaddr),      // input wire [63 : 0] s_axi_awaddr
   .s_axi_awlen(sh_cl_dma_pcis_awlen),        // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(sh_cl_dma_pcis_awsize),      // input wire [2 : 0] s_axi_awsize
-  .s_axi_awburst(),    // input wire [1 : 0] s_axi_awburst
-  .s_axi_awlock(),      // input wire [0 : 0] s_axi_awlock
-  .s_axi_awcache(),    // input wire [3 : 0] s_axi_awcache
-  .s_axi_awprot(),      // input wire [2 : 0] s_axi_awprot
-  .s_axi_awregion(),  // input wire [3 : 0] s_axi_awregion
-  .s_axi_awqos(),        // input wire [3 : 0] s_axi_awqos
+  .s_axi_awburst(2'h1),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awlock(1'b0),      // input wire [0 : 0] s_axi_awlock
+  .s_axi_awcache(4'h0),    // input wire [3 : 0] s_axi_awcache
+  .s_axi_awprot(3'h0),      // input wire [2 : 0] s_axi_awprot
+  .s_axi_awregion(4'h0),  // input wire [3 : 0] s_axi_awregion
+  .s_axi_awqos(4'h0),        // input wire [3 : 0] s_axi_awqos
   .s_axi_awvalid(sh_cl_dma_pcis_awvalid),    // input wire s_axi_awvalid
   .s_axi_awready(cl_sh_dma_pcis_awready),    // output wire s_axi_awready
 
@@ -895,12 +895,12 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_araddr(sh_cl_dma_pcis_araddr),      // input wire [63 : 0] s_axi_araddr
   .s_axi_arlen(sh_cl_dma_pcis_arlen),        // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(sh_cl_dma_pcis_arsize),      // input wire [2 : 0] s_axi_arsize
-  .s_axi_arburst(),    // input wire [1 : 0] s_axi_arburst
-  .s_axi_arlock(),      // input wire [0 : 0] s_axi_arlock
-  .s_axi_arcache(),    // input wire [3 : 0] s_axi_arcache
-  .s_axi_arprot(),      // input wire [2 : 0] s_axi_arprot
-  .s_axi_arregion(),  // input wire [3 : 0] s_axi_arregion
-  .s_axi_arqos(),        // input wire [3 : 0] s_axi_arqos
+  .s_axi_arburst(2'h1),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arlock(1'b0),      // input wire [0 : 0] s_axi_arlock
+  .s_axi_arcache(4'h0),    // input wire [3 : 0] s_axi_arcache
+  .s_axi_arprot(3'h0),      // input wire [2 : 0] s_axi_arprot
+  .s_axi_arregion(4'h0),  // input wire [3 : 0] s_axi_arregion
+  .s_axi_arqos(4'h0),        // input wire [3 : 0] s_axi_arqos
   .s_axi_arvalid(sh_cl_dma_pcis_arvalid),    // input wire s_axi_arvalid
   .s_axi_arready(cl_sh_dma_pcis_arready),    // output wire s_axi_arready
 
@@ -1167,11 +1167,11 @@ nic_axi_crossbar_1 multinode_nic_interconnect (
   .s_axi_awaddr(sh_cl_dma_pcis_awaddr_FIRESIM),      // input wire [63 : 0] s_axi_awaddr
   .s_axi_awlen(sh_cl_dma_pcis_awlen_FIRESIM),        // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(sh_cl_dma_pcis_awsize_FIRESIM),      // input wire [2 : 0] s_axi_awsize
-  .s_axi_awburst(),    // input wire [1 : 0] s_axi_awburst
-  .s_axi_awlock(),      // input wire [0 : 0] s_axi_awlock
-  .s_axi_awcache(),    // input wire [3 : 0] s_axi_awcache
-  .s_axi_awprot(),      // input wire [2 : 0] s_axi_awprot
-  .s_axi_awqos(),        // input wire [3 : 0] s_axi_awqos
+  .s_axi_awburst(2'h1),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awlock(1'b0),      // input wire [0 : 0] s_axi_awlock
+  .s_axi_awcache(4'h0),    // input wire [3 : 0] s_axi_awcache
+  .s_axi_awprot(3'h0),      // input wire [2 : 0] s_axi_awprot
+  .s_axi_awqos(4'h0),        // input wire [3 : 0] s_axi_awqos
   .s_axi_awvalid(sh_cl_dma_pcis_awvalid_FIRESIM),    // input wire [0 : 0] s_axi_awvalid
   .s_axi_awready(cl_sh_dma_pcis_awready_FIRESIM),    // output wire [0 : 0] s_axi_awready
   .s_axi_wdata(sh_cl_dma_pcis_wdata_FIRESIM),        // input wire [511 : 0] s_axi_wdata
@@ -1187,11 +1187,11 @@ nic_axi_crossbar_1 multinode_nic_interconnect (
   .s_axi_araddr(sh_cl_dma_pcis_araddr_FIRESIM),      // input wire [63 : 0] s_axi_araddr
   .s_axi_arlen(sh_cl_dma_pcis_arlen_FIRESIM),        // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(sh_cl_dma_pcis_arsize_FIRESIM),      // input wire [2 : 0] s_axi_arsize
-  .s_axi_arburst(),    // input wire [1 : 0] s_axi_arburst
-  .s_axi_arlock(),      // input wire [0 : 0] s_axi_arlock
-  .s_axi_arcache(),    // input wire [3 : 0] s_axi_arcache
-  .s_axi_arprot(),      // input wire [2 : 0] s_axi_arprot
-  .s_axi_arqos(),        // input wire [3 : 0] s_axi_arqos
+  .s_axi_arburst(2'h1),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arlock(1'h0),      // input wire [0 : 0] s_axi_arlock
+  .s_axi_arcache(4'h0),    // input wire [3 : 0] s_axi_arcache
+  .s_axi_arprot(3'h0),      // input wire [2 : 0] s_axi_arprot
+  .s_axi_arqos(4'h0),        // input wire [3 : 0] s_axi_arqos
   .s_axi_arvalid(sh_cl_dma_pcis_arvalid_FIRESIM),    // input wire [0 : 0] s_axi_arvalid
   .s_axi_arready(cl_sh_dma_pcis_arready_FIRESIM),    // output wire [0 : 0] s_axi_arready
   .s_axi_rid(cl_sh_dma_pcis_rid_FIRESIM),            // output wire [5 : 0] s_axi_rid
@@ -2265,54 +2265,297 @@ assign zeroila = 64'b0;
    );
 
 /*
-   ila_1 CL_DDR_ILA_0 (
+   ila_1 CL_NIC_AXI_ILA_V1_0 (
                    .clk    (firesim_internal_clock),
-                   .probe0 (fsimtop_s_0_axi_awvalid),
-                   .probe1 (fsimtop_s_0_axi_awaddr),
+                   .probe0 (sh_cl_dma_pcis_awvalid_FIRESIM_0),
+                   .probe1 (sh_cl_dma_pcis_awvalid_FIRESIM_0),
                    .probe2 (2'b0),
-                   .probe3 (fsimtop_s_0_axi_awready),
-                   .probe4 (fsimtop_s_0_axi_wvalid),
-                   .probe5 (fsimtop_s_0_axi_wstrb),
-                   .probe6 (fsimtop_s_0_axi_wlast),
-                   .probe7 (fsimtop_s_0_axi_wready),
+                   .probe3 (cl_sh_dma_pcis_awready_FIRESIM_0),
+                   .probe4 (sh_cl_dma_pcis_wvalid_FIRESIM_0),
+                   .probe5 (sh_cl_dma_pcis_wstrb_FIRESIM_0),
+                   .probe6 (sh_cl_dma_pcis_wlast_FIRESIM_0),
+                   .probe7 (cl_sh_dma_pcis_wready_FIRESIM_0),
                    .probe8 (1'b0),
                    .probe9 (1'b0),
-                   .probe10 (fsimtop_s_0_axi_wdata),
+                   .probe10 (sh_cl_dma_pcis_wdata_FIRESIM_0),
                    .probe11 (1'b0),
-                   .probe12 (fsimtop_s_0_axi_arready),
+                   .probe12 (cl_sh_dma_pcis_arready_FIRESIM_0),
                    .probe13 (2'b0),
-                   .probe14 (fsimtop_s_0_axi_rdata),
-                   .probe15 (fsimtop_s_0_axi_araddr),
-                   .probe16 (fsimtop_s_0_axi_arvalid),
+                   .probe14 (cl_sh_dma_pcis_rdata_FIRESIM_0),
+                   .probe15 (sh_cl_dma_pcis_araddr_FIRESIM_0),
+                   .probe16 (sh_cl_dma_pcis_arvalid_FIRESIM_0),
                    .probe17 (3'b0),
                    .probe18 (3'b0),
-                   .probe19 (fsimtop_s_0_axi_awid[4:0]),
-                   .probe20 (fsimtop_s_0_axi_arid[4:0]),
-                   .probe21 (fsimtop_s_0_axi_awlen),
-                   .probe22 (fsimtop_s_0_axi_rlast),
+                   .probe19 (sh_cl_dma_pcis_awid_FIRESIM_0[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid_FIRESIM_0[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen_FIRESIM_0),
+                   .probe22 (cl_sh_dma_pcis_rlast_FIRESIM_0),
                    .probe23 (3'b0), 
-                   .probe24 (fsimtop_s_0_axi_rresp),
-                   .probe25 (fsimtop_s_0_axi_rid[4:0]),
-                   .probe26 (fsimtop_s_0_axi_rvalid),
-                   .probe27 (fsimtop_s_0_axi_arlen),
+                   .probe24 (cl_sh_dma_pcis_rresp_FIRESIM_0),
+                   .probe25 (cl_sh_dma_pcis_rid_FIRESIM_0[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid_FIRESIM_0),
+                   .probe27 (sh_cl_dma_pcis_arlen_FIRESIM_0),
                    .probe28 (3'b0),
-                   .probe29 (fsimtop_s_0_axi_bresp),
-                   .probe30 (fsimtop_s_0_axi_rready),
+                   .probe29 (cl_sh_dma_pcis_bresp_FIRESIM_0),
+                   .probe30 (sh_cl_dma_pcis_rready_FIRESIM_0),
                    .probe31 (4'b0),
                    .probe32 (4'b0),
                    .probe33 (4'b0),
                    .probe34 (4'b0),
-                   .probe35 (fsimtop_s_0_axi_bvalid),
+                   .probe35 (cl_sh_dma_pcis_bvalid_FIRESIM_0),
                    .probe36 (4'b0),
                    .probe37 (4'b0),
-                   .probe38 (fsimtop_s_0_axi_bid[4:0]),
-                   .probe39 (fsimtop_s_0_axi_bready),
+                   .probe38 (cl_sh_dma_pcis_bid_FIRESIM_0[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready_FIRESIM_0),
                    .probe40 (1'b0),
                    .probe41 (1'b0),
                    .probe42 (1'b0),
                    .probe43 (1'b0)
                    );
 
+   ila_1 CL_NIC_AXI_ILA_V1_1 (
+                   .clk    (firesim_internal_clock),
+                   .probe0 (sh_cl_dma_pcis_awvalid_FIRESIM_1),
+                   .probe1 (sh_cl_dma_pcis_awaddr_FIRESIM_1),
+                   .probe2 (2'b0),
+                   .probe3 (cl_sh_dma_pcis_awready_FIRESIM_1),
+                   .probe4 (sh_cl_dma_pcis_wvalid_FIRESIM_1),
+                   .probe5 (sh_cl_dma_pcis_wstrb_FIRESIM_1),
+                   .probe6 (sh_cl_dma_pcis_wlast_FIRESIM_1),
+                   .probe7 (cl_sh_dma_pcis_wready_FIRESIM_1),
+                   .probe8 (1'b0),
+                   .probe9 (1'b0),
+                   .probe10 (sh_cl_dma_pcis_wdata_FIRESIM_1),
+                   .probe11 (1'b0),
+                   .probe12 (cl_sh_dma_pcis_arready_FIRESIM_1),
+                   .probe13 (2'b0),
+                   .probe14 (cl_sh_dma_pcis_rdata_FIRESIM_1),
+                   .probe15 (sh_cl_dma_pcis_araddr_FIRESIM_1),
+                   .probe16 (sh_cl_dma_pcis_arvalid_FIRESIM_1),
+                   .probe17 (3'b0),
+                   .probe18 (3'b0),
+                   .probe19 (sh_cl_dma_pcis_awid_FIRESIM_1[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid_FIRESIM_1[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen_FIRESIM_1),
+                   .probe22 (cl_sh_dma_pcis_rlast_FIRESIM_1),
+                   .probe23 (3'b0), 
+                   .probe24 (cl_sh_dma_pcis_rresp_FIRESIM_1),
+                   .probe25 (cl_sh_dma_pcis_rid_FIRESIM_1[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid_FIRESIM_1),
+                   .probe27 (sh_cl_dma_pcis_arlen_FIRESIM_1),
+                   .probe28 (3'b0),
+                   .probe29 (cl_sh_dma_pcis_bresp_FIRESIM_1),
+                   .probe30 (sh_cl_dma_pcis_rready_FIRESIM_1),
+                   .probe31 (4'b0),
+                   .probe32 (4'b0),
+                   .probe33 (4'b0),
+                   .probe34 (4'b0),
+                   .probe35 (cl_sh_dma_pcis_bvalid_FIRESIM_1),
+                   .probe36 (4'b0),
+                   .probe37 (4'b0),
+                   .probe38 (cl_sh_dma_pcis_bid_FIRESIM_1[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready_FIRESIM_1),
+                   .probe40 (1'b0),
+                   .probe41 (1'b0),
+                   .probe42 (1'b0),
+                   .probe43 (1'b0)
+                   );
+
+   ila_1 CL_NIC_AXI_ILA_V1_2 (
+                   .clk    (firesim_internal_clock),
+                   .probe0 (sh_cl_dma_pcis_awvalid_FIRESIM_2),
+                   .probe1 (sh_cl_dma_pcis_awaddr_FIRESIM_2),
+                   .probe2 (2'b0),
+                   .probe3 (cl_sh_dma_pcis_awready_FIRESIM_2),
+                   .probe4 (sh_cl_dma_pcis_wvalid_FIRESIM_2),
+                   .probe5 (sh_cl_dma_pcis_wstrb_FIRESIM_2),
+                   .probe6 (sh_cl_dma_pcis_wlast_FIRESIM_2),
+                   .probe7 (cl_sh_dma_pcis_wready_FIRESIM_2),
+                   .probe8 (1'b0),
+                   .probe9 (1'b0),
+                   .probe10 (sh_cl_dma_pcis_wdata_FIRESIM_2),
+                   .probe11 (1'b0),
+                   .probe12 (cl_sh_dma_pcis_arready_FIRESIM_2),
+                   .probe13 (2'b0),
+                   .probe14 (cl_sh_dma_pcis_rdata_FIRESIM_2),
+                   .probe15 (sh_cl_dma_pcis_araddr_FIRESIM_2),
+                   .probe16 (sh_cl_dma_pcis_arvalid_FIRESIM_2),
+                   .probe17 (3'b0),
+                   .probe18 (3'b0),
+                   .probe19 (sh_cl_dma_pcis_awid_FIRESIM_2[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid_FIRESIM_2[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen_FIRESIM_2),
+                   .probe22 (cl_sh_dma_pcis_rlast_FIRESIM_2),
+                   .probe23 (3'b0), 
+                   .probe24 (cl_sh_dma_pcis_rresp_FIRESIM_2),
+                   .probe25 (cl_sh_dma_pcis_rid_FIRESIM_2[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid_FIRESIM_2),
+                   .probe27 (sh_cl_dma_pcis_arlen_FIRESIM_2),
+                   .probe28 (3'b0),
+                   .probe29 (cl_sh_dma_pcis_bresp_FIRESIM_2),
+                   .probe30 (sh_cl_dma_pcis_rready_FIRESIM_2),
+                   .probe31 (4'b0),
+                   .probe32 (4'b0),
+                   .probe33 (4'b0),
+                   .probe34 (4'b0),
+                   .probe35 (cl_sh_dma_pcis_bvalid_FIRESIM_2),
+                   .probe36 (4'b0),
+                   .probe37 (4'b0),
+                   .probe38 (cl_sh_dma_pcis_bid_FIRESIM_2[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready_FIRESIM_2),
+                   .probe40 (1'b0),
+                   .probe41 (1'b0),
+                   .probe42 (1'b0),
+                   .probe43 (1'b0)
+                   );
+
+
+   ila_1 CL_NIC_AXI_ILA_V1_3 (
+                   .clk    (firesim_internal_clock),
+                   .probe0 (sh_cl_dma_pcis_awvalid_FIRESIM_3),
+                   .probe1 (sh_cl_dma_pcis_awaddr_FIRESIM_3),
+                   .probe2 (2'b0),
+                   .probe3 (cl_sh_dma_pcis_awready_FIRESIM_3),
+                   .probe4 (sh_cl_dma_pcis_wvalid_FIRESIM_3),
+                   .probe5 (sh_cl_dma_pcis_wstrb_FIRESIM_3),
+                   .probe6 (sh_cl_dma_pcis_wlast_FIRESIM_3),
+                   .probe7 (cl_sh_dma_pcis_wready_FIRESIM_3),
+                   .probe8 (1'b0),
+                   .probe9 (1'b0),
+                   .probe10 (sh_cl_dma_pcis_wdata_FIRESIM_3),
+                   .probe11 (1'b0),
+                   .probe12 (cl_sh_dma_pcis_arready_FIRESIM_3),
+                   .probe13 (2'b0),
+                   .probe14 (cl_sh_dma_pcis_rdata_FIRESIM_3),
+                   .probe15 (sh_cl_dma_pcis_araddr_FIRESIM_3),
+                   .probe16 (sh_cl_dma_pcis_arvalid_FIRESIM_3),
+                   .probe17 (3'b0),
+                   .probe18 (3'b0),
+                   .probe19 (sh_cl_dma_pcis_awid_FIRESIM_3[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid_FIRESIM_3[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen_FIRESIM_3),
+                   .probe22 (cl_sh_dma_pcis_rlast_FIRESIM_3),
+                   .probe23 (3'b0), 
+                   .probe24 (cl_sh_dma_pcis_rresp_FIRESIM_3),
+                   .probe25 (cl_sh_dma_pcis_rid_FIRESIM_3[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid_FIRESIM_3),
+                   .probe27 (sh_cl_dma_pcis_arlen_FIRESIM_3),
+                   .probe28 (3'b0),
+                   .probe29 (cl_sh_dma_pcis_bresp_FIRESIM_3),
+                   .probe30 (sh_cl_dma_pcis_rready_FIRESIM_3),
+                   .probe31 (4'b0),
+                   .probe32 (4'b0),
+                   .probe33 (4'b0),
+                   .probe34 (4'b0),
+                   .probe35 (cl_sh_dma_pcis_bvalid_FIRESIM_3),
+                   .probe36 (4'b0),
+                   .probe37 (4'b0),
+                   .probe38 (cl_sh_dma_pcis_bid_FIRESIM_3[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready_FIRESIM_3),
+                   .probe40 (1'b0),
+                   .probe41 (1'b0),
+                   .probe42 (1'b0),
+                   .probe43 (1'b0)
+                   );
+
+
+   ila_1 CL_NIC_AXI_ILA_V1_OUT (
+                   .clk    (firesim_internal_clock),
+                   .probe0 (sh_cl_dma_pcis_awvalid_FIRESIM),
+                   .probe1 (sh_cl_dma_pcis_awaddr_FIRESIM),
+                   .probe2 (2'b0),
+                   .probe3 (cl_sh_dma_pcis_awready_FIRESIM),
+                   .probe4 (sh_cl_dma_pcis_wvalid_FIRESIM),
+                   .probe5 (sh_cl_dma_pcis_wstrb_FIRESIM),
+                   .probe6 (sh_cl_dma_pcis_wlast_FIRESIM),
+                   .probe7 (cl_sh_dma_pcis_wready_FIRESIM),
+                   .probe8 (1'b0),
+                   .probe9 (1'b0),
+                   .probe10 (sh_cl_dma_pcis_wdata_FIRESIM),
+                   .probe11 (1'b0),
+                   .probe12 (cl_sh_dma_pcis_arready_FIRESIM),
+                   .probe13 (2'b0),
+                   .probe14 (cl_sh_dma_pcis_rdata_FIRESIM),
+                   .probe15 (sh_cl_dma_pcis_araddr_FIRESIM),
+                   .probe16 (sh_cl_dma_pcis_arvalid_FIRESIM),
+                   .probe17 (3'b0),
+                   .probe18 (3'b0),
+                   .probe19 (sh_cl_dma_pcis_awid_FIRESIM[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid_FIRESIM[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen_FIRESIM),
+                   .probe22 (cl_sh_dma_pcis_rlast_FIRESIM),
+                   .probe23 (3'b0), 
+                   .probe24 (cl_sh_dma_pcis_rresp_FIRESIM),
+                   .probe25 (cl_sh_dma_pcis_rid_FIRESIM[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid_FIRESIM),
+                   .probe27 (sh_cl_dma_pcis_arlen_FIRESIM),
+                   .probe28 (3'b0),
+                   .probe29 (cl_sh_dma_pcis_bresp_FIRESIM),
+                   .probe30 (sh_cl_dma_pcis_rready_FIRESIM),
+                   .probe31 (4'b0),
+                   .probe32 (4'b0),
+                   .probe33 (4'b0),
+                   .probe34 (4'b0),
+                   .probe35 (cl_sh_dma_pcis_bvalid_FIRESIM),
+                   .probe36 (4'b0),
+                   .probe37 (4'b0),
+                   .probe38 (cl_sh_dma_pcis_bid_FIRESIM[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready_FIRESIM),
+                   .probe40 (1'b0),
+                   .probe41 (1'b0),
+                   .probe42 (1'b0),
+                   .probe43 (1'b0)
+                   );
+
+   ila_1 CL_NIC_AXI_ILA_V1_EDGE (
+                   .clk    (clk_main_a0),
+                   .probe0 (sh_cl_dma_pcis_awvalid),
+                   .probe1 (sh_cl_dma_pcis_awaddr),
+                   .probe2 (2'b0),
+                   .probe3 (cl_sh_dma_pcis_awready),
+                   .probe4 (sh_cl_dma_pcis_wvalid),
+                   .probe5 (sh_cl_dma_pcis_wstrb),
+                   .probe6 (sh_cl_dma_pcis_wlast),
+                   .probe7 (cl_sh_dma_pcis_wready),
+                   .probe8 (1'b0),
+                   .probe9 (1'b0),
+                   .probe10 (sh_cl_dma_pcis_wdata),
+                   .probe11 (1'b0),
+                   .probe12 (cl_sh_dma_pcis_arready),
+                   .probe13 (2'b0),
+                   .probe14 (cl_sh_dma_pcis_rdata),
+                   .probe15 (sh_cl_dma_pcis_araddr),
+                   .probe16 (sh_cl_dma_pcis_arvalid),
+                   .probe17 (3'b0),
+                   .probe18 (3'b0),
+                   .probe19 (sh_cl_dma_pcis_awid[4:0]),
+                   .probe20 (sh_cl_dma_pcis_arid[4:0]),
+                   .probe21 (sh_cl_dma_pcis_awlen),
+                   .probe22 (cl_sh_dma_pcis_rlast),
+                   .probe23 (3'b0), 
+                   .probe24 (cl_sh_dma_pcis_rresp),
+                   .probe25 (cl_sh_dma_pcis_rid[4:0]),
+                   .probe26 (cl_sh_dma_pcis_rvalid),
+                   .probe27 (sh_cl_dma_pcis_arlen),
+                   .probe28 (3'b0),
+                   .probe29 (cl_sh_dma_pcis_bresp),
+                   .probe30 (sh_cl_dma_pcis_rready),
+                   .probe31 (4'b0),
+                   .probe32 (4'b0),
+                   .probe33 (4'b0),
+                   .probe34 (4'b0),
+                   .probe35 (cl_sh_dma_pcis_bvalid),
+                   .probe36 (4'b0),
+                   .probe37 (4'b0),
+                   .probe38 (cl_sh_dma_pcis_bid[4:0]),
+                   .probe39 (sh_cl_dma_pcis_bready),
+                   .probe40 (1'b0),
+                   .probe41 (1'b0),
+                   .probe42 (1'b0),
+                   .probe43 (1'b0)
+                   );
+*/
+/*
   ila_1 CL_DDR_ILA_1 (
                    .clk    (firesim_internal_clock),
                    .probe0 (fsimtop_s_1_axi_awvalid),
