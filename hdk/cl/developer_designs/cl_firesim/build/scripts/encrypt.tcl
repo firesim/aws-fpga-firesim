@@ -45,9 +45,9 @@ file copy -force $UNUSED_TEMPLATES_DIR/unused_pcim_template.inc       $TARGET_DI
 file copy -force $UNUSED_TEMPLATES_DIR/unused_sh_bar1_template.inc    $TARGET_DIR
 file copy -force $UNUSED_TEMPLATES_DIR/unused_flr_template.inc        $TARGET_DIR
 #file copy -force [glob /home/centos/firesim/sim/firechip/hls_adpcm_encode/src/main/verilog/*] $TARGET_DIR
-foreach i [glob  /home/centos/firesim/sim/firechip/hls_adpcm_encode/src/main/verilog/*] { 
-	file copy -force $i $TARGET_DIR
-} 
+#foreach i [glob  /home/centos/firesim/sim/firechip/hls_aes_decrypt_long/src/main/verilog/*] { 
+#	file copy -force $i $TARGET_DIR
+#} 
 
 #---- End of section replaced by Developr ---
 
@@ -56,7 +56,7 @@ exec chmod +w {*}[glob $TARGET_DIR/*]
 
 # encrypt .v/.sv/.vh/inc as verilog files
 # encrypt dat is not required
-encrypt -k $HDK_SHELL_DIR/build/scripts/vivado_keyfile.txt -lang verilog  [glob -nocomplain -- $TARGET_DIR/*.{v,sv}] [glob -nocomplain -- $TARGET_DIR/*.vh] [glob -nocomplain -- $TARGET_DIR/*.inc] [glob -nocomplain -- $TARGET_DIR/*.dat]
+encrypt -k $HDK_SHELL_DIR/build/scripts/vivado_keyfile.txt -lang verilog  [glob -nocomplain -- $TARGET_DIR/*.{v,sv}] [glob -nocomplain -- $TARGET_DIR/*.vh] [glob -nocomplain -- $TARGET_DIR/*.inc]
 
 # encrypt *vhdl files
 encrypt -k $HDK_SHELL_DIR/build/scripts/vivado_vhdl_keyfile.txt -lang vhdl -quiet [ glob -nocomplain -- $TARGET_DIR/*.vhd? ]

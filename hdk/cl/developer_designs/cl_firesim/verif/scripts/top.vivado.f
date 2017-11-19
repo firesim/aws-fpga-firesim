@@ -20,7 +20,7 @@
 -sourcelibext .svh
 -sourcelibext .dat
 
--sourcelibdir /home/centos/firesim/sim/firechip/hls_adpcm_encode/src/main/verilog 
+#-sourcelibdir /home/centos/firesim/sim/firechip/hls_adpcm_encode/src/main/verilog 
 -sourcelibdir ${CL_ROOT}/../common/design
 -sourcelibdir ${CL_ROOT}/design
 -sourcelibdir ${CL_ROOT}/verif/sv
