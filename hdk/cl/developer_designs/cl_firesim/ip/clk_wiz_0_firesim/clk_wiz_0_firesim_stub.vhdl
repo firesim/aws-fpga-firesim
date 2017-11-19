@@ -1,10 +1,9 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.1_sdxop (lin64) Build 1933108 Fri Jul 14 11:54:19 MDT 2017
--- Date        : Thu Oct 19 18:46:06 2017
--- Host        : ip-172-31-15-233.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
--- Command     : write_vhdl -force -mode synth_stub
---               /home/centos/firesim-push-timing/platforms/f1/aws-fpga/hdk/cl/developer_designs/cl_firesim/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_stub.vhdl
+-- Date        : Tue Aug 15 14:14:17 2017
+-- Host        : ip-172-31-30-89.ec2.internal running 64-bit CentOS Linux release 7.3.1611 (Core)
+-- Command     : write_vhdl -force -mode synth_stub /home/centos/clock_ip/clk_wiz_0_firesim/clk_wiz_0_firesim_stub.vhdl
 -- Design      : clk_wiz_0_firesim
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xcvu9p-flgb2104-2-i
