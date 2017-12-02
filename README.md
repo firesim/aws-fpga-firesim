@@ -1,6 +1,6 @@
 # AWS FPGA Shell for FireSim
 
-The interesting parts are in `hdk/cl/developer_designs/cl_firesim`. This repo currently tracks upstream shell version 1.3.3 from Sept. 24, 2017.
+The interesting parts are in `hdk/cl/developer_designs/cl_firesim`. This repo currently tracks upstream shell version 1.3.4 from Dec 1, 2017.
 
 Below is the standard aws-fpga documentation from upstream.
 

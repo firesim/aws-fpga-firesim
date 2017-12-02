@@ -112,7 +112,7 @@ AWS FPGA generation and EC2 F1 instances are supported in us-east-1 (N. Virginia
 
 **Q: What is the process for creating an AFI?**
 
-The AFI process starts by creating Custom Logic (CL) code that conforms to the [Shell Specification]((./hdk/docs/AWS_Shell_Interface_Specification.md). Then, the CL must be compiled using the HDK scripts which leverages Vivado tools to create a Design Checkpoint (DCP). That DCP is submitted to AWS for generating an AFI using the `aws ec2 create-fpga-image` API.
+The AFI process starts by creating Custom Logic (CL) code that conforms to the [Shell Specification](./hdk/docs/AWS_Shell_Interface_Specification.md). Then, the CL must be compiled using the HDK scripts which leverages Vivado tools to create a Design Checkpoint (DCP). That DCP is submitted to AWS for generating an AFI using the `aws ec2 create-fpga-image` API.
 
 Use the AWS CLI `describe-fpga-images` API to get information about the created AFIs using the AFI ID provided by `create-fpga-image`, or to list available AFIs for your account. See [describe-fpga-images](./hdk/docs/describe_fpga_images.md) document for details on how to use this API.
 
@@ -139,7 +139,7 @@ Use [delete-fpga-image](./hdk/docs/delete_fpga_image.md) carefully. Once all AFI
 
 **Q: Can I bring my own bitstream for loading on an F1 FPGA?**
 
-No. There is no mechanism for loading a bitstream directly onto the FPGAs of an F1 instance. All Custom Logic is loaded onto the FPGA by calling `$ fpga-local-load-image` tool at [AWS FPGA SDK](https://github.com/aws/aws-fpga/sdk). 
+No. There is no mechanism for loading a bitstream directly onto the FPGAs of an F1 instance. All Custom Logic is loaded onto the FPGA by calling `$ fpga-local-load-image` tool at [AWS FPGA SDK](./sdk). 
 
 Developers create an AFI by creating a Vivado Design Checkpoint (DCP) and submitting that DCP to AWS using `aws ec2 create-fpga-image` API. AWS creates the AFI and bitstream from that DCP and returns a unique AFI ID referencing that AFI.
   
@@ -153,7 +153,7 @@ If a developer uses local tools and license, please check the [supported version
 
 **Q: Is there a “best practice” system template?**
 
-AWS prefers not to limit developers to a specific template in terms of how we advise to use AWS FPGAs. A good overview of these interfaces can be found [here](https://github.com/aws/aws-fpga/blob/master/hdk/docs/Programmer_View.md)
+AWS prefers not to limit developers to a specific template in terms of how we advise to use AWS FPGAs. A good overview of these interfaces can be found [here](./hdk/docs/Programmer_View.md)
   
   
 **Q: Do I need to get a Xilinx license to generate an AFI?**
@@ -211,7 +211,7 @@ Yes, examples are in the [examples directory](./hdk/cl/examples):
 
 The [cl_hello_world example](./hdk/cl/examples/cl_hello_world) is an RTL/Verilog simple example to build and test the Custom Logic development process, it does not use any of the external interfaces of the FPGA except the PCIe to "peek" and "poke" registers in the memory space of the CL inside the FPGA.
 
-The [cl_dram_dma example](.hdk/cl/examples/cl_dram_dma) provides expanded features that demonstrates the use and connectivity for many of the Shell/CL interfaces and functionality.
+The [cl_dram_dma example](./hdk/cl/examples/cl_dram_dma) provides expanded features that demonstrates the use and connectivity for many of the Shell/CL interfaces and functionality.
 
 
 **Q: How do I get access to AWS FPGA Developer AMI?**
@@ -288,7 +288,7 @@ Both. The FPGA PCIe memory address space can be mmap() to both kernel and usersp
 
 **Q: How do I change what AFI is loaded in an FPGA?**
 
-Changing the AFI loaded in an FPGA is done using the `fpga-clear-local-image` and `fpga-load-local-image` APIs from the [FPGA Image Management tools](./sdk/userspace/fpga_mgmt_tools). Note that to ensure your AFI is loaded to a consistent state, a loaded FPGA slot must be cleared with `fpga-clear-local-image` before loading another FPGA image.  The `fpga-load-local-image` command takes the AFI ID and requests it to be programmed into the identified FPGA. The AWS infrastructure manages the actual FPGA image and programming of the FPGA using Partial Reconfiguration capabilities of the FPGA. The AFI image is not stored in the F1 instance nor AMI. The AFI image can’t be read or modified by the instance as there isn't a direct access to programming the FPGA from the instance. A user may call `fpga-load-local-image` at any time during the life of an instance, and may call `fpga-load-local-image` any number of times.
+Changing the AFI loaded in an FPGA is done using the `fpga-clear-local-image` and `fpga-load-local-image` APIs from the [FPGA Image Management tools](./sdk/userspace/fpga_mgmt_tools). The `fpga-load-local-image` command takes the AFI ID and requests it to be programmed into the identified FPGA. The AWS infrastructure manages the actual FPGA image and programming of the FPGA using Partial Reconfiguration capabilities of the FPGA. The AFI image is not stored in the F1 instance nor AMI. The AFI image can’t be read or modified by the instance as there isn't a direct access to programming the FPGA from the instance. A user may call `fpga-load-local-image` at any time during the life of an instance, and may call `fpga-load-local-image` any number of times.
 
 
 
@@ -374,7 +374,7 @@ Details on the Shell Interface to the FPGA Link IP blocks are provided in the [S
 
 **Q: What clock speed does the FPGA utilize?**
  
-The FPGA Shell provides a selectable frequency clocks (up to 8 clocks) from the Shell to the Custom Logic (CL) region, please refer to the [Shell Interface Specification](./hdk/docs/AWS_Shell_interface_Specification.md) and the [available clock recipe](./hdk/docs/clock_recipes.csv) for the available clocks and frequency options.
+The FPGA Shell provides a selectable frequency clocks (up to 8 clocks) from the Shell to the Custom Logic (CL) region, please refer to the [Shell Interface Specification](./hdk/docs/AWS_Shell_Interface_Specification.md) and the [available clock recipe](./hdk/docs/clock_recipes.csv) for the available clocks and frequency options.
 
 *Note: All the AXI interfaces between Shell and CL are synchronous to `clk_main_a0`, which has a default of 125Mhz using `A0` clock recipe.
 
@@ -446,6 +446,10 @@ You would need a valid [on premise license](./hdk/docs/on_premise_licensing_help
 >    * The license included on FPGA Developer AMI Versions 1.3.0_a and earlier expires on October 31 2017.
 >    * If you see the above error, please update to FPGA Developer AMI Version 1.3.3 or later.
 >    * All FPGA Developer AMI Versions 1.3.0_a and earlier will be deprecated once Version 1.3.3 is released.
+>    * If you are using the FPGA Developer AMI Version 1.3.3 or later, please check if the environment variable `XILINXD_LICENSE_FILE` is set to `/opt/Xilinx/license/XilinxAWS.lic`
+>    * If you still face the above error, please contact us on the forums and we'd be happy to help further.
 
-* If you are using the FPGA Developer AMI Version 1.3.3 or later, please check if the environment variable `XILINXD_LICENSE_FILE` is set to `/opt/Xilinx/license/XilinxAWS.lic`
-* If you still face the above error, please contact us on the forums and we'd be happy to help further.
+**Q: Why does Vivado in GUI mode show up blank ? or Why does Vivado in GUI mode show up as an empty window?**
+
+We have seen this issue when running RDP in 32 bit color mode where Vivado shows up as a blank window.
+Please modify RDP options to choose any color depth less than 32 bit and try re-connecting. 
