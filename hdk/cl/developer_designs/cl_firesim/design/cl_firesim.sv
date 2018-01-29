@@ -39,6 +39,7 @@ logic rst_extra1_n_sync;
 
 `include "unused_flr_template.inc"
 `include "unused_ddr_a_b_d_template.inc"
+`include "unused_dma_pcis_template.inc" // TODO: remove it
 `include "unused_pcim_template.inc"
 `include "unused_cl_sda_template.inc"
 `include "unused_sh_bar1_template.inc"
@@ -220,10 +221,11 @@ axi_clock_converter_oclnew ocl_clock_convert (
   .m_axi_rready(sh_ocl_rready_q)    // output wire m_axi_rready
 );
 
-
 //-------------------------------------------------
 // PCIe DMA_PCIS to FireSim Master
 //-------------------------------------------------
+
+/* TODO: add it back
 
    logic [5:0] sh_cl_dma_pcis_awid_FIRESIM;
    logic [63:0] sh_cl_dma_pcis_awaddr_FIRESIM;
@@ -354,6 +356,7 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .m_axi_rvalid(cl_sh_dma_pcis_rvalid_FIRESIM),      // input wire m_axi_rvalid
   .m_axi_rready(sh_cl_dma_pcis_rready_FIRESIM)      // output wire m_axi_rready
 );
+*/
 
 wire [15 : 0] fsimtop_s_axi_awid;
 wire [63 : 0] fsimtop_s_axi_awaddr;
@@ -449,6 +452,7 @@ wire fsimtop_s_axi_rready;
    .io_master_r_bits_user(),    // UNUSED at top level
 
     // special NIC master interface
+/* TODO: no more hacks
    .io_NICmaster_aw_ready(cl_sh_dma_pcis_awready_FIRESIM),
    .io_NICmaster_aw_valid(sh_cl_dma_pcis_awvalid_FIRESIM),
    .io_NICmaster_aw_bits_addr(sh_cl_dma_pcis_awaddr_FIRESIM),
@@ -494,6 +498,7 @@ wire fsimtop_s_axi_rready;
    .io_NICmaster_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM),
    .io_NICmaster_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM),
    .io_NICmaster_r_bits_user(),    // UNUSED at top level
+*/
 
    .io_slave_aw_ready(fsimtop_s_axi_awready),
    .io_slave_aw_valid(fsimtop_s_axi_awvalid),
