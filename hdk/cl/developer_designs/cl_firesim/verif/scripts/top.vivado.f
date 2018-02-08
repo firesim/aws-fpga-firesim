@@ -14,6 +14,12 @@
 # limitations under the License.
 
 -define VIVADO_SIM
+-define RANDOMIZE_MEM_INIT
+-define RANDOMIZE_REG_INIT
+-define RANDOMIZE_GARBAGE_ASSIGN
+-define RANDOMIZE_INVALID_ASSIGN
+-define PRINTF_COND=1'b1
+-define STOP_COND=1'b1
 
 -sourcelibext .v
 -sourcelibext .sv
