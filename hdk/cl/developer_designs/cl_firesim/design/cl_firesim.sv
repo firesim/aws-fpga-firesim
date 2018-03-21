@@ -412,6 +412,10 @@ wire fsimtop_s_axi_rlast;
 wire fsimtop_s_axi_rvalid;
 wire fsimtop_s_axi_rready;
 
+//ILA Wiring ports (generated from firrtl transform)
+`include "FireSimILAInsertWires.v"
+
+
   F1Shim firesim_top (
    .clock(firesim_internal_clock),
    .reset(!rst_firesim_n_sync),
@@ -460,6 +464,9 @@ wire fsimtop_s_axi_rready;
    .io_master_r_bits_last(), //UNUSED at top level
    .io_master_r_bits_id(),      // UNUSED at top level
    .io_master_r_bits_user(),    // UNUSED at top level
+
+    //ILA Wiring ports (generated from firrtl transform)
+`include "FireSimILAInsertPorts.v" 
 
     // special NIC master interface
    .io_dma_aw_ready(cl_sh_dma_pcis_awready_FIRESIM),
@@ -853,7 +860,13 @@ always_ff @(posedge clk_main_a0)
 logic zeroila;
 assign zeroila = 64'b0;
 
-// Integrated Logic Analyzers (ILA)
+
+//Custom Integrated Logic Analyzer (ILA)
+//ILA wiring instantiation - custom ILA generated from firrtl transform
+`include "FireSimILAInsertInst.v"
+
+
+//Standard Integrated Logic Analyzers (ILA)
    ila_0 CL_ILA_0 (
                    .clk    (clk_main_a0),
                    .probe0 (zeroila),

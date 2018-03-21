@@ -12,6 +12,12 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling aws_gen_clk_
 
 source $HDK_SHELL_DIR/build/scripts/aws_gen_clk_constraints.tcl
 
+########################################
+## Generate ILA based on script generated from FIRRTL transfrom 
+########################################
+
+source $HDK_SHELL_DIR/build/scripts/FireSimILAInsertVivado.tcl
+
 #############################
 ## Read design files
 #############################
