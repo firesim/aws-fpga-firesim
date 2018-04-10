@@ -560,24 +560,6 @@ wire fsimtop_s_axi_rready;
 
 );
 
-  // TODO, we are skipping this for simplicity.
-  // technically, all addresses will have the MSB set, but since we have access to 16GB of dram, it should still work
-  //wire [31:0] io_slave_aw_bits_addr;
-  //assign cl_sh_ddr_awaddr = { 30'b0, io_slave_aw_bits_addr[30:0], 3'b0 }; // TODO: check this
-
-  // THESE two are unnecessary now
-  //wire [63:0] io_slave_w_bits_data;
-  //assign cl_sh_ddr_wdata = { 448'b0, io_slave_w_bits_data };
-
-  // THESE two are unnecessary now
-  //wire [7:0] io_slave_w_bits_strb;
-  //assign cl_sh_ddr_wstrb = { 56'b0, io_slave_w_bits_strb };
-
-  // THESE two are unnecessary now
-  //wire [31:0] io_slave_ar_bits_addr;
-  //assign cl_sh_ddr_araddr = { 30'b0, io_slave_ar_bits_addr[30:0], 3'b0 };
-
-  // TODO look at this
   // assign cl_sh_ddr_awsize = 3'b110;
   // assign cl_sh_ddr_arsize = 3'b110;
   //assert ((cl_sh_ddr_awsize == 3'b110) | (!cl_sh_ddr_awvalid)) else $error("INVALID AWSIZE on DRAM IF");
@@ -640,7 +622,9 @@ axi_clock_converter_dramslim clock_convert_dramslim (
   .s_axi_awsize(fsimtop_s_axi_awsize),      // input wire [2 : 0] s_axi_awsize
   .s_axi_awburst(fsimtop_s_axi_awburst),    // input wire [1 : 0] s_axi_awburst
   .s_axi_awlock(fsimtop_s_axi_awlock),      // input wire [0 : 0] s_axi_awlock
-  .s_axi_awcache(fsimtop_s_axi_awcache),    // input wire [3 : 0] s_axi_awcache
+  // CACHE = xx1x indicates the transcation is modifiable and
+  // that the converter should back narrow reads into wider ones
+  .s_axi_awcache(4'h2),    // input wire [3 : 0] s_axi_awcache
   .s_axi_awprot(fsimtop_s_axi_awprot),      // input wire [2 : 0] s_axi_awprot
   .s_axi_awregion(fsimtop_s_axi_awregion),  // input wire [3 : 0] s_axi_awregion
   .s_axi_awqos(fsimtop_s_axi_awqos),        // input wire [3 : 0] s_axi_awqos
@@ -664,7 +648,9 @@ axi_clock_converter_dramslim clock_convert_dramslim (
   .s_axi_arsize(fsimtop_s_axi_arsize),      // input wire [2 : 0] s_axi_arsize
   .s_axi_arburst(fsimtop_s_axi_arburst),    // input wire [1 : 0] s_axi_arburst
   .s_axi_arlock(fsimtop_s_axi_arlock),      // input wire [0 : 0] s_axi_arlock
-  .s_axi_arcache(fsimtop_s_axi_arcache),    // input wire [3 : 0] s_axi_arcache
+  // CACHE = xx1x indicates the transcation is modifiable and
+  // that the converter should back narrow reads into wider ones
+  .s_axi_arcache(4'h2),                     // input wire [3 : 0] s_axi_arcache
   .s_axi_arprot(fsimtop_s_axi_arprot),      // input wire [2 : 0] s_axi_arprot
   .s_axi_arregion(fsimtop_s_axi_arregion),  // input wire [3 : 0] s_axi_arregion
   .s_axi_arqos(fsimtop_s_axi_arqos),        // input wire [3 : 0] s_axi_arqos

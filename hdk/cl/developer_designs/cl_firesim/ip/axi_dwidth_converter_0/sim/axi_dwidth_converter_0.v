@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -295,7 +295,7 @@ output wire m_axi_rready;
     .C_M_AXI_DATA_WIDTH(512),
     .C_AXI_SUPPORTS_WRITE(1),
     .C_AXI_SUPPORTS_READ(1),
-    .C_FIFO_MODE(0),
+    .C_FIFO_MODE(1),
     .C_S_AXI_ACLK_RATIO(1),
     .C_M_AXI_ACLK_RATIO(2),
     .C_AXI_IS_ACLK_ASYNC(0),
