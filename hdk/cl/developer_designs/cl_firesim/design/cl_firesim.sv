@@ -623,7 +623,7 @@ axi_clock_converter_dramslim clock_convert_dramslim (
   .s_axi_awburst(fsimtop_s_axi_awburst),    // input wire [1 : 0] s_axi_awburst
   .s_axi_awlock(fsimtop_s_axi_awlock),      // input wire [0 : 0] s_axi_awlock
   // CACHE = xx1x indicates the transcation is modifiable and
-  // that the converter should back narrow reads into wider ones
+  // that the converter should pack narrow writes into wider ones
   .s_axi_awcache(4'h2),    // input wire [3 : 0] s_axi_awcache
   .s_axi_awprot(fsimtop_s_axi_awprot),      // input wire [2 : 0] s_axi_awprot
   .s_axi_awregion(fsimtop_s_axi_awregion),  // input wire [3 : 0] s_axi_awregion
@@ -649,7 +649,7 @@ axi_clock_converter_dramslim clock_convert_dramslim (
   .s_axi_arburst(fsimtop_s_axi_arburst),    // input wire [1 : 0] s_axi_arburst
   .s_axi_arlock(fsimtop_s_axi_arlock),      // input wire [0 : 0] s_axi_arlock
   // CACHE = xx1x indicates the transcation is modifiable and
-  // that the converter should back narrow reads into wider ones
+  // that the converter should pack narrow reads into wider ones
   .s_axi_arcache(4'h2),                     // input wire [3 : 0] s_axi_arcache
   .s_axi_arprot(fsimtop_s_axi_arprot),      // input wire [2 : 0] s_axi_arprot
   .s_axi_arregion(fsimtop_s_axi_arregion),  // input wire [3 : 0] s_axi_arregion
