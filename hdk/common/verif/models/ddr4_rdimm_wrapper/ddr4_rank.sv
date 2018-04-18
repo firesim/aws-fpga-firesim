@@ -57,8 +57,6 @@ module ddr4_rank #(
    output reg 		     alert_n		  
    );
 
-  import arch_package::*;
-
   genvar 		     device_x; // used in for loop in generate block (shows number of current device)
   genvar 		     device_y; // used in for loop in generate block (shows number of current device)
   
