@@ -116,7 +116,7 @@ logic clock_gend_85;  // see above, really ~87
 logic clock_gend_75;
 
 logic firesim_internal_clock;
-assign firesim_internal_clock = clock_gend_160;
+assign firesim_internal_clock = clock_gend_90;
 
 clk_wiz_0_firesim firesim_clocking
 (
