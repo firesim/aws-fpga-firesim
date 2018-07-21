@@ -110,28 +110,37 @@ set_msg_config -string {AXI_QUAD_SPI} -suppress
 # may comment them out if they wish to see more information from warning
 # messages.
 set_msg_config -id {Common 17-55}        -suppress
-set_msg_config -id {Vivado 12-4739}      -suppress
-set_msg_config -id {Constraints 18-4866} -suppress
+set_msg_config -id {Designutils 20-1567} -suppress
 set_msg_config -id {IP_Flow 19-2162}     -suppress
+set_msg_config -id {Project 1-498}       -suppress
 set_msg_config -id {Route 35-328}        -suppress
-set_msg_config -id {Vivado 12-1008}      -suppress
 set_msg_config -id {Vivado 12-508}       -suppress
+set_msg_config -id {Constraints 18-4866} -suppress
 set_msg_config -id {filemgmt 56-12}      -suppress
+set_msg_config -id {Constraints 18-4644} -suppress
+set_msg_config -id {Coretcl 2-64}        -suppress
+set_msg_config -id {Vivado 12-4739}      -suppress
+set_msg_config -id {Vivado 12-5201}      -suppress
 set_msg_config -id {DRC CKLD-1}          -suppress
-set_msg_config -id {DRC CKLD-2}          -suppress
 set_msg_config -id {IP_Flow 19-2248}     -suppress
-set_msg_config -id {Vivado 12-1580}      -suppress
+set_msg_config -id {Opt 31-155}          -suppress
+set_msg_config -id {Synth 8-115}         -suppress
+set_msg_config -id {Synth 8-3936}        -suppress
+set_msg_config -id {Vivado 12-1023}      -suppress
 set_msg_config -id {Constraints 18-550}  -suppress
 set_msg_config -id {Synth 8-3295}        -suppress
 set_msg_config -id {Synth 8-3321}        -suppress
 set_msg_config -id {Synth 8-3331}        -suppress
 set_msg_config -id {Synth 8-3332}        -suppress
-set_msg_config -id {Synth 8-6014}        -suppress
-set_msg_config -id {Timing 38-436}       -suppress
-set_msg_config -id {DRC REQP-1853}       -suppress
 set_msg_config -id {Synth 8-350}         -suppress
 set_msg_config -id {Synth 8-3848}        -suppress
 set_msg_config -id {Synth 8-3917}        -suppress
+set_msg_config -id {Synth 8-6014}        -suppress
+set_msg_config -id {Vivado 12-1580}      -suppress
+set_msg_config -id {Constraints 18-619}  -suppress
+set_msg_config -id {DRC CKLD-2}          -suppress
+set_msg_config -id {DRC REQP-1853}       -suppress
+set_msg_config -id {Timing 38-436}       -suppress
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
 
@@ -316,11 +325,23 @@ if {$implement} {
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Compress files for sending to AWS. "
 
+
 # Create manifest file
 set manifest_file [open "$CL_DIR/build/checkpoints/to_aws/${timestamp}.manifest.txt" w]
 set hash [lindex [split [exec sha256sum $CL_DIR/build/checkpoints/to_aws/${timestamp}.SH_CL_routed.dcp] ] 0]
+set TOOL_VERSION $::env(VIVADO_TOOL_VERSION)
+set vivado_version [version -short]
+set ver_2017_4 2017.4
+puts "vivado_version is $vivado_version\n"
 
+if { [string first  $ver_2017_4 $vivado_version] == 0 } {
+puts $manifest_file "manifest_format_version=2\n"
+#puts "in 2017.4"
+} else {
 puts $manifest_file "manifest_format_version=1\n"
+#puts "in 2017.1"
+}
+
 puts $manifest_file "pci_vendor_id=$vendor_id\n"
 puts $manifest_file "pci_device_id=$device_id\n"
 puts $manifest_file "pci_subsystem_id=$subsystem_id\n"
@@ -329,6 +350,9 @@ puts $manifest_file "dcp_hash=$hash\n"
 puts $manifest_file "shell_version=$shell_version\n"
 puts $manifest_file "dcp_file_name=${timestamp}.SH_CL_routed.dcp\n"
 puts $manifest_file "hdk_version=$hdk_version\n"
+if { [string first $ver_2017_4 $vivado_version] == 0} {
+puts $manifest_file "tool_version=v2017.4\n"
+}
 puts $manifest_file "date=$timestamp\n"
 puts $manifest_file "clock_recipe_a=$clock_recipe_a\n"
 puts $manifest_file "clock_recipe_b=$clock_recipe_b\n"

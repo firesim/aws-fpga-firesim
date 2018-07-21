@@ -23,8 +23,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "fpga_pci_sv.h"
-#include <utils/sh_dpi_tasks.h>
+#include "common_dma.h"
 
 /* this is the connector from the FireSim driver to the XSim simulation.
  * this gets built into an XSim simulator including everything that goes
