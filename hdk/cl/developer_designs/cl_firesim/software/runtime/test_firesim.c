@@ -23,6 +23,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#ifdef SV_TEST
+#ifndef VIVADO_SIM
+#include "svdpi.h"
+#endif
+#endif
+
 #include "common_dma.h"
 
 /* this is the connector from the FireSim driver to the XSim simulation.
