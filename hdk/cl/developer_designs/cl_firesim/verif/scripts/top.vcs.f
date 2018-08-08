@@ -48,7 +48,7 @@ ${CL_ROOT}/../common/design/cl_common_defines.vh
 ${CL_ROOT}/design/cl_firesim_defines.vh
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_vio_counter/sim/ila_vio_counter.v
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_0/sim/ila_0.v
-${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/hdl/bd_a493.v
+${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/sim/bd_a493.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/sim/bd_a493_xsdbm_0.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/xsdbm_v3_0_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/ltlib_v1_0_vl_rfs.v
@@ -58,16 +58,19 @@ ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/hdl/bd_a493_wrapper.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/sim/cl_debug_bridge.v
 ${HDK_SHELL_DESIGN_DIR}/ip/vio_0/sim/vio_0.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/sim/axi_register_slice_light.v
+${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice/sim/axi_register_slice.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_register_slice_v2_1_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_infrastructure_v1_1_vl_rfs.v
-${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice/sim/axi_register_slice.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_clock_converter_0/hdl/axi_clock_converter_v2_1_vl_rfs.v
-${HDK_SHELL_DESIGN_DIR}/ip/axi_clock_converter_0/sim/axi_clock_converter_0.v
+${SH_LIB_DIR}/../ip/axi_clock_converter_0/sim/axi_clock_converter_0.v
 ${CL_ROOT}/ip/axi_clock_converter_dramslim/sim/axi_clock_converter_dramslim.v
 ${CL_ROOT}/ip/axi_clock_converter_oclnew/sim/axi_clock_converter_oclnew.v
+${CL_ROOT}/ip/axi_clock_converter_oclnew/hdl/axi_clock_converter_v2_1_vl_rfs.v
 ${CL_ROOT}/ip/axi_clock_converter_512_wide/sim/axi_clock_converter_512_wide.v
 ${CL_ROOT}/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/sim/axi_dwidth_converter_0.v
+${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_dwidth_converter_v2_1_vl_rfs.v
+${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_register_slice_v2_1_vl_rfs.v
 ${CL_ROOT}/design/cl_firesim_generated.sv
 ${CL_ROOT}/design/cl_firesim.sv
 
