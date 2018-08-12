@@ -265,6 +265,8 @@ axi_clock_converter_oclnew ocl_clock_convert (
    logic cl_sh_dma_pcis_rvalid_FIRESIM;
    logic sh_cl_dma_pcis_rready_FIRESIM;
 
+   assign cl_sh_dma_wr_full = 1'b0;
+   assign cl_sh_dma_rd_full = 1'b0;
 
 axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
@@ -775,7 +777,7 @@ axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
   .m_axi_awaddr(cl_sh_ddr_awaddr),      // output wire [63 : 0] m_axi_awaddr
   .m_axi_awlen(cl_sh_ddr_awlen),        // output wire [7 : 0] m_axi_awlen
   .m_axi_awsize(cl_sh_ddr_awsize),      // output wire [2 : 0] m_axi_awsize
-  .m_axi_awburst(),    // output wire [1 : 0] m_axi_awburst
+  .m_axi_awburst(cl_sh_ddr_awburst),    // output wire [1 : 0] m_axi_awburst
   .m_axi_awlock(),      // output wire [0 : 0] m_axi_awlock
   .m_axi_awcache(),    // output wire [3 : 0] m_axi_awcache
   .m_axi_awprot(),      // output wire [2 : 0] m_axi_awprot
@@ -797,7 +799,7 @@ axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
   .m_axi_araddr(cl_sh_ddr_araddr),      // output wire [63 : 0] m_axi_araddr
   .m_axi_arlen(cl_sh_ddr_arlen),        // output wire [7 : 0] m_axi_arlen
   .m_axi_arsize(cl_sh_ddr_arsize),      // output wire [2 : 0] m_axi_arsize
-  .m_axi_arburst(),    // output wire [1 : 0] m_axi_arburst
+  .m_axi_arburst(cl_sh_ddr_arburst),    // output wire [1 : 0] m_axi_arburst
   .m_axi_arlock(),      // output wire [0 : 0] m_axi_arlock
   .m_axi_arcache(),    // output wire [3 : 0] m_axi_arcache
   .m_axi_arprot(),      // output wire [2 : 0] m_axi_arprot
