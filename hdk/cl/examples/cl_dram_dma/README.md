@@ -1,6 +1,6 @@
 # CL_DRAM_DMA CustomLogic Example
 
-## :exclamation:  NOTE: If this is your first time using F1, you should read [How To Create an Amazon FPGA Image (AFI) From One of The CL Examples: Step-by-Step Guide](./../README.md) first!!
+## :exclamation:  NOTE: If this is your first time using F1, you should read [How To Create an Amazon FPGA Image (AFI) From One of The CL Examples: Step-by-Step Guide](./../../../../README.md) first!!
 
 ## Table of Content
 
@@ -44,13 +44,41 @@ All four DRAM channels are used.
 
 The DRAM space is 64GiB, and is mapped to the sh_cl_dma_pcis AXI4 bus.
 
+### Disabling Unused DDR controllers for simulation
+
+Disabling unused DDR controllers will improve simulation performance. cl_dram_dma example has all DDR controllers enabled by default. To disable a DDR controller which is not used follow the steps below.
+
+#### Design Changes
+
+Individual DDR controllers can be enabled and disabled by simply updating the appropriate defines in the [cl_dram_dma_defines.vh](design/cl_dram_dma_defines.vh) file. The [sh_ddr.sv](../../../common/shell_v04261818/design/sh_ddr/sim/sh_ddr.sv) file contains the necessary logic to remove and tie-off appropriate interfaces for the disabled DDR controllers.
+
+For the cl_dram_dma example a memory range has been allocated for each DDR. So, if a particular DDR controller is disabled, then the developer should take care to handle transactions to that addresss range since there will be no DDR controller to respond to the request. The address ranges for each DDR controller is described below in the [dma_pcis AXI4 bus section](#dma_pcis).
+
+#### Test Changes
+
+If a particular ddr controller is disabled, make sure that the test is not accessing address space for that DDR controller. 
+
+Please look at [dma_pcis AXI4 bus section](#dma_pcis) for address ranges.
+
+For DDRs that are enabled, make sure that the DDRs are initialized using the poke_stat commands below.
+
+eg:
+To initialize DDR_A, DDR-B and DDR-D
+
+tb.poke_stat(.addr(8'h0c), .ddr_idx(0), .data(32'h0000_0000));
+tb.poke_stat(.addr(8'h0c), .ddr_idx(1), .data(32'h0000_0000));
+tb.poke_stat(.addr(8'h0c), .ddr_idx(3), .data(32'h0000_0000));
+
+Make sure that the Host to Card and Card to Host DMA transfers only access enabled DDR controller address space.
+
+<a name="dma_pcis"></a>
 ### dma_pcis AXI4 bus
 
 sh\_cl\_dma\_pcis exposes a address windows of 128GiB matching AppPF BAR4.
 
 
 This memory space is mapped to the 64GiB DRAM space (the upper half of the 128GiB will just wrap around to the lower half).
-An [axi_crossbar_0](../../../common/shell_v071417d3/design/ip/cl_axi_interconnect/hdl/cl_axi_interconnect.v)
+An [axi_crossbar_0](../../../common/shell_v04261818/design/ip/cl_axi_interconnect/synth/cl_axi_interconnect.v)
 will interleave inbound addresses according to DDR_A (base_addr=0x0_0000_00000, range=16GB),
 DDR_B(base_addr=0x4_0000_0000, range=16GB), DDR_C(base_addr=0x8_0000_0000, range=16GB),
 DDR_D(base_addr=0xC_0000_0000, range=16GB).
@@ -111,10 +139,41 @@ flr_reset is ignored in this design
 
 <a name="software"></a>
 ## Runtime software
-DMA accesses rely on the edma driver- see the [edma driver readme](../../../../sdk/linux_kernel_drivers/edma/README.md)
+DMA accesses rely on the xdma driver- see the [xdma driver readme](../../../../sdk/linux_kernel_drivers/xdma/README.md)
 
 The DRAM DMA example includes runtime software to demonstate working DMA accesses. The runtime example is located [in the runtime directory](software/runtime/test_dram_dma.c)
-  
+
+There are two example tests in cl_dram_dma example.
+
+# test_dram_dma.c
+
+This test runs a regular software test with data transfer with all 4 DMA channels enabled.
+
+## Compile and run instructions
+cd $CL_DIR/software/runtime
+
+make all
+
+sudo ./test_dram_dma
+
+# test_dram_dma_hwsw_cosim.c
+
+This test runs a software test with HW/SW co-simulation enabled with all 4 DMA channels enabled.
+
+## Compile and run instructions
+
+cd $CL_DIR/software/runtime
+
+make TEST=test_dram_dma_hwsw_cosim
+
+sudo ./test_dram_dma_hwsw_cosim
+
+The test can be simulated with XSIM as follows.
+
+cd $CL_DIR/verif/scripts
+
+make C_TEST=test_dram_dma_hwsw_cosim
+
 <a name="metadata"></a>
 ## DRAM DMA Example Metadata
 The following table displays information about the CL that is required to register it as an AFI with AWS.
@@ -122,11 +181,11 @@ Alternatively, you can directly use a pre-generated AFI for this CL.
 
 | Key   | Value     |
 |-----------|------|
-| Shell Version | 0x071417d3 |
+| Shell Version | 0x04261818 |
 | PCI Device ID | 0xF001 |
 | PCI Vendor ID | 0x1D0F (Amazon) |
 | PCI Subsystem ID | 0x1D51 |
 | PCI Subsystem Vendor ID | 0xFEDC |
-| Pre-generated AFI ID | afi-0233d4b4e175518ba |
-| Pre-generated AGFI ID | agfi-08f98fa67671454fe |
+| Pre-generated AFI ID | afi-0f6832ffcb43fdc24 |
+| Pre-generated AGFI ID | agfi-0367124aff5e7c5f7 |
 

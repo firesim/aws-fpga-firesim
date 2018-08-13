@@ -24,7 +24,7 @@ See TESTING.md for details.
 from __future__ import print_function
 import boto3
 import os
-from os.path import basename, dirname, realpath
+from os.path import basename, dirname, realpath, stat
 import glob
 import pytest
 import re
@@ -68,6 +68,7 @@ class AwsFpgaTestBase(object):
 
     ADD_EXAMPLEPATH = False
     ADD_RTENAME = False
+    ADD_XILINX_VERSION = False
 
     msix_agfi = 'agfi-09c2a21805a8b9257'
 
@@ -209,72 +210,78 @@ class AwsFpgaTestBase(object):
         return os.path.join(AwsFpgaTestBase.get_cl_dir(cl), 'build/scripts')
 
     @staticmethod
-    def get_cl_s3_dcp_tag(cl, option_tag):
+    def get_cl_s3_dcp_tag(cl, option_tag, xilinxVersion):
         '''
         @param option_tag: A tag that is unique for each build.
             Required because a CL can be built with different options such as clock recipes.
         '''
         assert option_tag != ''
-        return "jenkins/{}/{}/{}/dcp".format(os.environ['BUILD_TAG'], cl, option_tag)
+        assert xilinxVersion != ''
+        return "jenkins/{}/cl/{}/{}/{}/dcp".format(os.environ['BUILD_TAG'], xilinxVersion, cl, option_tag)
 
     @staticmethod
-    def get_cl_s3_afi_tag(cl, option_tag):
+    def get_cl_s3_afi_tag(cl, option_tag, xilinxVersion):
         '''
         @param option_tag: A tag that is unique for each build.
             Required because a CL can be built with different options such as clock recipes.
         '''
         assert option_tag != ''
-        return "jenkins/{}/{}/{}/create-afi/afi_ids.txt".format(os.environ['BUILD_TAG'], cl, option_tag)
+        assert xilinxVersion != ''
+        return "jenkins/{}/cl/{}/{}/{}/create-afi/afi_ids.txt".format(os.environ['BUILD_TAG'], xilinxVersion, cl, option_tag)
 
     @staticmethod
     def get_sdaccel_xclbin_dir(examplePath):
         return os.path.join(AwsFpgaTestBase.get_sdaccel_example_fullpath(examplePath=examplePath), 'xclbin')
 
     @staticmethod
-    def get_sdaccel_example_s3_root_tag(examplePath, target, rteName):
+    def get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
         @param target: The target to build. For eg: hw, hw_emu, sw_emu
         @param rteName: The runtime environment
+        @param xilinxVersion: The Xilinx tool version
         '''
         assert target != ''
         assert examplePath != ''
         assert rteName != ''
+        assert xilinxVersion != ''
         example_relative_path = os.path.relpath(examplePath, AwsFpgaTestBase.xilinx_sdaccel_examples_prefix_path)
-        return "jenkins/{}/SDAccel/{}/{}/{}".format(os.environ['BUILD_TAG'], rteName, example_relative_path, target)
+        return "jenkins/{}/SDAccel/{}/{}/{}/{}".format(os.environ['BUILD_TAG'], xilinxVersion, rteName, example_relative_path, target)
 
     @staticmethod
-    def get_sdaccel_example_s3_xclbin_tag(examplePath, target, rteName):
+    def get_sdaccel_example_s3_xclbin_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
         @param target: The target to build. For eg: hw, hw_emu, sw_emu
         @param rteName: The runtime environment
-
+        @param xilinxVersion: The Xilinx tool version
         '''
         assert target != ''
         assert examplePath != ''
         assert rteName != ''
-
-        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName)
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
 
         return "{}/xclbin".format(root_tag)
 
     @staticmethod
-    def get_sdaccel_example_s3_dcp_tag(examplePath, target, rteName):
+    def get_sdaccel_example_s3_dcp_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
         @param target: The target to build. For eg: hw, hw_emu, sw_emu
         @param rteName: The runtime environment
+        @param xilinxVersion: The Xilinx tool version
         '''
         assert target != ''
         assert examplePath != ''
         assert rteName != ''
-        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName)
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
 
         return "{}/dcp".format(root_tag)
 
     @staticmethod
-    def get_sdaccel_example_s3_afi_tag(examplePath, target, rteName):
+    def get_sdaccel_example_s3_afi_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
         @param target: The target to build. For eg: hw, hw_emu, sw_emu
@@ -283,7 +290,8 @@ class AwsFpgaTestBase(object):
         assert target != ''
         assert examplePath != ''
         assert rteName != ''
-        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName)
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
 
         return "{}/create-afi/afi-ids.txt".format(root_tag)
 
@@ -316,14 +324,15 @@ class AwsFpgaTestBase(object):
         return "{}/{}/".format(AwsFpgaTestBase.WORKSPACE, examplePath)
 
     @staticmethod
-    def fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName):
+    def fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion):
         cwd = os.getcwd()
         assert examplePath != ''
         assert rteName != ''
+        assert xilinxVersion != ''
 
         os.chdir(AwsFpgaTestBase.get_sdaccel_example_fullpath(examplePath))
-        rc = os.system("aws s3 cp s3://{}/{} {} --recursive".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_sdaccel_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName), AwsFpgaTestBase.get_sdaccel_xclbin_dir(examplePath=examplePath)))
-        assert rc == 0, "Error while copying from s3://{}/{} to {}".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_sdaccel_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName), AwsFpgaTestBase.get_sdaccel_xclbin_dir(examplePath=examplePath))
+        rc = os.system("aws s3 cp s3://{}/{} {} --recursive".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_sdaccel_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName, xilinxVersion=xilinxVersion), AwsFpgaTestBase.get_sdaccel_xclbin_dir(examplePath=examplePath)))
+        assert rc == 0, "Error while copying from s3://{}/{} to {}".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_sdaccel_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName, xilinxVersion=xilinxVersion), AwsFpgaTestBase.get_sdaccel_xclbin_dir(examplePath=examplePath))
         xclbin_path = AwsFpgaTestBase.get_sdaccel_xclbin_dir(examplePath=examplePath)
 
         logger.debug(xclbin_path)
@@ -333,24 +342,24 @@ class AwsFpgaTestBase(object):
         return xclbin_path
 
     @staticmethod
-    def get_sdaccel_xclbin_file(examplePath, rteName):
-        xclbin_path = AwsFpgaTestBase.fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName)
+    def get_sdaccel_xclbin_file(examplePath, rteName, xilinxVersion):
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        xclbin_path = AwsFpgaTestBase.fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion)
         logger.info("Checking that a non zero size xclbin file exists in {}".format(xclbin_path))
-        if (rteName == '1ddr'):
-            xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*_{}-*.xclbin".format("hw", "1ddr")))
-        if (rteName == '4ddr_debug'):
-            xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*_{}.xclbin".format("hw", "4ddr-xpr-2pr-debug_4_0")))
-        if (rteName == '4ddr'):
-            xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*_{}.xclbin".format("hw", "4ddr-xpr-2pr_4_0")))
+
+        xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*.xclbin".format("hw")))
         return xclbin
 
     @staticmethod
-    def get_sdaccel_aws_xclbin_file(examplePath, rteName):
+    def get_sdaccel_aws_xclbin_file(examplePath, rteName, xilinxVersion):
         assert examplePath != ''
         assert rteName != ''
+        assert xilinxVersion != ''
 
-        xclbin_path = AwsFpgaTestBase.fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName)
-        logger.info("Checking that a non zero size xclbin file exists in {}".format(xclbin_path))
+        xclbin_path = AwsFpgaTestBase.fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion)
+        logger.info("Checking that a non zero size awsxclbin file exists in {}".format(xclbin_path))
         aws_xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*.awsxclbin".format("hw")))
         return aws_xclbin
 
@@ -389,15 +398,15 @@ class AwsFpgaTestBase(object):
         return (agfi, afi)
 
     @staticmethod
-    def fpga_clear_local_image(slot):
+    def fpga_clear_local_image(slot, request_timeout=180, sync_timeout=180):
         logger.info("Clearing FPGA slot {}".format(slot))
-        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("sudo fpga-clear-local-image  -S {}".format(slot))
+        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("sudo fpga-clear-local-image -S {} --request-timeout {} --sync-timeout {}".format(slot, request_timeout, sync_timeout))
         assert rc == 0, "Clearing FPGA slot {} failed.".format(slot)
 
     @staticmethod
-    def fpga_load_local_image(agfi, slot):
+    def fpga_load_local_image(agfi, slot, request_timeout=180, sync_timeout=180):
         logger.info("Loading {} into slot {}".format(agfi, slot))
-        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("sudo fpga-load-local-image -S {} -I {}".format(slot, agfi))
+        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("sudo fpga-load-local-image -S {} -I {} --request-timeout {} --sync-timeout {}".format(slot, agfi, request_timeout, sync_timeout))
         assert rc == 0, "Failed to load {} in slot {}.".format(agfi, slot)
 
     @staticmethod
@@ -447,16 +456,45 @@ class AwsFpgaTestBase(object):
         return filename
 
     @staticmethod
-    def get_fio_dma_tools():
-        '''Retrieve fio_dma_tools from S3'''
-        local_path = os.path.join(AwsFpgaTestBase.WORKSPACE, 'sdk/tests/fio_dma_tools/')
-        # If already exists then delete it so that get the latest
-        if os.path.exists(local_path):
-            AwsFpgaTestBase.run_cmd("rm -rf {}".format(local_path), echo=True)
-        logger.info("Downloading fio_dma_tools")
-        s3_path = 's3://' + AwsFpgaTestBase.s3_bucket + '/fio_dma_tools_compiled'
-        # For some reason S3 client doesn't have a native --recursive option so using the CLI
-        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("aws s3 cp {} {} --recursive".format(s3_path, local_path), echo=True)
+    def get_fio_tool_root():
+        return os.path.join(AwsFpgaTestBase.WORKSPACE, 'sdk/tests/fio_dma_tools')
+
+    @staticmethod
+    def get_fio_tool_install_path():
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), 'scripts/fio_github_repo')
+
+    @staticmethod
+    def get_fio_tool_install_script():
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), 'scripts/fio_install.py')
+
+    @staticmethod
+    def get_fio_tool_run_script():
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), 'scripts/fio')
+
+    @staticmethod
+    def get_fio_verify_script(driver='xdma'):
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), "scripts/{}_4-ch_4-1M_verify.fio".format(driver))
+
+    @staticmethod
+    def get_fio_read_benchmark_script(driver='xdma'):
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), "scripts/{}_4-ch_4-1M_read.fio".format(driver))
+
+    @staticmethod
+    def get_fio_write_benchmark_script(driver='xdma'):
+        return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), "scripts/{}_4-ch_4-1M_write.fio".format(driver))
+
+    @staticmethod
+    def setup_fio_tools(python_version=2.7):
+        '''Install and setup fio tools'''
+        # If downloaded repo already, exists, delete it so we can fetch again
+        if os.path.exists(AwsFpgaTestBase.get_fio_tool_install_path()):
+            AwsFpgaTestBase.run_cmd("rm -rf {}".format(AwsFpgaTestBase.get_fio_tool_install_path()), echo=True)
+
+        logger.info("Installing fio_dma_tools")
+
+        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("python{} {} {}".format(python_version, AwsFpgaTestBase.get_fio_tool_install_script(), AwsFpgaTestBase.get_fio_tool_install_path()), echo=True)
         assert rc == 0
-        assert os.path.exists("{}/scripts/fio".format(local_path))
-        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("chmod +x {0}/*.sh {0}/scripts/fio".format(local_path))
+        assert os.path.exists("{}".format(AwsFpgaTestBase.get_fio_tool_run_script()))
+
+        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("chmod +x {}".format(AwsFpgaTestBase.get_fio_tool_run_script()))
+        assert rc == 0

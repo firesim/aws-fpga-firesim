@@ -32,13 +32,6 @@ module cl_dram_dma #(parameter NUM_DDR=4)
 
 `include "unused_sh_bar1_template.inc"
 
-// Defining local parameters that will instantiate the
-// 3 DRAM controllers inside the CL
-  
-   localparam DDR_A_PRESENT = 1;
-   localparam DDR_B_PRESENT = 1;
-   localparam DDR_D_PRESENT = 1;
-
 // Define the addition pipeline stag
 // needed to close timing for the various
 // place where ATG (Automatic Test Generator)
@@ -70,6 +63,7 @@ module cl_dram_dma #(parameter NUM_DDR=4)
 axi_bus_t lcl_cl_sh_ddra();
 axi_bus_t lcl_cl_sh_ddrb();
 axi_bus_t lcl_cl_sh_ddrd();
+axi_bus_t axi_bus_tied();
 
 axi_bus_t sh_cl_dma_pcis_bus();
 axi_bus_t sh_cl_dma_pcis_q();
@@ -112,6 +106,15 @@ logic [2:0] dbg_scrb_mem_sel;
 //---------------------------- 
 // End Internal signals
 //----------------------------
+
+// Unused 'full' signals
+assign cl_sh_dma_rd_full  = 1'b0;
+assign cl_sh_dma_wr_full  = 1'b0;
+
+// Unused *burst signals
+assign cl_sh_ddr_arburst[1:0] = 2'h0;
+assign cl_sh_ddr_awburst[1:0] = 2'h0;
+
 
 assign clk = clk_main_a0;
 
@@ -461,6 +464,7 @@ logic[15:0] cl_sh_ddr_awid_2d[2:0];
 logic[63:0] cl_sh_ddr_awaddr_2d[2:0];
 logic[7:0] cl_sh_ddr_awlen_2d[2:0];
 logic[2:0] cl_sh_ddr_awsize_2d[2:0];
+logic[1:0] cl_sh_ddr_awburst_2d[2:0];
 logic cl_sh_ddr_awvalid_2d [2:0];
 logic[2:0] sh_cl_ddr_awready_2d;
 
@@ -480,6 +484,7 @@ logic[15:0] cl_sh_ddr_arid_2d[2:0];
 logic[63:0] cl_sh_ddr_araddr_2d[2:0];
 logic[7:0] cl_sh_ddr_arlen_2d[2:0];
 logic[2:0] cl_sh_ddr_arsize_2d[2:0];
+logic[1:0] cl_sh_ddr_arburst_2d[2:0];
 logic[2:0] cl_sh_ddr_arvalid_2d;
 logic[2:0] sh_cl_ddr_arready_2d;
 
@@ -495,6 +500,7 @@ assign cl_sh_ddr_awaddr_2d = '{lcl_cl_sh_ddrd.awaddr, lcl_cl_sh_ddrb.awaddr, lcl
 assign cl_sh_ddr_awlen_2d = '{lcl_cl_sh_ddrd.awlen, lcl_cl_sh_ddrb.awlen, lcl_cl_sh_ddra.awlen};
 assign cl_sh_ddr_awsize_2d = '{lcl_cl_sh_ddrd.awsize, lcl_cl_sh_ddrb.awsize, lcl_cl_sh_ddra.awsize};
 assign cl_sh_ddr_awvalid_2d = '{lcl_cl_sh_ddrd.awvalid, lcl_cl_sh_ddrb.awvalid, lcl_cl_sh_ddra.awvalid};
+assign cl_sh_ddr_awburst_2d = {2'b01, 2'b01, 2'b01};
 assign {lcl_cl_sh_ddrd.awready, lcl_cl_sh_ddrb.awready, lcl_cl_sh_ddra.awready} = sh_cl_ddr_awready_2d;
 
 assign cl_sh_ddr_wid_2d = '{lcl_cl_sh_ddrd.wid, lcl_cl_sh_ddrb.wid, lcl_cl_sh_ddra.wid};
@@ -514,6 +520,7 @@ assign cl_sh_ddr_araddr_2d = '{lcl_cl_sh_ddrd.araddr, lcl_cl_sh_ddrb.araddr, lcl
 assign cl_sh_ddr_arlen_2d = '{lcl_cl_sh_ddrd.arlen, lcl_cl_sh_ddrb.arlen, lcl_cl_sh_ddra.arlen};
 assign cl_sh_ddr_arsize_2d = '{lcl_cl_sh_ddrd.arsize, lcl_cl_sh_ddrb.arsize, lcl_cl_sh_ddra.arsize};
 assign cl_sh_ddr_arvalid_2d = {lcl_cl_sh_ddrd.arvalid, lcl_cl_sh_ddrb.arvalid, lcl_cl_sh_ddra.arvalid};
+assign cl_sh_ddr_arburst_2d = {2'b01, 2'b01, 2'b01};
 assign {lcl_cl_sh_ddrd.arready, lcl_cl_sh_ddrb.arready, lcl_cl_sh_ddra.arready} = sh_cl_ddr_arready_2d;
 
 assign {lcl_cl_sh_ddrd.rid, lcl_cl_sh_ddrb.rid, lcl_cl_sh_ddra.rid} = {sh_cl_ddr_rid_2d[2], sh_cl_ddr_rid_2d[1], sh_cl_ddr_rid_2d[0]};
@@ -526,9 +533,9 @@ assign cl_sh_ddr_rready_2d = {lcl_cl_sh_ddrd.rready, lcl_cl_sh_ddrb.rready, lcl_
 (* dont_touch = "true" *) logic sh_ddr_sync_rst_n;
 lib_pipe #(.WIDTH(1), .STAGES(4)) SH_DDR_SLC_RST_N (.clk(clk), .rst_n(1'b1), .in_bus(sync_rst_n), .out_bus(sh_ddr_sync_rst_n));
 sh_ddr #(
-         .DDR_A_PRESENT(DDR_A_PRESENT),
-         .DDR_B_PRESENT(DDR_B_PRESENT),
-         .DDR_D_PRESENT(DDR_D_PRESENT)
+         .DDR_A_PRESENT(`DDR_A_PRESENT),
+         .DDR_B_PRESENT(`DDR_B_PRESENT),
+         .DDR_D_PRESENT(`DDR_D_PRESENT)
    ) SH_DDR
    (
    .clk(clk),
@@ -601,6 +608,7 @@ sh_ddr #(
    .cl_sh_ddr_awlen(cl_sh_ddr_awlen_2d),
    .cl_sh_ddr_awsize(cl_sh_ddr_awsize_2d),
    .cl_sh_ddr_awvalid(cl_sh_ddr_awvalid_2d),
+   .cl_sh_ddr_awburst(cl_sh_ddr_awburst_2d),
    .sh_cl_ddr_awready(sh_cl_ddr_awready_2d),
 
    .cl_sh_ddr_wid(cl_sh_ddr_wid_2d),
@@ -620,6 +628,7 @@ sh_ddr #(
    .cl_sh_ddr_arlen(cl_sh_ddr_arlen_2d),
    .cl_sh_ddr_arsize(cl_sh_ddr_arsize_2d),
    .cl_sh_ddr_arvalid(cl_sh_ddr_arvalid_2d),
+   .cl_sh_ddr_arburst(cl_sh_ddr_arburst_2d),
    .sh_cl_ddr_arready(sh_cl_ddr_arready_2d),
 
    .sh_cl_ddr_rid(sh_cl_ddr_rid_2d),
@@ -728,13 +737,12 @@ cl_sda_slv CL_SDA_SLV (
 
 `ifndef DISABLE_VJTAG_DEBUG
 
-cl_ila CL_ILA (
+   cl_ila #(.DDR_A_PRESENT(`DDR_A_PRESENT) ) CL_ILA   (
 
    .aclk(clk),
-
    .drck(drck),
    .shift(shift),
-   .tdi(tdi),
+      .tdi(tdi),
    .update(update),
    .sel(sel),
    .tdo(tdo),
@@ -744,10 +752,12 @@ cl_ila CL_ILA (
    .reset(reset),
    .capture(capture),
    .bscanid_en(bscanid_en),
- 
    .sh_cl_dma_pcis_q(sh_cl_dma_pcis_q),
+`ifndef DDR_A_ABSENT   
    .lcl_cl_sh_ddra(lcl_cl_sh_ddra)
-
+`else
+   .lcl_cl_sh_ddra(axi_bus_tied)
+`endif
 );
 
 cl_vio CL_VIO (
@@ -762,10 +772,38 @@ cl_vio CL_VIO (
 //----------------------------------------- 
 // Virtual JATG ILA Debug core example 
 //-----------------------------------------
+// tie off for ILA port when probing block not present
+   assign axi_bus_tied.awvalid = 1'b0 ;
+   assign axi_bus_tied.awaddr = 64'b0 ;
+   assign axi_bus_tied.awready = 1'b0 ;
+   assign axi_bus_tied.wvalid = 1'b0 ;
+   assign axi_bus_tied.wstrb = 64'b0 ;
+   assign axi_bus_tied.wlast = 1'b0 ;
+   assign axi_bus_tied.wready = 1'b0 ;
+   assign axi_bus_tied.wdata = 512'b0 ;
+   assign axi_bus_tied.arready = 1'b0 ;
+   assign axi_bus_tied.rdata = 512'b0 ;
+   assign axi_bus_tied.araddr = 64'b0 ;
+   assign axi_bus_tied.arvalid = 1'b0 ;
+   assign axi_bus_tied.awid = 16'b0 ;
+   assign axi_bus_tied.arid = 16'b0 ;
+   assign axi_bus_tied.awlen = 8'b0 ;
+   assign axi_bus_tied.rlast = 1'b0 ;
+   assign axi_bus_tied.rresp = 2'b0 ;
+   assign axi_bus_tied.rid = 16'b0 ;
+   assign axi_bus_tied.rvalid = 1'b0 ;
+   assign axi_bus_tied.arlen = 8'b0 ;
+   assign axi_bus_tied.bresp = 2'b0 ;
+   assign axi_bus_tied.rready = 1'b0 ;
+   assign axi_bus_tied.bvalid = 1'b0 ;
+   assign axi_bus_tied.bid = 16'b0 ;
+   assign axi_bus_tied.bready = 1'b0 ;
+
 
 // Temporal workaround until these signals removed from the shell
 
      assign cl_sh_pcim_awuser = 18'h0;
      assign cl_sh_pcim_aruser = 18'h0;
+
 
 endmodule   

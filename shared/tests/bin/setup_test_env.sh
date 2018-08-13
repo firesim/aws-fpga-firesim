@@ -54,7 +54,7 @@ for python_version in ${python_versions[@]}; do
         fi
         sudo $pip install --upgrade pip
     fi
-    
+
     for p in ${python_packages[@]}; do
         if ! $pip show $p > /dev/null; then
             echo "Installing $p"
