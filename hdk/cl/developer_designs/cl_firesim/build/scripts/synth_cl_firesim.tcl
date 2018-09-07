@@ -1,3 +1,12 @@
+########################################
+## Generate ILA based on Recipe 
+########################################
+
+puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling firesim_ila_insert_vivado.tcl to generate ILAs from developer's specified recipe.";
+
+source $CL_DIR/design/ila_files/firesim_ila_insert_vivado.tcl
+
+
 #Param needed to avoid clock name collisions
 set_param sta.enableAutoGenClkNamePersistence 0
 set CL_MODULE $CL_MODULE
@@ -62,7 +71,8 @@ read_ip [ list \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
   $CL_DIR/ip/axi_dwidth_converter_0/axi_dwidth_converter_0.xci \
-  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci
+  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci \
+  $CL_DIR/ip/firesim_ila_ip/ila_firesim_0/ila_firesim_0.xci
 ]
 
 # Additional IP's that might be needed if using the DDR
