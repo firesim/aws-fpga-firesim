@@ -35,6 +35,9 @@ if {[llength [glob -nocomplain -dir $TARGET_DIR *]] != 0} {
 
 ## Change file names and paths below to reflect your CL area.  DO NOT include AWS RTL files.
 file copy -force $CL_DIR/design/cl_firesim_defines.vh                 $TARGET_DIR
+file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_inst.v   $TARGET_DIR
+file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_ports.v  $TARGET_DIR
+file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_wires.v  $TARGET_DIR
 file copy -force $CL_DIR/design/cl_id_defines.vh                      $TARGET_DIR
 file copy -force $CL_DIR/design/cl_firesim.sv                         $TARGET_DIR 
 file copy -force $CL_DIR/design/cl_firesim_generated.sv               $TARGET_DIR 
