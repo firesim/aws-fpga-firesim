@@ -27,6 +27,7 @@
 
 -sourcelibdir ${CL_ROOT}/../common/design
 -sourcelibdir ${CL_ROOT}/design
+-sourcelibdir ${CL_ROOT}/design/ila_files
 -sourcelibdir ${CL_ROOT}/verif/sv
 -sourcelibdir ${SH_LIB_DIR}
 -sourcelibdir ${SH_INF_DIR}
@@ -36,6 +37,7 @@
 
 -include ${CL_ROOT}/../common/design
 -include ${CL_ROOT}/verif/sv
+-include ${CL_ROOT}/design/ila_files
 -include ${SH_LIB_DIR}
 -include ${SH_INF_DIR}
 -include ${SH_SH_DIR}
@@ -49,6 +51,9 @@
 
 ${CL_ROOT}/../common/design/cl_common_defines.vh
 ${CL_ROOT}/design/cl_firesim_defines.vh
+${CL_ROOT}/design/ila_files/firesim_ila_insert_inst.v
+${CL_ROOT}/design/ila_files/firesim_ila_insert_ports.v
+${CL_ROOT}/design/ila_files/firesim_ila_insert_wires.v
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_vio_counter/sim/ila_vio_counter.v
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_0/sim/ila_0.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/sim/bd_a493.v
