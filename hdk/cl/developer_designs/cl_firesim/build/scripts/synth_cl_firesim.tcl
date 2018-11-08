@@ -72,6 +72,7 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/cl_debug_bridge/cl_debug_bridge.xci \
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
+  $HDK_SHELL_DESIGN_DIR/ip/axi_clock_converter_0/axi_clock_converter_0.xci \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
@@ -81,8 +82,10 @@ read_ip [ list \
 ]
 
 # Additional IP's that might be needed if using the DDR
+read_ip [ list \
+ $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci 
+]
 read_bd [ list \
- $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci \
  $HDK_SHELL_DESIGN_DIR/ip/cl_axi_interconnect/cl_axi_interconnect.bd
 ]
 
