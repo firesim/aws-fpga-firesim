@@ -1021,7 +1021,7 @@ wire fsimtop_s_3_axi_rready;
    .io_master_aw_valid(sh_ocl_awvalid_q),
    .io_master_aw_bits_addr(sh_ocl_awaddr_q[24:0]),
    .io_master_aw_bits_len(8'h0),
-   .io_master_aw_bits_size(4'h2),
+   .io_master_aw_bits_size(3'h2),
    .io_master_aw_bits_burst(2'h1),
    .io_master_aw_bits_lock(1'h0),
    .io_master_aw_bits_cache(4'h0),
