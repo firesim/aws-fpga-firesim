@@ -33,6 +33,7 @@
 -y ${SH_SH_DIR}
 -y ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/hdl
 -y ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/sim
+-y ${HDK_SHELL_DESIGN_DIR}/sh_ddr/sim
 
 +incdir+${CL_ROOT}/../common/design
 +incdir+${CL_ROOT}/design
@@ -43,6 +44,9 @@
 +incdir+${HDK_COMMON_DIR}/verif/include
 +incdir+${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/verilog
 +incdir+${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl
++incdir+${CL_ROOT}/design/axi_crossbar_0
++incdir+${HDK_SHELL_DESIGN_DIR}/ip/cl_axi_interconnect/ipshared/7e3a/hdl
++incdir+${HDK_SHELL_DESIGN_DIR}/sh_ddr/sim
 
 ${CL_ROOT}/../common/design/cl_common_defines.vh
 ${CL_ROOT}/design/cl_firesim_defines.vh
@@ -62,6 +66,7 @@ ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice/sim/axi_register_slice.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_register_slice_v2_1_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_infrastructure_v1_1_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_clock_converter_0/hdl/axi_clock_converter_v2_1_vl_rfs.v
+${HDK_SHELL_DESIGN_DIR}/ip/cl_axi_interconnect/sim/cl_axi_interconnect.v
 ${SH_LIB_DIR}/../ip/axi_clock_converter_0/sim/axi_clock_converter_0.v
 ${CL_ROOT}/ip/axi_clock_converter_dramslim/sim/axi_clock_converter_dramslim.v
 ${CL_ROOT}/ip/axi_clock_converter_oclnew/sim/axi_clock_converter_oclnew.v
