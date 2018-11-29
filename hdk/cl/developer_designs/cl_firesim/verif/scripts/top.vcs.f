@@ -44,7 +44,6 @@
 +incdir+${HDK_COMMON_DIR}/verif/include
 +incdir+${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/verilog
 +incdir+${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl
-+incdir+${CL_ROOT}/design/axi_crossbar_0
 +incdir+${HDK_SHELL_DESIGN_DIR}/ip/cl_axi_interconnect/ipshared/7e3a/hdl
 +incdir+${HDK_SHELL_DESIGN_DIR}/sh_ddr/sim
 

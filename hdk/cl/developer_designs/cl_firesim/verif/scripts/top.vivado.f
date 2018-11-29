@@ -47,7 +47,6 @@
 -include ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/ip/ip_0/hdl/verilog
 -include ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice/hdl
 -include ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl
--include ${CL_ROOT}/design/axi_crossbar_0
 -include ${HDK_SHELL_DESIGN_DIR}/ip/cl_axi_interconnect/ipshared/7e3a/hdl
 -include ${HDK_SHELL_DESIGN_DIR}/sh_ddr/sim
 -include ${CL_ROOT}/ip/axi_clock_converter_oclnew/hdl
