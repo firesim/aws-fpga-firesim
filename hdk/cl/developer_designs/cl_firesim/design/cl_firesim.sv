@@ -116,8 +116,10 @@ logic clock_gend_90;  // see above, really ~92
 logic clock_gend_85;  // see above, really ~87
 logic clock_gend_75;
 
+`define FIRESIM_CLOCK_SIGNAL_SETTING(freq)    clock_gend_``freq
+
 logic firesim_internal_clock;
-assign firesim_internal_clock = clock_gend_`SELECTED_FIRESIM_CLOCK;
+assign firesim_internal_clock = `FIRESIM_CLOCK_SIGNAL_SETTING(`SELECTED_FIRESIM_CLOCK);
 
 clk_wiz_0_firesim firesim_clocking
 (
