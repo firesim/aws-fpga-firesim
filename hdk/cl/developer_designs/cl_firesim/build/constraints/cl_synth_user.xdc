@@ -4,9 +4,25 @@
 
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_0/incomingPCISdat/BRAMQueue/fq/ram_reg]
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_0/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_1/incomingPCISdat/BRAMQueue/fq/ram_reg]
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_1/incomingPCISdat/BRAMQueue/fq/ram_reg]
+
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_2/incomingPCISdat/BRAMQueue/fq/ram_reg]
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_2/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_3/outgoingPCISdat/BRAMQueue/fq/ram_reg]
 set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_3/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_4/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_4/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_5/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_5/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_6/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_6/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_7/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+set_property RAM_STYLE ULTRA [get_cells firesim_top/top/SimpleNICWidget_7/outgoingPCISdat/BRAMQueue/fq/ram_reg]
+
