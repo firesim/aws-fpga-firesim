@@ -86,7 +86,7 @@ function check_set_xilinx_sdx {
     echo "RELEASE_VER equals $RELEASE_VER"
 }
 
-function check_install_packages {
+function check_install_packages_centos {
 #TODO: Check required packages are installed or install them
 #TODO: Check version of gcc is above 4.8.5 (4.6.3 does not work)
   for pkg in `cat $SDACCEL_DIR/packages.txt`; do
@@ -94,6 +94,16 @@ function check_install_packages {
       true
     else
       warn_msg " $pkg not installed - please run: sudo yum install $pkg "
+    fi
+  done
+}
+
+function check_install_packages_ubuntu {
+  for pkg in `cat $SDACCEL_DIR/packages.txt`; do
+    if apt -qq list "$pkg" >/dev/null 2>&1; then
+      true
+    else
+      warn_msg " $pkg not installed - please run: sudo apt-get install $pkg "
     fi
   done
 }
@@ -147,30 +157,32 @@ for (( i = 0; i < ${#args[@]}; i++ )); do
     esac
 done
 
-# Install patches as required.
-setup_patches
-
 # Check XILINX_SDX is set
 if ! check_set_xilinx_sdx; then
     return 1
 fi
 
+info_msg " XILINX_SDX is set to $XILINX_SDX"
+# Install patches as required.
+info_msg " Checking & installing required patches"
+setup_patches
+
+
 # Update Xilinx SDAccel Examples from GitHub
 info_msg "Using SDx $RELEASE_VER"
-if [[ $RELEASE_VER =~ .*2017\.4.* ]]; then
-    info_msg "Updating Xilinx SDAccel Examples 2017.4"
-    git submodule update --init -- SDAccel/examples/xilinx_2017.4
-    export VIVADO_TOOL_VER=2017.4
+if [[ $RELEASE_VER =~ .*2017\.4.* || $RELEASE_VER =~ .*2018\.2.* ]]; then
+    info_msg "Updating Xilinx SDAccel Examples $RELEASE_VER"
+    git submodule update --init -- SDAccel/examples/xilinx_$RELEASE_VER
+    export VIVADO_TOOL_VER=$RELEASE_VER
     if [ -e $SDACCEL_DIR/examples/xilinx ]; then
         if [ ! -L $SDACCEL_DIR/examples/xilinx ]; then
-          err_msg "ERROR:  SDAccel/examples/xilinx is not a symbolic link.  Backup any data and remove SDAccel/examples/xilinx directory.  The setup needs to create a symbolic link from SDAccel/examples/xilinx to SDAccel/examples/xilinx_2017.4"
+          err_msg "ERROR:  SDAccel/examples/xilinx is not a symbolic link.  Backup any data and remove SDAccel/examples/xilinx directory.  The setup needs to create a symbolic link from SDAccel/examples/xilinx to SDAccel/examples/xilinx_$RELEASE_VER"
           return 1
         fi
     fi
-    rm -I $SDACCEL_DIR/examples/xilinx
-    ln -s $SDACCEL_DIR/examples/xilinx_2017.4 $SDACCEL_DIR/examples/xilinx
+    ln -sf $SDACCEL_DIR/examples/xilinx_$RELEASE_VER $SDACCEL_DIR/examples/xilinx
 else
-   echo " $RELEASE_VER is not 2017.4\n" 
+   echo " $RELEASE_VER is not supported (2017.4 or 2018.2).\n" 
    exit 2
 fi
 
@@ -179,6 +191,9 @@ fi
 
 export LD_LIBRARY_PATH=`$XILINX_SDX/bin/ldlibpath.sh $XILINX_SDX/lib/lnx64.o`:$XILINX_SDX/runtime/lib/x86_64
 export LD_LIBRARY_PATH=$XILINX_SDX/lnx64/tools/opencv/:$LD_LIBRARY_PATH
+
+# add variable to allow compilation using 2017.4 and 2018.2 on newer OSes
+export XOCC_ADD_OPTIONS="--xp param:compiler.useHlsGpp=1"
 
 # Check if internet connection is available
 if ! check_internet; then
@@ -191,8 +206,14 @@ if ! check_icd; then
 fi
 
 # Check correct packages are installed
-if ! check_install_packages; then
-    return 1
+if [ -f "/etc/redhat-release" ]; then
+    if ! check_install_packages_centos; then
+        return 1
+    fi
+else
+    if ! check_install_packages_ubuntu; then
+        return 1
+    fi
 fi
 
 function setup_dsa {
@@ -265,27 +286,44 @@ function setup_dsa {
 
 
 # Start of runtime xdma driver install
-cd $SDACCEL_DIR
-info_msg "Building SDAccel runtime"
-if ! make ec2=1 debug=1 RELEASE_VER=$RELEASE_VER; then
-    err_msg "Build of SDAccel runtime FAILED"
-    return 1
-fi
-info_msg "Installing SDAccel runtime"
-
-
-    
-    export INSTALL_ROOT=/opt/Xilinx/SDx/${RELEASE_VER}.rte.dyn
-    if ! sudo make ec2=1 debug=1 INSTALL_ROOT=$INSTALL_ROOT SDK_DIR=$SDK_DIR XILINX_SDX=$XILINX_SDX SDACCEL_DIR=$SDACCEL_DIR RELEASE_VER=$RELEASE_VER DSA=xilinx_aws-vu9p-f1-04261818_dynamic_5_0 install ; then
-        err_msg "Install of SDAccel runtime FAILED"
+if [[ $RELEASE_VER == "2017.4" ]]; then
+    cd $SDACCEL_DIR
+    info_msg "Building SDAccel runtime"
+    if ! make ec2=1 debug=1 RELEASE_VER=$RELEASE_VER; then
+        err_msg "Build of SDAccel runtime FAILED"
         return 1
     fi
+    info_msg "Installing SDAccel runtime"
+        
+        export INSTALL_ROOT=/opt/Xilinx/SDx/${RELEASE_VER}.rte.dyn
+        if ! sudo make ec2=1 debug=1 INSTALL_ROOT=$INSTALL_ROOT SDK_DIR=$SDK_DIR XILINX_SDX=$XILINX_SDX SDACCEL_DIR=$SDACCEL_DIR RELEASE_VER=$RELEASE_VER DSA=xilinx_aws-vu9p-f1-04261818_dynamic_5_0 install ; then
+            err_msg "Install of SDAccel runtime FAILED"
+            return 1
+        fi
+            
+    info_msg "SDAccel runtime installed"
     
-    export AWS_PLATFORM=$AWS_PLATFORM_DYNAMIC_5_0
-    info_msg "The default AWS Platform has been set to: \"AWS_PLATFORM=\$AWS_PLATFORM_DYNAMIC_5_0\" "
+    cd $current_dir
+elif [[ $RELEASE_VER == "2018.2" ]]; then
+    # Check if XRT is installed  
+    if [ -e /opt/xilinx/xrt ]; then
+        export XILINX_XRT=/opt/xilinx/xrt
+        export LD_LIBRARY_PATH=$XILINX_XRT/lib:$LD_LIBRARY_PATH
+        # copy libstdc++ from $XILINX_SDX/lib
+        if [[ $(lsb_release -si) == "Ubuntu" ]]; then
+            sudo cp $XILINX_SDX/lib/lnx64.o/Ubuntu/libstdc++.so* /opt/xilinx/xrt/lib/
+        elif [[ $(lsb_release -si) == "CentOS" ]]; then
+            sudo cp $XILINX_SDX/lib/lnx64.o/Default/libstdc++.so* /opt/xilinx/xrt/lib/
+        else
+            info_msg "Unsupported OS."
+            return 1
+        fi
+    else 
+        info_msg "SDAccel runtime not installed - This is required if you are running on F1 instance."
+    fi
+fi
 
-info_msg "SDAccel runtime installed"
-
-cd $current_dir
+export AWS_PLATFORM=$AWS_PLATFORM_DYNAMIC_5_0
+info_msg "The default AWS Platform has been set to: \"AWS_PLATFORM=\$AWS_PLATFORM_DYNAMIC_5_0\" "
 
 info_msg "SDAccel Setup PASSED"

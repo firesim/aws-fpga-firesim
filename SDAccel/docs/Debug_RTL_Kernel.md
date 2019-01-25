@@ -13,9 +13,54 @@ This file contains the following sections:
 ## 1. Overview
 The sections below give you a brief explanation of the steps required to debug your SDAccel RTL kernel design.  They include instantiating the ILA/debug cores in your RTL kernel, pausing the execution of the host code at the appriopriate stage to ensure the setup of ILA triggers, building the running the host code and starting the debug servers to debug the design in hardware.  
 
-## 2. Instantiating Debug cores in your RTL kernel design
+## 2. Adding debug cores to your RTL kernel 
 
-You need to instantiate debug cores like the Integrated Logic Analyzer(ILA), Virtual Input/Output(VIO) etc in your application RTL kernel code.
+There are different types of debug that can be enabled in an RTL kernel design.  Debug cores can be added to the AXI interfaces on the kernel itself to monitor AXI transaction level activity (part of the ChipScope Debug feature of SDAccel) and debug cores can be instantiated in the RTL kernel to monitor signals in the RTL kernel code.
+
+### Adding debug cores to the kernel AXI interfaces
+
+Adding debug cores to the AXI interfaces on the kernel can be done in a couple of ways:
+
+- By opening the SDAccel GUI and enabling "ChipScope Debug" on the hardware function in the Hardware Function Settings window.
+
+- Or, by passing the --dk chipscope option to the XOCC compiler with the compute unit name and optional interface name. 
+
+
+To enable ChipScope debug using the GUI, perform the following steps:
+
+1. In the assistant window, under System build configuration, right-click on the compute unit that you want to enable ChipScope debug on and click settings.
+
+
+
+
+
+   ![](./figure/sda_chipscope_flow1.PNG)
+
+2. When the hardware function settings dialog appears, check the box for "ChipScope Debug" in the debug and profiling settings table.  By checking this box, the compute unit will now have a System ILA inserted onto it's AXI interface ports.
+
+   ![](./figure/sda_chipscope_flow2.PNG)
+
+
+
+Alternatively, ChipScope debug can be enabled by adding an XOCC option to the CLFLAGS in the makefile.  This method allows the ChipScope debug feature to be enabled without invoking the SDAccel GUI.  The --dk option shown below shows the general usage:
+
+```
+--dk chipscope:<compute_unit_name>:<interface_name>
+```
+
+For example if a project has a compute unit named krnl_vadd_1, enabling chipscope debug can be accomplished by adding the following XOCC option to the CLFLAGS in the makefile:
+
+```
+--dk chipscope:krnl_vadd_1
+```
+
+For detailed usage and more examples, refer to the SDAccel Debugging Guide (UG1281 v2018.2).
+
+
+
+### Adding debug cores to the RTL kernel code
+
+To debug signals internal to the RTL Kernel you need to instantiate debug cores like the Integrated Logic Analyzer(ILA), Virtual Input/Output(VIO) etc in your application RTL kernel code.
 
 The ILA Debug IP can be created and added to the RTL Kernel in a couple of ways. 
 
@@ -26,9 +71,9 @@ The ILA Debug IP can be created and added to the RTL Kernel in a couple of ways.
 2. Create the ILA IP on the fly using TCL.  A snippet of the create_ip TCL command is shown below. The example below creates the ILA IP with 7 probes and associates properties with the IP.
 
 ```
-	create_ip -name ila -vendor xilinx.com -library ip -module_name ila_0
-	
-	set_property -dict [list CONFIG.C_PROBE6_WIDTH {32} CONFIG.C_PROBE3_WIDTH {64} CONFIG.C_NUM_OF_PROBES {7} CONFIG.C_EN_STRG_QUAL {1} CONFIG.C_INPUT_PIPE_STAGES {2} CONFIG.C_ADV_TRIGGER {true} CONFIG.ALL_PROBE_SAME_MU_CNT {4} CONFIG.C_PROBE6_MU_CNT {4} CONFIG.C_PROBE5_MU_CNT {4} CONFIG.C_PROBE4_MU_CNT {4} CONFIG.C_PROBE3_MU_CNT {4} CONFIG.C_PROBE2_MU_CNT {4} CONFIG.C_PROBE1_MU_CNT {4} CONFIG.C_PROBE0_MU_CNT {4}] [get_ips ila_0]
+create_ip -name ila -vendor xilinx.com -library ip -module_name ila_0
+set_property -dict [list CONFIG.C_PROBE6_WIDTH {32} CONFIG.C_PROBE3_WIDTH {64} 
+CONFIG.C_NUM_OF_PROBES {7} CONFIG.C_EN_STRG_QUAL {1} CONFIG.C_INPUT_PIPE_STAGES {2} CONFIG.C_ADV_TRIGGER {true} CONFIG.ALL_PROBE_SAME_MU_CNT {4} CONFIG.C_PROBE6_MU_CNT {4} CONFIG.C_PROBE5_MU_CNT {4} CONFIG.C_PROBE4_MU_CNT {4} CONFIG.C_PROBE3_MU_CNT {4} CONFIG.C_PROBE2_MU_CNT {4} CONFIG.C_PROBE1_MU_CNT {4} CONFIG.C_PROBE0_MU_CNT {4}] [get_ips ila_0]
 ```
 
 This TCL file should be added as an RTL Kernel source in the Makefile of your design
@@ -50,7 +95,10 @@ Now you are ready to instantiate the ILA Debug core in your RTL Kernel. The RTL 
 
 ## 3. Host code changes to support debugging
 
-The application host code  needs to be modified to ensure you can set up the ILA trigger conditions **prior** to  running the kernel. 
+The application host code needs to be modified to ensure you can set up the ILA trigger conditions **prior** to  running the kernel.   
+
+
+
 The host code shown below introduces the wait for the setup of ILA Trigger conditions and the arming of the ILA.
 
 src/host.cpp
@@ -60,9 +108,9 @@ src/host.cpp
 		    std::cout << msg << std::endl;
 		    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
-    
+	
 		...
-    
+	
 		cl::Program::Binaries bins = xcl::import_binary_file(binaryFile);
 		devices.resize(1);
 		cl::Program program(context, devices, bins);
@@ -73,7 +121,7 @@ src/host.cpp
 		//Allocate Buffer in Global Memory
 		
 		...
-    
+	
 		//Launch the Kernel
 		q.enqueueTask(krnl_vadd);
 
@@ -101,7 +149,7 @@ Please note, the angle bracket directories need to be replaced according to the 
 
 ```
 		$ sudo sh
-		# source /opt/Xilinx/SDx/2017.4.rte.dyn/setup.sh
+		# source $AWS_FPGA_REPO_DIR/sdaccel_runtime_setup.sh
 		# ./host
 ```
 This produces the following output: 
@@ -117,8 +165,8 @@ This produces the following output:
 			Successfully skipped reloading of local image.
 			
 			Press ENTER to continue after setting up ILA trigger...
-```		
-		
+```
+
 
 ## 5. Start Debug Servers
 

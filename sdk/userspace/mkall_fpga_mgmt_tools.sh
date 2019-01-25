@@ -26,6 +26,10 @@ else
 	CONFIG_LOGLEVEL=$LOGLEVEL
 fi
 
+if allow_non_root ; then
+       OPT="$OPT -DFPGA_ALLOW_NON_ROOT=1"
+fi
+
 #
 # gcc optimizations
 #OPT="-O3 -fno-strict-aliasing"
@@ -70,6 +74,9 @@ BUILD_DIR="utils"
 build_exec
 
 BUILD_DIR="fpga_libs/fpga_pci"
+build_exec
+
+BUILD_DIR="fpga_libs/fpga_dma"
 build_exec
 
 BUILD_DIR="fpga_libs/fpga_mgmt"

@@ -117,7 +117,7 @@ This example does not use FPGA to FPGA PCIe communication
 
 ### FPGA to FPGA communication over Ring
 
-This example does not use FPGA to FPGA Ring
+This example does not use FPGA to FPGA Ring. FPGA Ring is a unsupported feature planned for future release.
 
 
 ### Virtual JTAG
@@ -140,6 +140,8 @@ flr_reset is ignored in this design
 <a name="software"></a>
 ## Runtime software
 DMA accesses rely on the xdma driver- see the [xdma driver readme](../../../../sdk/linux_kernel_drivers/xdma/README.md)
+
+Developers using AMI 1.5.0 or Later Instances that come with pre-installed Xilinx Runtime Environment (XRT) should [refer to this note](../../../../sdk/linux_kernel_drivers/xdma/xdma_install.md#xdmainstallfail) before installing XDMA driver.
 
 The DRAM DMA example includes runtime software to demonstate working DMA accesses. The runtime example is located [in the runtime directory](software/runtime/test_dram_dma.c)
 
@@ -186,6 +188,6 @@ Alternatively, you can directly use a pre-generated AFI for this CL.
 | PCI Vendor ID | 0x1D0F (Amazon) |
 | PCI Subsystem ID | 0x1D51 |
 | PCI Subsystem Vendor ID | 0xFEDC |
-| Pre-generated AFI ID | afi-0f6832ffcb43fdc24 |
-| Pre-generated AGFI ID | agfi-0367124aff5e7c5f7 |
+| Pre-generated AFI ID | afi-0583e8d7a84ac7ce2 |
+| Pre-generated AGFI ID | agfi-0d132ece5c8010bf7 |
 
