@@ -212,7 +212,7 @@ if {$implement} {
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Combining Shell and CL design checkpoints";
       add_files $HDK_SHELL_DIR/build/checkpoints/from_aws/SH_CL_BB_routed.dcp
       add_files $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp
-      set_property SCOPED_TO_CELLS {CL} [get_files $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp]
+      set_property SCOPED_TO_CELLS {WRAPPER_INST/CL} [get_files $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp]
 
       #Read the constraints, note *DO NOT* read cl_clocks_aws (clocks originating from AWS shell)
       read_xdc [ list \
@@ -221,7 +221,7 @@ if {$implement} {
       set_property PROCESSING_ORDER late [get_files cl_pnr_user.xdc]
 
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Running link_design";
-      link_design -top $TOP -part [DEVICE_TYPE] -reconfig_partitions {SH CL}
+      link_design -top $TOP -part [DEVICE_TYPE] -reconfig_partitions {WRAPPER_INST/SH WRAPPER_INST/CL}
 
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - PLATFORM.IMPL==[get_property PLATFORM.IMPL [current_design]]";
       ##################################################
@@ -319,14 +319,17 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Compress files for
 # Create manifest file
 set manifest_file [open "$CL_DIR/build/checkpoints/to_aws/${timestamp}.manifest.txt" w]
 set hash [lindex [split [exec sha256sum $CL_DIR/build/checkpoints/to_aws/${timestamp}.SH_CL_routed.dcp] ] 0]
+set vivado_version [string range [version -short] 0 5]
+puts "vivado_version is $vivado_version\n"
 
-puts $manifest_file "manifest_format_version=1\n"
+puts $manifest_file "manifest_format_version=2\n"
 puts $manifest_file "pci_vendor_id=$vendor_id\n"
 puts $manifest_file "pci_device_id=$device_id\n"
 puts $manifest_file "pci_subsystem_id=$subsystem_id\n"
 puts $manifest_file "pci_subsystem_vendor_id=$subsystem_vendor_id\n"
 puts $manifest_file "dcp_hash=$hash\n"
 puts $manifest_file "shell_version=$shell_version\n"
+puts $manifest_file "tool_version=v$vivado_version\n"
 puts $manifest_file "dcp_file_name=${timestamp}.SH_CL_routed.dcp\n"
 puts $manifest_file "hdk_version=$hdk_version\n"
 puts $manifest_file "date=$timestamp\n"

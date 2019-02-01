@@ -14,6 +14,12 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 #
+script=${BASH_SOURCE[0]}
+if [ $script != $0 ]; then
+  echo "ERROR: You must execute this script instead of sourcing!"
+  return
+fi
+
 
 if [ -z "$SDK_DIR" ]; then
     echo "Error: SDK_DIR environment variable is not set.  Please use 'source sdk_setup.sh' from the aws-fpga directory."
@@ -54,6 +60,15 @@ RET=$?
 if [ $RET != 0 ]; then
     echo "Error: install_fpga_mgmt_tools.sh returned $RET"
     exit $RET
+fi
+# Add udev rules if asked for non root access
+if allow_non_root ; then
+	  sudo $SDK_USERSPACE_DIR/add_udev_rules.sh
+	  RET=$?
+	  if [ $RET != 0 ]; then
+				 echo "Error: $SDK_USERSPACE_DIR/add_udev_rules.sh returned $RET"
+				 exit $RET
+	  fi
 fi
 
 echo "Done with SDK install."

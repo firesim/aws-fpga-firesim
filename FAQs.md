@@ -382,14 +382,14 @@ FPGA Direct is FPGA to FPGA low latency high throughput peer communication throu
 
 **Q: What is FPGA Link and how fast is it?**
 
-FPGA Link is based on 4 x 100Gbps links on each FPGA card. The FPGA Link is organized as a ring, with 2 x 100Gbps links to each adjacent card. This enables each FPGA card to send/receive data from an adjacent card at 200Gbps speeds. Details on the FPGA Link interface will be provided in the Shell Interface specification when available.
+FPGA Link is based on 4 x 100Gbps links on each FPGA card. The FPGA Link is organized as a ring, with 2 x 100Gbps links to each adjacent card. This enables each FPGA card to send/receive data from an adjacent card at 200Gbps speeds. This is a unsupported feature planned for future release. Details on the FPGA Link interface will be provided in the Shell Interface specification when available.
 
 
 **Q: What protocol is used for FPGA link?**
 
 The FPGA link is a generic raw streaming interface, no transport protocol is provided for it by AWS. It is expected that developers would take advantage of standard PCIe protocol, Ethernet protocol, or Xilinx's (reliable) Aurora protocol layer for this interface.
 
-Details on the Shell Interface to the FPGA Link IP blocks are provided in the [Shell Interface specification](./hdk/docs/AWS_Shell_Interface_Specification.md) when available.
+This is a unsupported feature planned for future release. Details on the Shell Interface to the FPGA Link IP blocks are provided in the [Shell Interface specification](./hdk/docs/AWS_Shell_Interface_Specification.md) when available.
 
 
 **Q: What clock speed does the FPGA utilize?**
@@ -460,14 +460,9 @@ Parent process (pid 8160) has died. This helper process will now exit
 
 You would need a valid [on premise license](./hdk/docs/on_premise_licensing_help.md) provided by Xilinx.
 
-*For runs using the FPGA Developer AMI:*
+*For runs using the FPGA Developer AMI:* Please contact us through [AWS FPGA Developers forum](https://forums.aws.amazon.com/forum.jspa?forumID=243)
 
-**NOTE:**
->    * The license included on FPGA Developer AMI Versions 1.3.0_a and earlier expires on October 31 2017.
->    * If you see the above error, please update to FPGA Developer AMI Version 1.3.3 or later.
->    * All FPGA Developer AMI Versions 1.3.0_a and earlier will be deprecated once Version 1.3.3 is released.
->    * If you are using the FPGA Developer AMI Version 1.3.3 or later, please check if the environment variable `XILINXD_LICENSE_FILE` is set to `/opt/Xilinx/license/XilinxAWS.lic`
->    * If you still face the above error, please contact us on the forums and we'd be happy to help further.
+
 
 **Q: Why does Vivado in GUI mode show up blank ? or Why does Vivado in GUI mode show up as an empty window?**
 

@@ -49,10 +49,16 @@ enum {
 	FPGA_CMD_CLEAR_HW_METRICS = 1 << 2,
 	FPGA_CMD_FORCE_SHELL_RELOAD = 1 << 3,
 
+
+	/** request that ddr data retention is used during load */
+	FPGA_CMD_DRAM_DATA_RETENTION = 1 << 4,
+
 	FPGA_CMD_ALL_FLAGS = FPGA_CMD_GET_HW_METRICS | 
-		FPGA_CMD_CLEAR_HW_METRICS|
-		FPGA_CMD_FORCE_SHELL_RELOAD,
+		FPGA_CMD_CLEAR_HW_METRICS |
+		FPGA_CMD_FORCE_SHELL_RELOAD |
+		FPGA_CMD_DRAM_DATA_RETENTION ,
 };
+
 
 /** 
  * FPGA specific errors
@@ -65,6 +71,7 @@ enum {
  *
  *  Any additions should also be added to FPGA_ERR2STR (see below).
  */
+
 enum {
     /** Negative values are compatible with standard errno returns */
 
@@ -96,6 +103,32 @@ enum {
 
 	FPGA_ERR_POWER_VIOLATION = 17,
 
+	/** In some cases it is possible to detect when data retention is not
+	 *  possible. This prevents the loss of data when retention cannot work. */
+	FPGA_ERR_DRAM_DATA_RETENTION_NOT_POSSIBLE = 18,
+
+	/** Reserved: 19 */
+
+	/** Unable to locate PCI devices/resources */
+	FPGA_ERR_PCI_MISSING = 20,
+
+	FPGA_ERR_AFI_CMD_MALFORMED = 21,
+
+	/** Data retention was attempted, but failed and data was lost. All efforts
+	 *  are made to avoid this condition. */
+	FPGA_ERR_DRAM_DATA_RETENTION_FAILED = 22,
+
+	/** Saving DDR control calibration failed and data retention will not be
+	 *  possible. */
+	FPGA_ERR_DRAM_DATA_RETENTION_SETUP_FAILED = 23,
+
+	/** This error indicates a bug or unhandled external condition in the
+	 *  software. Report occurrences on github. */
+	FPGA_ERR_SOFTWARE_PROBLEM = 24,
+
+	/** Cannot communicate with the FPGA */
+	FPGA_ERR_UNRESPONSIVE = 25,
+
 	FPGA_ERR_END
 };
 
@@ -110,6 +143,13 @@ enum {
 	((error) == FPGA_ERR_FAIL) ?						"unspecified-error" : \
 	((error) == FPGA_ERR_SHELL_MISMATCH) ?			    "afi-shell-version-mismatch" : \
 	((error) == FPGA_ERR_POWER_VIOLATION) ?			    "afi-power-violation" : \
+	((error) == FPGA_ERR_DRAM_DATA_RETENTION_NOT_POSSIBLE) ? "dram-data-retention-not-possible" : \
+	((error) == FPGA_ERR_DRAM_DATA_RETENTION_FAILED) ? "dram-data-retention-failed" : \
+	((error) == FPGA_ERR_DRAM_DATA_RETENTION_SETUP_FAILED) ? "dram-data-retention-setup-failed" : \
+	((error) == FPGA_ERR_PCI_MISSING) ? 				"pci-device-missing" : \
+	((error) == FPGA_ERR_SOFTWARE_PROBLEM) ?			"software-problem": \
+	((error) == FPGA_ERR_UNRESPONSIVE) ?				"unresponsive": \
+	((error) == FPGA_ERR_AFI_CMD_MALFORMED) ?			"afi-command-malformed" : \
 														"internal-error"
 
 
