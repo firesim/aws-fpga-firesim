@@ -37,7 +37,7 @@ set clock_recipe_b      [lindex $argv  9]
 set clock_recipe_c      [lindex $argv 10]
 set uram_option         [lindex $argv 11]
 set notify_via_sns      [lindex $argv 12]
-
+set VDEFINES            [lindex $argv 13]
 ##################################################
 ## Flow control variables 
 ##################################################
@@ -104,6 +104,11 @@ puts "All reports and intermediate results will be time stamped with $timestamp"
 
 set_msg_config -id {Chipscope 16-3} -suppress
 set_msg_config -string {AXI_QUAD_SPI} -suppress
+set_msg_config -string {PIPE_CL_SH_AURORA_STAT} -suppress
+set_msg_config -string {PIPE_CL_SH_HMC_STAT} -suppress
+set_msg_config -string {PIPE_AURORA_CHANNEL_UP} -suppress
+set_msg_config -string {PIPE_HMC_IIC} -suppress
+set_msg_config -string {PIPE_SH_CL_AURORA_STAT} -suppress
 
 # Suppress Warnings
 # These are to avoid warning messages that may not be real issues. A developer
@@ -123,7 +128,7 @@ set_msg_config -id {Vivado 12-4739}      -suppress
 set_msg_config -id {Vivado 12-5201}      -suppress
 set_msg_config -id {DRC CKLD-1}          -suppress
 set_msg_config -id {IP_Flow 19-2248}     -suppress
-set_msg_config -id {Opt 31-155}          -suppress
+#set_msg_config -id {Opt 31-155}          -suppress
 set_msg_config -id {Synth 8-115}         -suppress
 set_msg_config -id {Synth 8-3936}        -suppress
 set_msg_config -id {Vivado 12-1023}      -suppress
@@ -202,7 +207,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling aws_gen_clk_
 
 source $HDK_SHELL_DIR/build/scripts/aws_gen_clk_constraints.tcl
 #################################################################
-##### Do not remove this setting. Need to workaround bug in 2017.4
+##### Do not remove this setting. Need to workaround bug
 ##################################################################
 set_param hd.clockRoutingWireReduction false
 
@@ -342,18 +347,10 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Compress files for
 set manifest_file [open "$CL_DIR/build/checkpoints/to_aws/${timestamp}.manifest.txt" w]
 set hash [lindex [split [exec sha256sum $CL_DIR/build/checkpoints/to_aws/${timestamp}.SH_CL_routed.dcp] ] 0]
 set TOOL_VERSION $::env(VIVADO_TOOL_VERSION)
-set vivado_version [version -short]
-set ver_2017_4 2017.4
+set vivado_version [string range [version -short] 0 5]
 puts "vivado_version is $vivado_version\n"
 
-if { [string first  $ver_2017_4 $vivado_version] == 0 } {
 puts $manifest_file "manifest_format_version=2\n"
-#puts "in 2017.4"
-} else {
-puts $manifest_file "manifest_format_version=1\n"
-#puts "in 2017.1"
-}
-
 puts $manifest_file "pci_vendor_id=$vendor_id\n"
 puts $manifest_file "pci_device_id=$device_id\n"
 puts $manifest_file "pci_subsystem_id=$subsystem_id\n"
@@ -362,9 +359,7 @@ puts $manifest_file "dcp_hash=$hash\n"
 puts $manifest_file "shell_version=$shell_version\n"
 puts $manifest_file "dcp_file_name=${timestamp}.SH_CL_routed.dcp\n"
 puts $manifest_file "hdk_version=$hdk_version\n"
-if { [string first $ver_2017_4 $vivado_version] == 0} {
-puts $manifest_file "tool_version=v2017.4\n"
-}
+puts $manifest_file "tool_version=v$vivado_version\n"
 puts $manifest_file "date=$timestamp\n"
 puts $manifest_file "clock_recipe_a=$clock_recipe_a\n"
 puts $manifest_file "clock_recipe_b=$clock_recipe_b\n"

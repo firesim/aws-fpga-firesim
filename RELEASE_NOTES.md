@@ -26,6 +26,71 @@
          *    1 DDR controller implemented in the SH (always available)
          *    3 DDR controllers implemented in the CL (configurable number of implemented controllers allowed)
 
+## Release 1.4.6 (See [ERRATA](./ERRATA.md) for unsupported features)
+
+  * Fixes SDx 2018.2 [missing profile report items in SDAccel](https://forums.aws.amazon.com/thread.jspa?threadID=293541&tstart=0)
+    * Requires [Xilinx 2018.2 Patch AR71715](hdk/docs/SDxPatch_AR71715_and_XRT_installation_instructions.md#installing-sdx-20182-tool-patch-ar71715)
+    * Requires [Xilinx runtime release 2018.2_XDF.RC4](https://github.com/Xilinx/XRT/tree/2018.2_XDF.RC4)
+    * Please see patching & XRT installation instructions [here](hdk/docs/SDxPatch_AR71715_and_XRT_installation_instructions.md)
+  * Fixes SDx 2018.2 [multithreaded kernel driver scheduling](https://forums.aws.amazon.com/thread.jspa?threadID=293166&tstart=0)
+     * Requires [Xilinx runtime release 2018.2_XDF.RC4](https://github.com/Xilinx/XRT/tree/2018.2_XDF.RC4)
+     * Please see XRT installation instructions [here](hdk/docs/SDxPatch_AR71715_and_XRT_installation_instructions.md#installing-xilinx-runtime-xrt-20182_xdfrc4)  
+  * EDMA Driver is no longer supported. 
+      * AWS strongly recommends moving your applications to [XDMA](sdk/linux_kernel_drivers/xdma/README.md).
+      * [EDMA Driver](sdk/linux_kernel_drivers/edma/README.md) will be fully removed from Developer kit 1.4.7+.
+  * Fixed Issues
+    * [NULL definition include in header file](https://github.com/aws/aws-fpga/pull/414)
+    * [Improved messaging for AFI builder script](https://github.com/aws/aws-fpga/pull/407)
+    * [Fixes address decoding to DDR slaves in cl_dram_dma example](hdk/cl/examples/cl_dram_dma/design)  
+  * Improvements
+    * [Improves SDK FPGA management tools error messaging](sdk/userspace/fpga_mgmt_tools/README.md)
+    * [Enhanced DMA lib for general device number mapping](sdk/userspace/fpga_libs/fpga_dma/fpga_dma_utils.c)
+    * [Improved guidelines for AFI power management](hdk/docs/afi_power.md)
+    * [Improved Streaming Data Engine IP Integration Documentation](sdk/apps/virtual-ethernet/doc/SDE_HW_Guide.md) 
+   
+  * Package versions used to validate SDAccel runtime
+  
+   | Package | AMI 1.5.0 [SDx 2018.2] | AMI 1.4.0 [SDx 2017.4] |
+   |---------|------------------------|------------------------|
+   | kernel  | 3.10.0-862.11.6.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
+   | kernel-devel | 3.10.0-862.11.6.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
+   | LIBSTDC++ | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-16.el7_4.2.x86_64 |
+   
+   
+## Release 1.4.5 (See [ERRATA](./ERRATA.md) for unsupported features) 
+
+* [Documents SDAccel Runtime compatibility](SDAccel/docs/Create_Runtime_AMI.md#runtime-ami-compatability-table)
+* [Enables SDK FPGA Mgmt tool access to Non-root users](sdk/README.md#using-fpga-as-non-root-user)
+* Fixed issues
+  * [HLX simulation failure](https://forums.aws.amazon.com/thread.jspa?threadID=293313&tstart=0)
+  * [Shell BFM  read from C host memory](https://forums.aws.amazon.com/thread.jspa?threadID=288959&tstart=0)
+  * [cl_dram_dma example design DDR read issue](https://forums.aws.amazon.com/thread.jspa?threadID=290277&tstart=50)
+
+## Release 1.4.4 (See [ERRATA](./ERRATA.md) for unsupported features)        
+* Fixed compile issues in simulation while using 3rd party simulators (synopsys VCS, Cadence IES and Mentor Questasim).
+
+## Release 1.4.3 (See [ERRATA](./ERRATA.md) for unsupported features)
+* [DRAM Data Retention](hdk/docs/data_retention.md) - With DRAM data retention, developers can simply load a new AFI and continue using the data that is persistently kept in the DRAM attached to the FPGA, eliminating unnecessary data movements and greatly improving the overall application performance.
+* [Virtual Ethernet](./sdk/apps/virtual-ethernet/README.md) - Provides a low latency network interface for EC2 F1, that enables high performance hardware acceleration to ethernet based applications on AWS like firewalls, routers and advanced security virtual appliances. With Virtual Ethernet, developers are able to create F1 accelerators that process ethernet packets directly from user-space on the FPGA with high throughput and low-latency. 
+* [Developer AMI v1.5](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) with Vivado/SDx 2018.2 tools - New FPGA developer AMI supporting Vivado 2018.2 for faster compile times, higher frequencies and improved timing closure
+
+## Release 1.4.2 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Fixed SDAccel XOCL driver compile fails that occur on linux kernels greater than 3.10.0-862.3.3.el7.x86_64
+
+## Release 1.4.1 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Simulation performance Improvements
+  * DDR Behavioural Model- Hardware simulations use an AXI memory model to run 4X faster by skipping DDR initialization. Please refer to this [README](./hdk/cl/examples/cl_dram_dma/verif/README.md) on how to use this feature in your simulation.
+  * DDR Backdoor Loading- Hardware simulation time is reduced by pre-loading data directly into memory models.  Please refer to this [README](./hdk/cl/examples/cl_dram_dma/verif/README.md#ddr-backdoor-loading) for example tests that demonstrate this feature.
+* Fixed Issues
+  * XOCL Driver update to address synchronization issues.
+  * Fixed XOCL driver issues when using ubuntu distribution for Linux OS.
+  * Improved Performance for [cl_dram_dma Public AFI](./hdk/cl/examples/cl_dram_dma/README.md#metadata).
+  * SDAccel 3rd party examples updated to use Shell V1.4 DSA.
+  * Fixed AFI Manifest generation in IPI flow.
+  * HLX button fixed in IPI
+  * [FPGA Library update](./sdk/userspace/README.md)
+  
+  
 ## Release 1.4.0 (See [ERRATA](./ERRATA.md) for unsupported features)
 * [New Shell Stable: v04261818](./hdk/common/shell_stable).  Starting with release v1.4.0, the AWS FPGA shell stable has been updated and only supports Xilinx 2017.4 SDx/Vivado.  All previous versions of tools and shells are not supported with this developer kit shell release. 
   * [Shell Release Notes](./hdk/docs/AWS_Shell_RELEASE_NOTES.md) 
@@ -59,7 +124,7 @@ Look for the ./hdk/hdk_version.txt file.
 
 **Q: How do I know what my Shell version is? **
 
-The Shell version of an FPGA slot is available through the FPGA Image Management tools.  See the description of `fpga-describe-local-image` for more details on retrieving the shell version from a slot.
+The Shell version of an FPGA slot is available through the FPGA Image Management tools after an AFI has been loaded.  See the description of `fpga-describe-local-image` for more details on retrieving the shell version from a slot.  Prior to loading an AFI, the state of the FPGA (including shell version) is undefined and non-deterministic.  
 
 **Q: How do I know what version of FPGA Image management tools are running on my instance? **
 

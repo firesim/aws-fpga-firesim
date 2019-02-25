@@ -11,6 +11,7 @@ properties([parameters([
     booleanParam(name: 'test_hdk_scripts',                    defaultValue: true,  description: 'Test the HDK setup scripts'),
     booleanParam(name: 'test_sims',                           defaultValue: true,  description: 'Run all Simulations'),
     booleanParam(name: 'test_edma',                           defaultValue: true,  description: 'Run EDMA unit and perf tests'),
+    booleanParam(name: 'test_non_root_access',                defaultValue: true,  description: 'Test non-root access to FPGA tools'),
     booleanParam(name: 'test_xdma',                           defaultValue: true,  description: 'Test XDMA driver'),
     booleanParam(name: 'test_runtime_software',               defaultValue: true,  description: 'Test precompiled AFIs'),
     booleanParam(name: 'test_dcp_recipes',                    defaultValue: false, description: 'Run DCP generation with all clock recipes and build strategies.'),
@@ -21,7 +22,9 @@ properties([parameters([
     booleanParam(name: 'debug_dcp_gen',                       defaultValue: false, description: 'Only run FDF on cl_hello_world. Overrides test_*.'),
     booleanParam(name: 'debug_fdf_uram',                      defaultValue: false, description: 'Debug the FDF for cl_uram_example.'),
     booleanParam(name: 'fdf_ddr_comb',                        defaultValue: false, description: 'run FDF for cl_dram_dma ddr combinations.'),
-    booleanParam(name: 'disable_runtime_tests',               defaultValue: false,  description: 'Option to disable runtime tests.')
+    booleanParam(name: 'disable_runtime_tests',               defaultValue: false,  description: 'Option to disable runtime tests.'),
+    booleanParam(name: 'use_test_ami',                        defaultValue: false,  description: 'This option asks for the test AMI from Jenkins'),
+    booleanParam(name: 'internal_simulations',                defaultValue: false, description: 'This option asks for default agent from Jenkins')
 ])])
 
 //=============================================================================
@@ -33,6 +36,7 @@ boolean test_hdk_scripts = params.get('test_hdk_scripts')
 boolean test_fpga_tools = params.get('test_fpga_tools')
 boolean test_sims = params.get('test_sims')
 boolean test_edma = params.get('test_edma')
+boolean test_non_root_access = params.get('test_non_root_access')
 boolean test_xdma = params.get('test_xdma')
 boolean test_runtime_software = params.get('test_runtime_software')
 boolean test_dcp_recipes = params.get('test_dcp_recipes')
@@ -60,7 +64,7 @@ def dcp_recipe_scenarios = [
     'A1-B2-C0-TIMING',
     'A1-B2-C0-CONGESTION',
     ]
-def fdf_test_names = ['cl_dram_dma[A0-B0-C0-DEFAULT]', 'cl_hello_world[A0-B0-C0-DEFAULT]', 'cl_hello_world_vhdl',
+def fdf_test_names = ['cl_dram_dma[A1-B0-C0-DEFAULT]', 'cl_hello_world[A0-B0-C0-DEFAULT]', 'cl_hello_world_vhdl',
     'cl_uram_example[2]', 'cl_uram_example[3]', 'cl_uram_example[4]']
 
 boolean debug_dcp_gen = params.get('debug_dcp_gen')
@@ -95,43 +99,54 @@ if(fdf_ddr_comb) {
 //=============================================================================
 
 // Map that contains stages of tests
-
-def initial_tests = [:]
-def secondary_tests = [:]
-def multi_stage_tests = [:]
+def all_tests = [:]
 
 // Task to Label map
 task_label = [
     'create_afi':        't2.l_50',
-    'simulation':        'c4.xl',
-    'dcp_gen':           'c4.4xl',
+    'simulation':        'z1d.l',
+    'dcp_gen':           'z1d.2xl',
     'runtime':           'f1.2xl',
     'runtime_all_slots': 'f1.16xl',
     'source_scripts':    'c4.xl',
     'md_links':          'c4.xl',
     'find_tests':        't2.l_50',
-    'sdaccel_builds':    'c4.4xl'
+    'sdaccel_builds':    'z1d.2xl'
 ]
 
-def xilinx_versions = [ '2017.4' ]
+def xilinx_versions = [ '2017.4', '2018.2' ]
 def default_xilinx_version = xilinx_versions.last()
 
-def dsa_map = [ '2017.1' : [ '1DDR' : '1ddr' , '4DDR' : '4ddr' , '4DDR_DEBUG' : '4ddr_debug' ],
-                '2017.4' : [ 'DYNAMIC_5_0' : 'dyn']
+def dsa_map = [ '2017.4' : [ 'DYNAMIC_5_0' : 'dyn'],
+                '2018.2' : [ 'DYNAMIC_5_0' : 'dyn']
 ]
 
-def sdaccel_example_default_map = [ '2017.1' : [ 'Hello_World_all': 'SDAccel/examples/xilinx/getting_started/host/helloworld_ocl',
+def sdaccel_example_default_map = [ '2017.4' : [ 'Hello_World_1ddr': 'SDAccel/examples/xilinx/getting_started/host/helloworld_ocl',
                                                  'Gmem_2Banks_2ddr': 'SDAccel/examples/xilinx/getting_started/kernel_to_gmem/gmem_2banks_ocl',
-                                                 'wide_mem_rw_ocl_4ddr': 'SDAccel/examples/xilinx/getting_started/kernel_to_gmem/wide_mem_rw_ocl',
-                                                 'RTL_Vadd_Debug': 'SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd'
+                                                 'kernel_3ddr_bandwidth_4ddr': 'SDAccel/examples/aws/kernel_3ddr_bandwidth',
+                                                 'Kernel_Global_Bw_4ddr': 'SDAccel/examples/xilinx/getting_started/kernel_to_gmem/kernel_global_bandwidth',
+                                                 'RTL_Vadd_Debug': 'SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd_hw_debug'
                                                ],
-                                    '2017.4' : [ 'Hello_World_1ddr': 'SDAccel/examples/xilinx/getting_started/host/helloworld_ocl',
+                                    '2018.2' : [ 'Hello_World_1ddr': 'SDAccel/examples/xilinx/getting_started/host/helloworld_ocl',
                                                  'Gmem_2Banks_2ddr': 'SDAccel/examples/xilinx/getting_started/kernel_to_gmem/gmem_2banks_ocl',
                                                  'kernel_3ddr_bandwidth_4ddr': 'SDAccel/examples/aws/kernel_3ddr_bandwidth',
                                                  'Kernel_Global_Bw_4ddr': 'SDAccel/examples/xilinx/getting_started/kernel_to_gmem/kernel_global_bandwidth',
                                                  'RTL_Vadd_Debug': 'SDAccel/examples/xilinx/getting_started/rtl_kernel/rtl_vadd_hw_debug'
                                                ]
 ]
+
+def simulator_tool_default_map = [ '2017.4' : [ 'vivado': 'xilinx/SDx/2017.4_04112018',
+                                                'vcs': 'vcs-mx/L-2016.06-1',
+                                                'questa': 'questa/10.6b',
+                                                'ies': 'incisive/15.20.063'
+                                              ],
+                                   '2018.2' : [ 'vivado': 'xilinx/SDx/2018.2_06142018',
+                                                'vcs': 'vcs-mx/N-2017.12-SP1-1',
+                                                'questa': 'questa/10.6c_1',
+                                                'ies': 'incisive/15.20.063'
+                                              ]
+]
+
 
 // Get serializable entry set
 @NonCPS def entrySet(m) {m.collect {k, v -> [key: k, value: v]}}
@@ -144,6 +159,17 @@ def is_public_repo() {
 
 def get_task_label(Map args=[ : ]) {
     String task_label = args.xilinx_version + '_' + task_label[args.task]
+    //boolean use_test_ami = params.get('use_test_ami')
+
+    if (params.use_test_ami) {
+        echo "Test AMI Requested"
+        task_label = task_label + '_test'
+    }
+    if (params.internal_simulations) {
+        echo "internal simulation agent requested"
+        task_label = 'f1'
+    }
+
     echo "Label Requested: $task_label"
     return task_label
 }
@@ -189,7 +215,7 @@ if (env.CHANGE_ID) {
 
 
 if (test_markdown_links || test_src_headers) {
-    initial_tests['Documentation Tests'] = {
+    all_tests['Documentation Tests'] = {
         node(get_task_label(task: 'md_links', xilinx_version: default_xilinx_version)) {
             checkout scm
             commitChangeset = sh(returnStdout: true, script: 'git diff-tree --no-commit-id --name-status -r HEAD').trim()
@@ -243,7 +269,7 @@ if (test_markdown_links || test_src_headers) {
 //=============================================================================
 
 if (test_hdk_scripts) {
-    initial_tests['Test HDK Scripts'] = {
+    all_tests['Test HDK Scripts'] = {
         stage('Test HDK Scripts') {
             String report_file = 'test_hdk_scripts.xml'
             node(get_task_label(task: 'source_scripts', xilinx_version: default_xilinx_version)) {
@@ -268,7 +294,7 @@ if (test_hdk_scripts) {
 }
 
 if (test_fpga_tools) {
-    secondary_tests['Test FPGA Tools 1 Slot'] = {
+    all_tests['Test FPGA Tools 1 Slot'] = {
         stage('Test FPGA Tools 1 Slot') {
             String report_file_tools = 'test_fpga_tools.xml'
             String report_file_sdk = 'test_fpga_sdk.xml'
@@ -300,7 +326,7 @@ if (test_fpga_tools) {
             }
         }
     }
-    secondary_tests['Test FPGA Tools All Slots'] = {
+    all_tests['Test FPGA Tools All Slots'] = {
         stage('Test FPGA Tools All Slots') {
             String report_file_tools = 'test_fpga_tools_all_slots.xml'
             String report_file_sdk = 'test_fpga_sdk_all_slots.xml'
@@ -334,27 +360,56 @@ if (test_fpga_tools) {
     }
 }
 
+
 if (test_sims) {
-    multi_stage_tests['Run Sims'] = {
+    all_tests['Run Sims'] = {
         stage('Run Sims') {
             def cl_names = ['cl_uram_example', 'cl_dram_dma', 'cl_hello_world']
+            def simulators = ['vivado']
             def sim_nodes = [:]
+            if(params.internal_simulations) {
+              simulators = ['vcs', 'ies', 'questa', 'vivado']
+            }
             for (x in cl_names) {
                 for (y in xilinx_versions) {
-                    String xilinx_version = y
-                    String cl_name = x
-                    String node_name = "Sim ${cl_name} ${xilinx_version}"
-                    String key = "test_${cl_name}__"
-                    String report_file = "test_sims_${cl_name}_${xilinx_version}.xml"
-                    sim_nodes[node_name] = {
+                    for ( z in simulators)  {
+                        String xilinx_version = y
+                        String cl_name = x
+                        String simulator = z
+                        String node_name = "Sim ${cl_name} ${xilinx_version}"
+                        String key = "test_${cl_name}__"
+                        String report_file = "test_sims_${cl_name}_${xilinx_version}.xml"
+                        def tool_module_map = simulator_tool_default_map.get(xilinx_version)
+                        String vcs_module = tool_module_map.get('vcs')
+                        String questa_module = tool_module_map.get('questa')
+                        String ies_module = tool_module_map.get('ies')
+                        String vivado_module = tool_module_map.get('vivado')
+                        if(params.internal_simulations) {
+                           report_file = "test_sims_${cl_name}_${xilinx_version}_${simulator}.xml"
+                        }
+                        sim_nodes[node_name] = {
                         node(get_task_label(task: 'simulation', xilinx_version: xilinx_version)) {
                             checkout scm
                             try {
-                                sh """
-                                    set -e
-                                    source $WORKSPACE/shared/tests/bin/setup_test_hdk_env.sh
-                                    python2.7 -m pytest -v $WORKSPACE/hdk/tests/simulation_tests/test_sims.py -k \"${key}\" --junit-xml $WORKSPACE/${report_file}
-                                """
+                                if(params.internal_simulations) {
+                                   sh """
+                                   set -e
+                                   module purge
+                                   module load python/2.7.9
+                                   module load ${vivado_module}
+                                   module load ${vcs_module}
+                                   module load ${questa_module}
+                                   module load ${ies_module}
+                                   source $WORKSPACE/hdk_setup.sh
+                                   python2.7 -m pytest -v $WORKSPACE/hdk/tests/simulation_tests/test_sims.py -k \"${key}\" --junit-xml $WORKSPACE/${report_file} --Simulator ${simulator}
+                                       """
+                                } else {
+                                   sh """
+                                   set -e
+                                   source $WORKSPACE/shared/tests/bin/setup_test_hdk_env.sh
+                                   python2.7 -m pytest -v $WORKSPACE/hdk/tests/simulation_tests/test_sims.py -k \"${key}\" --junit-xml $WORKSPACE/${report_file} --Simulator ${simulator} 
+                                      """
+                                }
                             } catch (exc) {
                                 echo "${node_name} failed: archiving results"
                                 archiveArtifacts artifacts: "hdk/cl/examples/${cl_name}/verif/sim/**", fingerprint: true
@@ -370,6 +425,7 @@ if (test_sims) {
                         }
                     }
                 }
+              }
             }
             parallel sim_nodes
         }
@@ -377,7 +433,7 @@ if (test_sims) {
 }
 
 if (test_edma) {
-    secondary_tests['Test EDMA Driver'] = {
+    all_tests['Test EDMA Driver'] = {
         stage('Test EDMA Driver') {
             node(get_task_label(task: 'runtime', xilinx_version: default_xilinx_version)) {
 
@@ -413,8 +469,41 @@ if (test_edma) {
     }
 }
 
+if (test_non_root_access) {
+    all_tests['Test non-root access to FPGA tools'] = {
+        stage('Test non-root access to FPGA tools') {
+            node(get_task_label(task: 'runtime', xilinx_version: default_xilinx_version)) {
+
+                echo "Test non-root access to FPGA tools"
+                checkout scm
+
+                String test = "sdk/tests/test_non_root_access.py"
+                String report_file = "test_non_root_access.xml"
+
+                try {
+                    sh """
+                        export AWS_FPGA_ALLOW_NON_ROOT=y
+                        export AWS_FPGA_SDK_OVERRIDE_GROUP=y
+                        set -e
+                        source $WORKSPACE/shared/tests/bin/setup_test_sdk_env.sh
+                        newgrp fpgauser
+                        export SDK_DIR="${WORKSPACE}/sdk"
+                        source  $WORKSPACE/shared/tests/bin/setup_test_env.sh
+                        python2.7 -m pytest -v $WORKSPACE/${test} --junit-xml $WORKSPACE/${report_file}
+                    """
+                } catch (exc) {
+                    input message: "Non-root access test failed. Click Proceed or Abort when you are done debugging on the instance."
+                    throw exc
+                } finally {
+                    junit healthScaleFactor: 10.0, testResults: report_file
+                }
+            }
+        }
+    }
+}
+
 if (test_xdma) {
-    secondary_tests['Test XDMA Driver'] = {
+    all_tests['Test XDMA Driver'] = {
         stage('Test XDMA Driver') {
             node(get_task_label(task: 'runtime', xilinx_version: default_xilinx_version)) {
 
@@ -450,7 +539,7 @@ if(disable_runtime_tests) {
 }
 else {
     if (test_runtime_software) {
-        multi_stage_tests['Test Runtime Software'] = {
+        all_tests['Test Runtime Software'] = {
 
             stage('Test Runtime Software') {
                 def nodes = [:]
@@ -501,7 +590,7 @@ else {
 
 
 if (test_dcp_recipes) {
-    multi_stage_tests['Test DCP Recipes'] = {
+    all_tests['Test DCP Recipes'] = {
         stage('Test DCP Recipes') {
             def nodes = [:]
             for (version in xilinx_versions) {
@@ -550,7 +639,7 @@ if (test_dcp_recipes) {
 if (test_hdk_fdf) {
     // Top level stage for FDF
     // Each CL will have its own parallel FDF stage under this one.
-    multi_stage_tests['HDK_FDF'] = {
+    all_tests['HDK_FDF'] = {
         stage('HDK FDF') {
             def fdf_stages = [:]
             for (version in xilinx_versions) {
@@ -732,7 +821,7 @@ if (test_hdk_fdf) {
 //=============================================================================
 
 if (test_sdaccel_scripts) {
-    initial_tests['Test SDAccel Scripts'] = {
+    all_tests['Test SDAccel Scripts'] = {
         stage('Test SDAccel Scripts') {
             def nodes = [:]
 
@@ -767,7 +856,7 @@ if (test_sdaccel_scripts) {
 }
 
 if (test_helloworld_sdaccel_example_fdf || test_all_sdaccel_examples_fdf) {
-    multi_stage_tests['Run SDAccel Tests'] = {
+    all_tests['Run SDAccel Tests'] = {
         String sdaccel_examples_list = 'sdaccel_examples_list.json'
 
         def sdaccel_all_version_stages = [:]
@@ -828,39 +917,9 @@ if (test_helloworld_sdaccel_example_fdf || test_all_sdaccel_examples_fdf) {
 
                             String test_key = e.key
                             def dsa_map_for_version = dsa_map.get(xilinx_version)
-                            def dsa_map_for_test = [:]
-                            if(xilinx_version == '2017.4') {
-                                dsa_map_for_test = dsa_map_for_version
-                            }
-                            else {
-                                if(test_key =~ '_all') {
-                                    dsa_map_for_test = dsa_map_for_version
-                                }
-                                else if(test_key =~ '_1ddr')  {
-                                    dsa_map_for_test.put("1DDR", dsa_map_for_version.get("1DDR"))
-                                }
-                                else if(test_key =~ '_2ddr')  {
-                                    dsa_map_for_test.put("4DDR", dsa_map_for_version.get("4DDR"))
-                                }
-                                else if(test_key =~ '_4ddr')  {
-                                    dsa_map_for_test.put("4DDR", dsa_map_for_version.get("4DDR"))
-                                }
-                                else if(test_key =~ '_Debug')  {
-                                    dsa_map_for_test.put("4DDR_DEBUG", dsa_map_for_version.get("4DDR_DEBUG"))
-                                }
-                                else {
-                                    dsa_map_for_test.put("4DDR", dsa_map_for_version.get("4DDR"))
-                                }
-                            }
-
-                            boolean test_sw_emu_supported = true
-
-                            if(test_key =~ '_Debug') {
-                                test_sw_emu_supported = false
-                            }
 
                             // dsa = [ 4DDR: 4ddr ]
-                            for ( def dsa in entrySet(dsa_map_for_test) ) {
+                            for ( def dsa in entrySet(dsa_map_for_version) ) {
 
                                 String build_name = "SDx ${e.key}_${dsa.value}_${xilinx_version}"
                                 String example_path = e.value
@@ -879,6 +938,33 @@ if (test_helloworld_sdaccel_example_fdf || test_all_sdaccel_examples_fdf) {
                                 String hw_report_file          = "sdaccel_hw_${e.key}_${dsa.value}_${xilinx_version}.xml"
                                 String create_afi_report_file  = "sdaccel_create_afi_${e.key}_${dsa.value}_${xilinx_version}.xml"
                                 String run_example_report_file = "sdaccel_run_${e.key}_${dsa.value}_${xilinx_version}.xml"
+
+                                String description_file = "${example_path}/description.json"
+                                def description_json = ["targets":["hw","hw_emu","sw_emu"]]
+
+                                try {
+                                    description_json = readJSON file: description_file
+                                }
+                                catch (exc) {
+                                    echo "Could not read the file: ${description_file}"
+                                    throw exc
+                                }
+
+                                boolean test_sw_emu_supported = true
+
+                                if(description_json["targets"]) {
+                                    if(description_json["targets"].contains("sw_emu")) {
+                                        test_sw_emu_supported = true
+                                        echo "Description file ${description_file} has target sw_emu"
+                                    }
+                                    else {
+                                        test_sw_emu_supported = false
+                                        echo "Description file ${description_file} does not have target sw_emu"
+                                    }
+                                }
+                                else {
+                                    echo "Description json did not have a 'target' key"
+                                }
 
                                 sdaccel_build_stages[build_name] = {
                                     if(test_sw_emu_supported) {
@@ -1058,7 +1144,7 @@ if (test_helloworld_sdaccel_example_fdf || test_all_sdaccel_examples_fdf) {
 
                                 } // sdaccel_build_stages[ e.key ]
 
-                            } //for ( def dsa in entrySet(dsa_map_for_test) ) {
+                            } //for ( def dsa in entrySet(dsa_map_for_version) ) {
                         } // for ( e in list_map )
 
                         parallel sdaccel_build_stages
@@ -1076,6 +1162,4 @@ if (test_helloworld_sdaccel_example_fdf || test_all_sdaccel_examples_fdf) {
 
 
 // Run the tests here
-parallel initial_tests
-parallel secondary_tests
-parallel multi_stage_tests
+parallel all_tests

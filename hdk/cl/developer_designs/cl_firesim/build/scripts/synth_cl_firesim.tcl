@@ -10,6 +10,7 @@ source $CL_DIR/design/ila_files/firesim_ila_insert_vivado.tcl
 #Param needed to avoid clock name collisions
 set_param sta.enableAutoGenClkNamePersistence 0
 set CL_MODULE $CL_MODULE
+set VDEFINES $VDEFINES
 
 create_project -in_memory -part [DEVICE_TYPE] -force
 
@@ -48,6 +49,11 @@ read_verilog -sv [ list \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/flop_ccf.sv \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/ccf_ctl.v \
   $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/sh_ddr.sv \
+  $HDK_SHELL_DESIGN_DIR/lib/lib_pipe.sv \
+  $HDK_SHELL_DESIGN_DIR/lib/bram_2rw.sv \
+  $HDK_SHELL_DESIGN_DIR/lib/flop_fifo.sv \
+  $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/mgt_acc_axl.sv  \
+  $HDK_SHELL_DESIGN_DIR/sh_ddr/synth/mgt_gen_axl.sv  \
   $HDK_SHELL_DESIGN_DIR/interfaces/cl_ports.vh
 ]
 
@@ -67,6 +73,7 @@ read_ip [ list \
   $HDK_SHELL_DESIGN_DIR/ip/cl_debug_bridge/cl_debug_bridge.xci \
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
+  $HDK_SHELL_DESIGN_DIR/ip/axi_clock_converter_0/axi_clock_converter_0.xci \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
@@ -76,10 +83,12 @@ read_ip [ list \
 ]
 
 # Additional IP's that might be needed if using the DDR
-#read_bd [ list \
-# $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci \
-# $HDK_SHELL_DESIGN_DIR/ip/cl_axi_interconnect/cl_axi_interconnect.bd
-#]
+read_ip [ list \
+ $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci 
+]
+read_bd [ list \
+ $HDK_SHELL_DESIGN_DIR/ip/cl_axi_interconnect/cl_axi_interconnect.bd
+]
 
 puts "AWS FPGA: Reading AWS constraints";
 
@@ -106,7 +115,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Start design synthes
 
 update_compile_order -fileset sources_1
 puts "\nRunning synth_design for $CL_MODULE $CL_DIR/build/scripts \[[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Y}]\]"
-eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive -retiming]
+eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS $VDEFINES -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive -retiming]
 
 set failval [catch {exec grep "FAIL" failfast.csv}]
 if { $failval==0 } {

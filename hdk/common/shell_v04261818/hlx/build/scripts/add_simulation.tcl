@@ -39,6 +39,7 @@ add_files -fileset sim_1 [ list \
 
 
 add_files -fileset sim_1 [ list \
+ ${HDK_SHELL_DIR}/verif/models/ddr4_model/ddr4_sdram_model_wrapper.sv\
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_bi_delay.sv\
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_db_delay_model.sv\
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_dimm.sv\
@@ -46,7 +47,7 @@ add_files -fileset sim_1 [ list \
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_rank.sv\
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_rcd_model.sv\
  ${HDK_SHELL_DIR}/verif/models/ddr4_rdimm_wrapper/ddr4_rdimm_wrapper.sv\
- ${HDK_SHELL_DIR}/verif/models/ddr4_model/ddr4_sdram_model_wrapper.sv\
+ ${HDK_SHELL_DIR}/verif/models/ddr4_model/ddr4_model.sv\
 ]
 
 set define_inc_var [get_property include_dirs [get_filesets sim_1]]

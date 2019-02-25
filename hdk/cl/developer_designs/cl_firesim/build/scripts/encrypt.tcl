@@ -35,6 +35,7 @@ if {[llength [glob -nocomplain -dir $TARGET_DIR *]] != 0} {
 
 ## Change file names and paths below to reflect your CL area.  DO NOT include AWS RTL files.
 file copy -force $CL_DIR/design/cl_firesim_defines.vh                 $TARGET_DIR
+file copy -force $CL_DIR/design/cl_firesim_generated_defines.vh       $TARGET_DIR
 file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_inst.v   $TARGET_DIR
 file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_ports.v  $TARGET_DIR
 file copy -force $CL_DIR/design/ila_files/firesim_ila_insert_wires.v  $TARGET_DIR
@@ -61,8 +62,7 @@ file copy -force $UNUSED_TEMPLATES_DIR/unused_flr_template.inc        $TARGET_DI
 exec chmod +w {*}[glob $TARGET_DIR/*]
 
 set TOOL_VERSION $::env(VIVADO_TOOL_VERSION)
-set vivado_version [version -short]
-set ver_2017_4 2017.4
+set vivado_version [string range [version -short] 0 5]
 puts "AWS FPGA: VIVADO_TOOL_VERSION $TOOL_VERSION"
 puts "vivado_version $vivado_version"
 
