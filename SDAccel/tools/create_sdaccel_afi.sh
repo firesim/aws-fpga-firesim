@@ -22,11 +22,12 @@ full_script=$(readlink -f $script)
 script_name=$(basename $full_script)
 
 source $AWS_FPGA_REPO_DIR/shared/bin/set_common_functions.sh
+source $AWS_FPGA_REPO_DIR/shared/bin/set_common_env_vars.sh
 
 debug=0
 
 function usage {
-   info_msg "USAGE: $script_name [-d|-debug] [-h|-help] [-s3_bucket=<bucket_name>] [-s3_dcp_key=<S3_folder_of_dcp>] [-s3_logs_key=<S3_folder_of_logs>] [-xclbin=<xclbin_filename>] [-o=<awsxclbin_filename>] [-awsprofile=<aws_profile_name>]"                                                                                               
+   info_msg "USAGE: $script_name [-h|-help] [-s3_bucket=<bucket_name>] [-s3_dcp_key=<S3_folder_of_dcp>] [-s3_logs_key=<S3_folder_of_logs>] [-xclbin=<xclbin_filename>] [-o=<awsxclbin_filename>] [-awsprofile=<aws_profile_name>]"                                                                                               
 }                                                                                                              
 
 function help {
@@ -90,9 +91,15 @@ while [ "$1" != "" ]; do
     shift                                         
 done                                              
 
+if [ "$HDK_DIR" == "" ]
+then
+    err_msg "Env HDK_DIR not set"
+    exit 1
+fi
+
 if [ "$RELEASE_VER" == "" ]
 then
-    err_msg "Env variable RELEASE_VER not set, did you `source sdaccel_setup.sh`?"
+    err_msg "Env variable RELEASE_VER not set, did you source sdaccel_setup.sh?"
     exit 1
 fi
 

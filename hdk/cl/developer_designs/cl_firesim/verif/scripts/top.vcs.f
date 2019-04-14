@@ -62,6 +62,7 @@ ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/sim/cl_debug_bridge.v
 ${HDK_SHELL_DESIGN_DIR}/ip/vio_0/sim/vio_0.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/sim/axi_register_slice_light.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice/sim/axi_register_slice.v
+${HDK_SHELL_DESIGN_DIR}/ip/axi_clock_converter_0/hdl/fifo_generator_v13_2_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_register_slice_v2_1_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_register_slice_light/hdl/axi_infrastructure_v1_1_vl_rfs.v
 ${HDK_SHELL_DESIGN_DIR}/ip/axi_clock_converter_0/hdl/axi_clock_converter_v2_1_vl_rfs.v
@@ -76,6 +77,7 @@ ${CL_ROOT}/ip/axi_dwidth_converter_0/sim/axi_dwidth_converter_0.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_dwidth_converter_v2_1_vl_rfs.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_register_slice_v2_1_vl_rfs.v
 ${CL_ROOT}/design/cl_firesim_generated.sv
+${CL_ROOT}/design/cl_firesim_generated_defines.vh
 ${CL_ROOT}/design/cl_firesim.sv
 
 -f ${HDK_COMMON_DIR}/verif/tb/filelists/tb.${SIMULATOR}.f

@@ -33,7 +33,7 @@ It is highly recommended you read the documentation and utilize software and har
 * SDAccel is a complete development environment for applications accelerated using Xilinx FPGAs
 * It leverages the OpenCL heterogeneous computing framework to offload compute intensive workloads to the FPGA
 * The accelerated application is written in  C/C++, OpenCL or RTL with OpenCL APIs
-* Once you complete this quick starting exampl, see the [SDAccel GUI Guide](./docs/README_GUI.md) to access the fully integrated Eclipse-based environment with built-in debug, profiling and performance analysis tools. 
+* Once you complete this quick starting example, see the [SDAccel GUI Guide](./docs/README_GUI.md) to access the fully integrated Eclipse-based environment with built-in debug, profiling and performance analysis tools. 
 
 <a name="prerequisites"></a>
 # Prerequisites
@@ -125,6 +125,8 @@ The instructions below describe how to build the Xilinx FPGA Binary and host app
     $ make TARGETS=hw DEVICES=$AWS_PLATFORM all   
 ```
 
+NOTE: If you encounter an error with  `No current synthesis run set`, you may have previously run the [HDK IPI examples](../hdk/docs/IPI_GUI_Vivado_Setup.md) and created a `Vivado_init.tcl` file in `~/.Xilinx/Vivado`. This will cause [problems](https://forums.aws.amazon.com/thread.jspa?threadID=268202&tstart=25) with the build process, thus it is recommended to remove it before starting a hardware system build.
+
 Now that you have built your Xilinx FPGA binary, see [SDAccel Power Analysis Guide](./docs/SDAccel_Power_Analysis.md) for more details on how to analyze power for your binary.
 
 <a name="createafi"></a>
@@ -192,7 +194,7 @@ For help with AFI creation issues, see [create-fpga-image error codes](../hdk/do
 # 3. Run the FPGA accelerated application on Amazon FPGA instances
 
 Here are the steps:
-* Start an FPGA instance using [FPGA Developer AMI on AWS Marketplace](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) and check the AMI [compatiability table](../README.md#devAmi).  Alternatively, you can [create your own Runtime AMI](docs/Create_Runtime_AMI.md) for running your SDAccel applications on Amazon FPGA instances.
+* Start an FPGA instance using [FPGA Developer AMI on AWS Marketplace](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) and check the AMI [compatiability table](../README.md#devAmi) and [runtime compatilibility table](docs/Create_Runtime_AMI.md#runtime-ami-compatability-table).  Alternatively, you can [create your own Runtime AMI](docs/Create_Runtime_AMI.md) for running your SDAccel applications on Amazon FPGA instances.
    * *Assuming the developer flow (compilation) was done on a separate instance you will need to:*
      * Copy the compiled host executable (exe) to new instance
      * Copy the \*.awsxclbin AWS FPGA binary file to the new instance
@@ -208,12 +210,12 @@ Here are the steps:
 
 * Ensure the host application can find and load the \*.awsxclbin AWS FPGA binary file. 
 
-* Source the Runtime Environment & Execute your Host Application (Xilinx SDx 2017.4):
-```
-    $ sudo sh
-    # source /opt/Xilinx/SDx/2017.4.rte.dyn/setup.sh   # Other runtime env settings needed by the host app should be setup after this step
-    # ./helloworld 
-```
+* Source the Runtime Environment & Execute your Host Application 
+   ```
+       $ sudo sh
+       # source $AWS_FPGA_REPO_DIR/sdaccel_runtime_setup.sh   # Other runtime env settings needed by the host app should be setup after this step
+       # ./helloworld 
+   ```
     
 <a name="read"></a>
 # Additional SDAccel Information (2017.4)
