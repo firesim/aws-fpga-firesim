@@ -63,14 +63,16 @@ function help {
 }
 
 function xrt_install_instructions_2018_2 {
-    err_msg "AWS recommended XRT version release: https://github.com/Xilinx/XRT/releases/tag/2018.2_XDF.RC4"
+    err_msg "AWS recommended XRT version release: https://github.com/Xilinx/XRT/releases/tag/2018.2_XDF.RC5"
     err_msg "refer to following link for instructions to install XRT"
     err_msg "https://www.xilinx.com/html_docs/xilinx2018_2_xdf/sdaccel_doc/ejy1538090924727.html"
     err_msg "use following command to download and install latest validated XRT rpms for centos distributions"
-    err_msg "curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Patches/xrt_201802.2.1.0_7.5.1804-xrt.rpm -o xrt_201802.2.1.0_7.5.1804-xrt.rpm"
-    err_msg "curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Patches/xrt_201802.2.1.0_7.5.1804-aws.rpm -o xrt_201802.2.1.0_7.5.1804-aws.rpm"
-    err_msg "sudo yum reinstall -y xrt_*-xrt.rpm"
-    err_msg "sudo yum reinstall -y xrt_*-aws.rpm"
+    err_msg "curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Patches/XRT_2018_2_XDF_RC5/xrt_201802.2.1.0_7.5.1804-xrt.rpm -o xrt_201802.2.1.0_7.5.1804-xrt.rpm"
+    err_msg "curl -s https://s3.amazonaws.com/aws-fpga-developer-ami/1.5.0/Patches/XRT_2018_2_XDF_RC5/xrt_201802.2.1.0_7.5.1804-aws.rpm -o xrt_201802.2.1.0_7.5.1804-aws.rpm"
+    err_msg "sudo yum remove -y xrt-aws"
+    err_msg "sudo yum remove -y xrt"
+    err_msg "sudo yum install -y xrt_201802.2.1.0_7.5.1804-xrt.rpm"
+    err_msg "sudo yum install -y xrt_201802.2.1.0_7.5.1804-aws.rpm"
 }
 
 function check_xdma_driver {
@@ -98,11 +100,25 @@ function check_xocl_driver {
         err_msg " XOCL Driver not installed. Please install xocl driver using below instructions"
         err_msg " If using 2017.4 Vivado toolset please source $AWS_FPGA_REPO_DIR/sdaccel_setup.sh "
         err_msg " if using 2018.2 Vivado toolset please reinstall rpm using instructions below "
-        xrt_install_instructions_2018_2
+        err_msg "Please Refer $AWS_FPGA_REPO/SDAccel/doc/XRT_installation_instructions.md for XRT installation instructions"
         return 1
     fi
 }
 
+function check_kernel_ver {
+
+      ins_ker_ver=$(uname -r)
+      info_msg "Installed kernel version : $ins_ker_ver"
+      if grep -Fxq "$ins_ker_ver" $AWS_FPGA_REPO_DIR/SDAccel/kernel_version.txt
+       then
+        info_msg "kernel version $ins_ker_ver has been validated for this devkit."
+      else
+          warn_msg "$ins_ker_ver does not match one of recommended kernel versions"
+          cat $AWS_FPGA_REPO_DIR/SDAccel/kernel_version.txt
+          warn_msg "Xilinx Runtime not validated against your installed kernel version."
+       fi
+ 
+}
 # Process command line args
 args=( "$@" )
 for (( i = 0; i < ${#args[@]}; i++ )); do
@@ -147,14 +163,14 @@ fi
 info_msg "VIVADO_TOOL_VERSION is $VIVADO_TOOL_VERSION"
 
 
-
+check_kernel_ver
 check_xdma_driver
 check_edma_driver
 
-if [[ "$VIVADO_TOOL_VERSION" =~ .*2018\.2.* ]]; then
-    info_msg "Xilinx Vivado version is 2018.2"
+if [[ "$VIVADO_TOOL_VERSION" =~ .*2018\.2.* || "$VIVADO_TOOL_VERSION" =~ .*2018\.3.* ]]; then
+    info_msg "Xilinx Vivado version is $VIVADO_TOOL_VERSION"
     
-    if override; then
+    if [ $override == 1 ]; then
       info_msg "XRT check overide selected."
       source /opt/xilinx/xrt/setup.sh
       return 0
@@ -162,7 +178,9 @@ if [[ "$VIVADO_TOOL_VERSION" =~ .*2018\.2.* ]]; then
 
     if [ -f "/opt/xilinx/xrt/include/version.h" ]; then
        info_msg "XRT installed. proceeding to check version compatibility"
-       xrt_build_ver=$(grep  'xrt_build_version_hash\[\]' /opt/xilinx/xrt/include/version.h | sed 's/";//' | sed 's/^.*"//')
+       xrt_build_ver=$VIVADO_TOOL_VERSION
+       xrt_build_ver+=:
+       xrt_build_ver+=$(grep  'xrt_build_version_hash\[\]' /opt/xilinx/xrt/include/version.h | sed 's/";//' | sed 's/^.*"//')
        info_msg "Installed XRT version : $xrt_build_ver"
        if grep -Fxq "$xrt_build_ver" $AWS_FPGA_REPO_DIR/SDAccel/sdaccel_xrt_version.txt
        then
@@ -173,19 +191,20 @@ if [[ "$VIVADO_TOOL_VERSION" =~ .*2018\.2.* ]]; then
              source /opt/xilinx/xrt/setup.sh
           else
              err_msg " Cannot find /opt/xilinx/xrt/setup.sh "
-             err_msg " Please check XRT is installed correctly "  
+             err_msg " Please check XRT is installed correctly "
+	     err_msg "Please Refer $AWS_FPGA_REPO/SDAccel/doc/XRT_installation_instructions.md for XRT installation instructions"
              return 1
           fi
           info_msg " XRT Runtime setup Done "
        else
-          err_msg "$xrt_build_ver does not match recommended version"
+          err_msg "$xrt_build_ver does not match recommended versions"
           cat $AWS_FPGA_REPO_DIR/SDAccel/sdaccel_xrt_version.txt
-          xrt_install_instructions_2018_2
+          err_msg "Please Refer $AWS_FPGA_REPO/SDAccel/doc/XRT_installation_instructions.md for XRT installation instructions"
           return 1
        fi
     else
        err_msg "XRT not installed. Please install XRT"
-       xrt_install_instructions_2018_2
+       err_msg "Please Refer $AWS_FPGA_REPO/SDAccel/doc/XRT_installation_instructions.md for XRT installation instructions"
        return 1
     fi
 else
