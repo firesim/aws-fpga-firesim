@@ -78,13 +78,12 @@ read_ip [ list \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
   $CL_DIR/ip/axi_dwidth_converter_0/axi_dwidth_converter_0.xci \
-  $CL_DIR/ip/clk_wiz_0_firesim/clk_wiz_0_firesim.xci \
   $CL_DIR/ip/firesim_ila_ip/ila_firesim_0/ila_firesim_0.xci
 ]
 
 # Additional IP's that might be needed if using the DDR
 read_ip [ list \
- $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci 
+ $HDK_SHELL_DESIGN_DIR/ip/ddr4_core/ddr4_core.xci
 ]
 read_bd [ list \
  $HDK_SHELL_DESIGN_DIR/ip/cl_axi_interconnect/cl_axi_interconnect.bd
@@ -103,6 +102,9 @@ read_xdc [ list \
    $HDK_SHELL_DIR/build/constraints/cl_synth_aws.xdc \
    $CL_DIR/build/constraints/cl_synth_user.xdc
 ]
+
+# FireSim custom clocking
+source $CL_DIR/build/scripts/synth_firesim_clk_wiz.tcl
 
 #Do not propagate local clock constraints for clocks generated in the SH
 set_property USED_IN {synthesis implementation OUT_OF_CONTEXT} [get_files cl_clocks_aws.xdc]

@@ -154,6 +154,10 @@ if {[string compare $notify_via_sns "1"] == 0} {
     puts "AWS FPGA: ([clock format [clock seconds] -format %T]) EMAIL address for completion notification set to $env(EMAIL).";
   }
 }
+##################################################
+### Source FireSim Generated TCL Env variables
+##################################################
+source $CL_DIR/design/cl_firesim_generated_env.tcl
 
 ##################################################
 ### Strategy options 
@@ -271,6 +275,7 @@ if {$implement} {
          impl_step opt_design $TOP "-merge_equivalent_drivers -sweep"
       }
    }
+   report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
 
    ########################
    # CL Place
