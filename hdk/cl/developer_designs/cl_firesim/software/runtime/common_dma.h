@@ -55,9 +55,9 @@ int fpga_driver_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buff
 
 int fpga_driver_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
 
-void fpga_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
-
-void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
+//void fpga_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
+//
+//void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
 
 int dma_example_hwsw_cosim(int slot_id);
 

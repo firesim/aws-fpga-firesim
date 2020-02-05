@@ -17,7 +17,7 @@
 ## Makefile For Vivado compiles and simulations
 ##################################################################
 
-compile:
+compile: $(ELABORATED_IP_FILES)
 	mkdir -p $(SIM_DIR)
 	cd $(SIM_DIR) && xsc $(C_FILES) --additional_option "-I$(C_SDK_USR_INC_DIR)" --additional_option "-I$(C_SDK_USR_UTILS_DIR)" --additional_option "-I$(C_COMMON_DIR)/include" --additional_option "-I$(C_COMMON_DIR)/src" --additional_option "-I$(C_INC_DIR)"  --additional_option "-DVIVADO_SIM" --additional_option "-DSV_TEST" --additional_option "-DDMA_TEST"
 	cd $(SIM_DIR) && xvlog --sv -m64 --define DMA_TEST --initfile $(XILINX_VIVADO)/data/xsim/ip/xsim_ip.ini --work xil_defaultlib --relax -f $(SCRIPTS_DIR)/top.vivado.f
