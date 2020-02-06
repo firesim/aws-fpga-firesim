@@ -57,11 +57,16 @@ export SH_SH_DIR   = $(HDK_SHELL_DESIGN_DIR)/sh_ddr/sim
 SV_TEST_LIST = test_firesim
 C_FILES      = $(C_TEST_NAME) $(C_SDK_USR_UTILS_DIR)/sh_dpi_tasks.c $(C_COMMON_DIR)/src/fpga_pci_sv.c $(C_SRC_DIR)/common_dma.c
 
+ELABORATED_IP_FILES = $(CL_ROOT)/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
+
 ifeq ($(XCHK), 1)
   all:	make_sim_dir compile_chk run
 else
   all:	make_sim_dir compile run
 endif
+
+$(CL_ROOT)/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v:
+	vivado -mode tcl -source synth_firesim_clk_wiz_sim.tcl -tclargs $(CL_ROOT)
 
 include $(HDK_COMMON_DIR)/verif/tb/scripts/Makefile.common.inc
 

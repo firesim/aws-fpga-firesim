@@ -163,22 +163,23 @@ out:
     return rc;
 }
 
-void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address) {
-#ifdef SV_TEST
-  sv_fpga_start_cl_to_buffer(slot_id, channel, buffer_size, address);
-#else
-  fpga_driver_read_cl_to_buffer(slot_id, channel, fd, buffer_size, address);
-#endif
-  dma_memcmp(buffer_size);
-}
-
-void fpga_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buffer_size, size_t address){
-#ifdef SV_TEST
-  sv_fpga_start_buffer_to_cl(slot_id, channel, buffer_size, write_buffer, address);
-#else
-  fpga_driver_write_buffer_to_cl(slot_id, channel, fd, buffer_size, address);
-#endif
-}
+// Biancolin: We don't use these but their callouts to the SV task that implements them has changed.
+//void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address) {
+//#ifdef SV_TEST
+//  sv_fpga_start_cl_to_buffer(slot_id, channel, buffer_size, address);
+//#else
+//  fpga_driver_read_cl_to_buffer(slot_id, channel, fd, buffer_size, address);
+//#endif
+//  dma_memcmp(buffer_size);
+//}
+//
+//void fpga_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buffer_size, size_t address){
+//#ifdef SV_TEST
+//  sv_fpga_start_buffer_to_cl(slot_id, channel, buffer_size, write_buffer, address);
+//#else
+//  fpga_driver_write_buffer_to_cl(slot_id, channel, fd, buffer_size, address);
+//#endif
+//}
 
 int dma_memcmp (size_t buffer_size) {
    int rc = 0;
