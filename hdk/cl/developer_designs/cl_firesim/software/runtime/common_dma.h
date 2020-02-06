@@ -55,6 +55,7 @@ int fpga_driver_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buff
 
 int fpga_driver_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
 
+// Biancolin: We don't use these but their callouts to the SV task that implements them has changed.
 //void fpga_write_buffer_to_cl(int slot_id, int channel, int fd, size_t buffer_size, size_t address);
 //
 //void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address);

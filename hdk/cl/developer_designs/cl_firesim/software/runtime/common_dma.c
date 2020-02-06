@@ -163,6 +163,7 @@ out:
     return rc;
 }
 
+// Biancolin: We don't use these but their callouts to the SV task that implements them has changed.
 //void fpga_read_cl_to_buffer(int slot_id, int channel, int fd, size_t buffer_size, size_t address) {
 //#ifdef SV_TEST
 //  sv_fpga_start_cl_to_buffer(slot_id, channel, buffer_size, address);
