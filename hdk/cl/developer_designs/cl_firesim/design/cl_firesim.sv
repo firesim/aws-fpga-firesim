@@ -1089,23 +1089,18 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_0_aw_bits_cache(fsimtop_s_0_axi_awcache), // not available on DDR IF
    .io_slave_0_aw_bits_prot(fsimtop_s_0_axi_awprot), // not available on DDR IF
    .io_slave_0_aw_bits_qos(fsimtop_s_0_axi_awqos), // not available on DDR IF
-   .io_slave_0_aw_bits_region(fsimtop_s_0_axi_awregion), // not available on DDR IF
    .io_slave_0_aw_bits_id(fsimtop_s_0_axi_awid),
-   .io_slave_0_aw_bits_user(), // not available on DDR IF
 
    .io_slave_0_w_ready(fsimtop_s_0_axi_wready),
    .io_slave_0_w_valid(fsimtop_s_0_axi_wvalid),
    .io_slave_0_w_bits_data(fsimtop_s_0_axi_wdata),
    .io_slave_0_w_bits_last(fsimtop_s_0_axi_wlast),
-   .io_slave_0_w_bits_id(),
    .io_slave_0_w_bits_strb(fsimtop_s_0_axi_wstrb),
-   .io_slave_0_w_bits_user(), // not available on DDR IF
 
    .io_slave_0_b_ready(fsimtop_s_0_axi_bready),
    .io_slave_0_b_valid(fsimtop_s_0_axi_bvalid),
    .io_slave_0_b_bits_resp(fsimtop_s_0_axi_bresp),
    .io_slave_0_b_bits_id(fsimtop_s_0_axi_bid),
-   .io_slave_0_b_bits_user(1'b0), // TODO check this
 
    .io_slave_0_ar_ready(fsimtop_s_0_axi_arready),
    .io_slave_0_ar_valid(fsimtop_s_0_axi_arvalid),
@@ -1117,9 +1112,7 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_0_ar_bits_cache(fsimtop_s_0_axi_arcache), // not available on DDR IF
    .io_slave_0_ar_bits_prot(fsimtop_s_0_axi_arprot), // not available on DDR IF
    .io_slave_0_ar_bits_qos(fsimtop_s_0_axi_arqos), // not available on DDR IF
-   .io_slave_0_ar_bits_region(fsimtop_s_0_axi_arregion), // not available on DDR IF
    .io_slave_0_ar_bits_id(fsimtop_s_0_axi_arid), // not available on DDR IF
-   .io_slave_0_ar_bits_user(), // not available on DDR IF
 
    .io_slave_0_r_ready(fsimtop_s_0_axi_rready),
    .io_slave_0_r_valid(fsimtop_s_0_axi_rvalid),
@@ -1127,7 +1120,6 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_0_r_bits_data(fsimtop_s_0_axi_rdata),
    .io_slave_0_r_bits_last(fsimtop_s_0_axi_rlast),
    .io_slave_0_r_bits_id(fsimtop_s_0_axi_rid),
-   .io_slave_0_r_bits_user(1'b0), // TODO check this
 
    .io_slave_1_aw_ready(fsimtop_s_1_axi_awready),
    .io_slave_1_aw_valid(fsimtop_s_1_axi_awvalid),
@@ -1139,23 +1131,18 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_1_aw_bits_cache(fsimtop_s_1_axi_awcache), // not available on DDR IF
    .io_slave_1_aw_bits_prot(fsimtop_s_1_axi_awprot), // not available on DDR IF
    .io_slave_1_aw_bits_qos(fsimtop_s_1_axi_awqos), // not available on DDR IF
-   .io_slave_1_aw_bits_region(fsimtop_s_1_axi_awregion), // not available on DDR IF
    .io_slave_1_aw_bits_id(fsimtop_s_1_axi_awid),
-   .io_slave_1_aw_bits_user(), // not available on DDR IF
 
    .io_slave_1_w_ready(fsimtop_s_1_axi_wready),
    .io_slave_1_w_valid(fsimtop_s_1_axi_wvalid),
    .io_slave_1_w_bits_data(fsimtop_s_1_axi_wdata),
    .io_slave_1_w_bits_last(fsimtop_s_1_axi_wlast),
-   .io_slave_1_w_bits_id(),
    .io_slave_1_w_bits_strb(fsimtop_s_1_axi_wstrb),
-   .io_slave_1_w_bits_user(), // not available on DDR IF
 
    .io_slave_1_b_ready(fsimtop_s_1_axi_bready),
    .io_slave_1_b_valid(fsimtop_s_1_axi_bvalid),
    .io_slave_1_b_bits_resp(fsimtop_s_1_axi_bresp),
    .io_slave_1_b_bits_id(fsimtop_s_1_axi_bid),
-   .io_slave_1_b_bits_user(1'b0), // TODO check this
 
    .io_slave_1_ar_ready(fsimtop_s_1_axi_arready),
    .io_slave_1_ar_valid(fsimtop_s_1_axi_arvalid),
@@ -1167,9 +1154,7 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_1_ar_bits_cache(fsimtop_s_1_axi_arcache), // not available on DDR IF
    .io_slave_1_ar_bits_prot(fsimtop_s_1_axi_arprot), // not available on DDR IF
    .io_slave_1_ar_bits_qos(fsimtop_s_1_axi_arqos), // not available on DDR IF
-   .io_slave_1_ar_bits_region(fsimtop_s_1_axi_arregion), // not available on DDR IF
    .io_slave_1_ar_bits_id(fsimtop_s_1_axi_arid), // not available on DDR IF
-   .io_slave_1_ar_bits_user(), // not available on DDR IF
 
    .io_slave_1_r_ready(fsimtop_s_1_axi_rready),
    .io_slave_1_r_valid(fsimtop_s_1_axi_rvalid),
@@ -1177,8 +1162,6 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_1_r_bits_data(fsimtop_s_1_axi_rdata),
    .io_slave_1_r_bits_last(fsimtop_s_1_axi_rlast),
    .io_slave_1_r_bits_id(fsimtop_s_1_axi_rid),
-   .io_slave_1_r_bits_user(1'b0), // TODO check this
-
 
    .io_slave_2_aw_ready(fsimtop_s_2_axi_awready),
    .io_slave_2_aw_valid(fsimtop_s_2_axi_awvalid),
@@ -1190,23 +1173,18 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_2_aw_bits_cache(fsimtop_s_2_axi_awcache), // not available on DDR IF
    .io_slave_2_aw_bits_prot(fsimtop_s_2_axi_awprot), // not available on DDR IF
    .io_slave_2_aw_bits_qos(fsimtop_s_2_axi_awqos), // not available on DDR IF
-   .io_slave_2_aw_bits_region(fsimtop_s_2_axi_awregion), // not available on DDR IF
    .io_slave_2_aw_bits_id(fsimtop_s_2_axi_awid),
-   .io_slave_2_aw_bits_user(), // not available on DDR IF
 
    .io_slave_2_w_ready(fsimtop_s_2_axi_wready),
    .io_slave_2_w_valid(fsimtop_s_2_axi_wvalid),
    .io_slave_2_w_bits_data(fsimtop_s_2_axi_wdata),
    .io_slave_2_w_bits_last(fsimtop_s_2_axi_wlast),
-   .io_slave_2_w_bits_id(),
    .io_slave_2_w_bits_strb(fsimtop_s_2_axi_wstrb),
-   .io_slave_2_w_bits_user(), // not available on DDR IF
 
    .io_slave_2_b_ready(fsimtop_s_2_axi_bready),
    .io_slave_2_b_valid(fsimtop_s_2_axi_bvalid),
    .io_slave_2_b_bits_resp(fsimtop_s_2_axi_bresp),
    .io_slave_2_b_bits_id(fsimtop_s_2_axi_bid),
-   .io_slave_2_b_bits_user(1'b0), // TODO check this
 
    .io_slave_2_ar_ready(fsimtop_s_2_axi_arready),
    .io_slave_2_ar_valid(fsimtop_s_2_axi_arvalid),
@@ -1218,9 +1196,7 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_2_ar_bits_cache(fsimtop_s_2_axi_arcache), // not available on DDR IF
    .io_slave_2_ar_bits_prot(fsimtop_s_2_axi_arprot), // not available on DDR IF
    .io_slave_2_ar_bits_qos(fsimtop_s_2_axi_arqos), // not available on DDR IF
-   .io_slave_2_ar_bits_region(fsimtop_s_2_axi_arregion), // not available on DDR IF
    .io_slave_2_ar_bits_id(fsimtop_s_2_axi_arid), // not available on DDR IF
-   .io_slave_2_ar_bits_user(), // not available on DDR IF
 
    .io_slave_2_r_ready(fsimtop_s_2_axi_rready),
    .io_slave_2_r_valid(fsimtop_s_2_axi_rvalid),
@@ -1228,7 +1204,6 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_2_r_bits_data(fsimtop_s_2_axi_rdata),
    .io_slave_2_r_bits_last(fsimtop_s_2_axi_rlast),
    .io_slave_2_r_bits_id(fsimtop_s_2_axi_rid),
-   .io_slave_2_r_bits_user(1'b0), // TODO check this
 
    .io_slave_3_aw_ready(fsimtop_s_3_axi_awready),
    .io_slave_3_aw_valid(fsimtop_s_3_axi_awvalid),
@@ -1240,23 +1215,18 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_3_aw_bits_cache(fsimtop_s_3_axi_awcache), // not available on DDR IF
    .io_slave_3_aw_bits_prot(fsimtop_s_3_axi_awprot), // not available on DDR IF
    .io_slave_3_aw_bits_qos(fsimtop_s_3_axi_awqos), // not available on DDR IF
-   .io_slave_3_aw_bits_region(fsimtop_s_3_axi_awregion), // not available on DDR IF
    .io_slave_3_aw_bits_id(fsimtop_s_3_axi_awid),
-   .io_slave_3_aw_bits_user(), // not available on DDR IF
 
    .io_slave_3_w_ready(fsimtop_s_3_axi_wready),
    .io_slave_3_w_valid(fsimtop_s_3_axi_wvalid),
    .io_slave_3_w_bits_data(fsimtop_s_3_axi_wdata),
    .io_slave_3_w_bits_last(fsimtop_s_3_axi_wlast),
-   .io_slave_3_w_bits_id(),
    .io_slave_3_w_bits_strb(fsimtop_s_3_axi_wstrb),
-   .io_slave_3_w_bits_user(), // not available on DDR IF
 
    .io_slave_3_b_ready(fsimtop_s_3_axi_bready),
    .io_slave_3_b_valid(fsimtop_s_3_axi_bvalid),
    .io_slave_3_b_bits_resp(fsimtop_s_3_axi_bresp),
    .io_slave_3_b_bits_id(fsimtop_s_3_axi_bid),
-   .io_slave_3_b_bits_user(1'b0), // TODO check this
 
    .io_slave_3_ar_ready(fsimtop_s_3_axi_arready),
    .io_slave_3_ar_valid(fsimtop_s_3_axi_arvalid),
@@ -1268,18 +1238,14 @@ wire fsimtop_s_3_axi_rready;
    .io_slave_3_ar_bits_cache(fsimtop_s_3_axi_arcache), // not available on DDR IF
    .io_slave_3_ar_bits_prot(fsimtop_s_3_axi_arprot), // not available on DDR IF
    .io_slave_3_ar_bits_qos(fsimtop_s_3_axi_arqos), // not available on DDR IF
-   .io_slave_3_ar_bits_region(fsimtop_s_3_axi_arregion), // not available on DDR IF
    .io_slave_3_ar_bits_id(fsimtop_s_3_axi_arid), // not available on DDR IF
-   .io_slave_3_ar_bits_user(), // not available on DDR IF
 
    .io_slave_3_r_ready(fsimtop_s_3_axi_rready),
    .io_slave_3_r_valid(fsimtop_s_3_axi_rvalid),
    .io_slave_3_r_bits_resp(fsimtop_s_3_axi_rresp),
    .io_slave_3_r_bits_data(fsimtop_s_3_axi_rdata),
    .io_slave_3_r_bits_last(fsimtop_s_3_axi_rlast),
-   .io_slave_3_r_bits_id(fsimtop_s_3_axi_rid),
-   .io_slave_3_r_bits_user(1'b0) // TODO check this
-
+   .io_slave_3_r_bits_id(fsimtop_s_3_axi_rid)
 );
 
   // assign cl_sh_ddr_awsize = 3'b110;
