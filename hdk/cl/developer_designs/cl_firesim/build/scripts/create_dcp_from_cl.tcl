@@ -144,6 +144,10 @@ set_msg_config -id {DRC CKLD-2}          -suppress
 set_msg_config -id {DRC REQP-1853}       -suppress
 set_msg_config -id {Timing 38-436}       -suppress
 
+# Promote the following critical warnings to errors to prevent AGFI generation
+# Design not completely routed
+set_msg_config -id {Route 35-1} -new_severity "ERROR"
+
 # Check that an email address has been set, else unset notify_via_sns
 
 if {[string compare $notify_via_sns "1"] == 0} {
@@ -312,6 +316,12 @@ if {$implement} {
    if {$route_phys_opt && $SLACK > -0.400 && $SLACK < 0} {
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Running post-route optimization";
       impl_step route_phys_opt_design $TOP $post_phys_options $post_phys_directive $post_phys_preHookTcl $post_phys_postHookTcl
+   }
+   # Check if slack has improved after physopt.
+   set SLACK [get_property SLACK [get_timing_paths]]
+   if {$SLACK < 0} {
+      puts "\nFATAL: Design did not meet timing requirements. Terminating.";
+      exit 3
    }
 
    ##############################
