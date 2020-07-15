@@ -311,17 +311,11 @@ if {$implement} {
    ##############################
    # CL Post-Route Optimization
    ##############################
-   set SLACK [get_property SLACK [get_timing_paths]]
+   set SLACK [get_property -min SLACK [get_timing_paths -delay_type min_max]]
    #Post-route phys_opt will not be run if slack is positive or greater than -200ps.
    if {$route_phys_opt && $SLACK > -0.400 && $SLACK < 0} {
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Running post-route optimization";
       impl_step route_phys_opt_design $TOP $post_phys_options $post_phys_directive $post_phys_preHookTcl $post_phys_postHookTcl
-   }
-   # Check if slack has improved after physopt.
-   set SLACK [get_property SLACK [get_timing_paths]]
-   if {$SLACK < 0} {
-      puts "\nFATAL: Design did not meet timing requirements. Terminating.";
-      exit 3
    }
 
    ##############################
@@ -346,6 +340,13 @@ if {$implement} {
 
    # Generate debug probes file
    write_debug_probes -force -no_partial_ltxfile -file $CL_DIR/build/checkpoints/${timestamp}.debug_probes.ltx
+
+   # Before proceeding, coarsely check if we meet timing otherwise exit
+   set SLACK [get_property -min SLACK [get_timing_paths -delay_type min_max]]
+   if {$SLACK < 0} {
+      puts "\nFATAL: Design did not meet timing requirements. Terminating.";
+      exit 3
+   }
 
    close_project
 }
