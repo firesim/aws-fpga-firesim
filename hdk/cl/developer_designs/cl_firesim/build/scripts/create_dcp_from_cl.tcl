@@ -147,6 +147,8 @@ set_msg_config -id {Timing 38-436}       -suppress
 # Promote the following critical warnings to errors to prevent AGFI generation
 # Design not completely routed
 set_msg_config -id {Route 35-1} -new_severity "ERROR"
+# Route 35-535] Clock Net: <net> is not completely routed.
+set_msg_config -id {Route 35-535} -new_severity "ERROR"
 
 # Check that an email address has been set, else unset notify_via_sns
 
