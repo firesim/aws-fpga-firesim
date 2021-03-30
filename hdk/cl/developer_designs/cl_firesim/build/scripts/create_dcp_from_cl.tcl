@@ -177,6 +177,10 @@ switch $strategy {
         puts "EXPLORE strategy."
         source $HDK_SHELL_DIR/build/scripts/strategy_EXPLORE.tcl
     }
+    "NORETIMING" {
+        puts "NORETIMING strategy."
+        source $HDK_SHELL_DIR/build/scripts/strategy_NORETIMING.tcl
+    }
     "TIMING" {
         puts "TIMING strategy."
         source $HDK_SHELL_DIR/build/scripts/strategy_TIMING.tcl
