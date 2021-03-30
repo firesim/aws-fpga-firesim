@@ -66,6 +66,7 @@ class AwsFpgaTestBase(object):
     git_repo_dir = get_git_repo_root(dirname(__file__))
     WORKSPACE = git_repo_dir
 
+    ADD_BATCH = False
     ADD_SIMULATOR = False
     ADD_EXAMPLEPATH = False
     ADD_RTENAME = False
@@ -88,6 +89,12 @@ class AwsFpgaTestBase(object):
         AwsFpgaTestBase.xilinx_sdaccel_examples_prefix_path = "SDAccel/examples/xilinx"
         AwsFpgaTestBase.xilinx_sdaccel_examples_dir = AwsFpgaTestBase.git_repo_dir + "/" + AwsFpgaTestBase.xilinx_sdaccel_examples_prefix_path
         AwsFpgaTestBase.xilinx_sdaccel_examples_list_file = AwsFpgaTestBase.WORKSPACE + "/sdaccel_examples_list.json"
+
+        # Vitis locations
+        # Need to move to either a config file somewhere or a subclass
+        AwsFpgaTestBase.xilinx_vitis_examples_prefix_path = "Vitis/examples/xilinx"
+        AwsFpgaTestBase.xilinx_vitis_examples_dir = AwsFpgaTestBase.git_repo_dir + "/" + AwsFpgaTestBase.xilinx_vitis_examples_prefix_path
+        AwsFpgaTestBase.xilinx_vitis_examples_list_file = AwsFpgaTestBase.WORKSPACE + "/vitis_examples_list.json"
 
         if 'WORKSPACE' in os.environ:
             assert os.environ['WORKSPACE'] == AwsFpgaTestBase.git_repo_dir, "WORKSPACE incorrect"
@@ -134,6 +141,17 @@ class AwsFpgaTestBase(object):
         assert os.environ['SDACCEL_DIR'] == os.path.join(AwsFpgaTestBase.git_repo_dir, 'SDAccel'), "SDACCEL_DIR incorrect. source {}/sdaccel_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
         assert os.environ.get('AWS_PLATFORM') != 'None', "Environment Var AWS_PLATFORM not set. source {}/sdaccel_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
         assert os.environ.get('XILINX_SDX') != 'None', "Environment Var XILINX_SDX not set. Please check the AMI."
+
+    @staticmethod
+    def assert_vitis_setup():
+        assert 'AWS_FPGA_REPO_DIR' in os.environ, "AWS_FPGA_REPO_DIR not set. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert os.environ['AWS_FPGA_REPO_DIR'] == AwsFpgaTestBase.git_repo_dir, "AWS_FPGA_REPO_DIR not set to the repo dir. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert 'SDK_DIR' in os.environ, "SDK_DIR not set. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert os.environ['SDK_DIR'] == os.path.join(AwsFpgaTestBase.git_repo_dir, 'sdk'), "SDK_DIR incorrect. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert 'VITIS_DIR' in os.environ, "VITIS_DIR not set. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert os.environ['VITIS_DIR'] == os.path.join(AwsFpgaTestBase.git_repo_dir, 'Vitis'), "VITIS_DIR incorrect. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert os.environ.get('AWS_PLATFORM') != 'None', "Environment Var AWS_PLATFORM not set. source {}/vitis_setup.sh".format(AwsFpgaTestBase.git_repo_dir)
+        assert os.environ.get('XILINX_VITIS') != 'None', "Environment Var XILINX_VITIS not set. Please check the AMI."
 
     @staticmethod
     def running_on_f1_instance():
@@ -191,6 +209,12 @@ class AwsFpgaTestBase(object):
         return AwsFpgaTestBase.run_cmd(cmd, echo, check)
 
     @staticmethod
+    def run_vitis_cmd(cmd, echo=False, check=True):
+        source_vitis_cmd = "source {}/vitis_setup.sh &> /dev/null".format(AwsFpgaTestBase.git_repo_dir)
+        cmd = source_vitis_cmd + " && " + cmd
+        return AwsFpgaTestBase.run_cmd(cmd, echo, check)
+
+    @staticmethod
     def get_shell_version():
         shell_link = os.path.join(AwsFpgaTestBase.WORKSPACE, 'hdk/common/shell_stable')
         link = basename(os.readlink(shell_link))
@@ -238,6 +262,10 @@ class AwsFpgaTestBase(object):
         return os.path.join(AwsFpgaTestBase.get_sdaccel_example_fullpath(examplePath=examplePath), 'xclbin')
 
     @staticmethod
+    def get_vitis_xclbin_dir(examplePath, target='hw'):
+        return os.path.join(AwsFpgaTestBase.get_sdaccel_example_fullpath(examplePath=examplePath), "build_dir.{}.xilinx_aws-vu9p-f1_shell-v04261818_201920_2".format(target))
+
+    @staticmethod
     def get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
@@ -253,6 +281,21 @@ class AwsFpgaTestBase(object):
         return "jenkins/{}/SDAccel/{}/{}/{}/{}".format(os.environ['BUILD_TAG'], xilinxVersion, rteName, example_relative_path, target)
 
     @staticmethod
+    def get_vitis_example_s3_root_tag(examplePath, target, rteName, xilinxVersion):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        @param target: The target to build. For eg: hw, hw_emu, sw_emu
+        @param rteName: The runtime environment
+        @param xilinxVersion: The Xilinx tool version
+        '''
+        assert target != ''
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        example_relative_path = os.path.relpath(examplePath, AwsFpgaTestBase.xilinx_vitis_examples_prefix_path)
+        return "jenkins/{}/Vitis/{}/{}/{}/{}".format(os.environ['BUILD_TAG'], xilinxVersion, rteName, example_relative_path, target)
+
+    @staticmethod
     def get_sdaccel_example_s3_xclbin_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
@@ -265,6 +308,22 @@ class AwsFpgaTestBase(object):
         assert rteName != ''
         assert xilinxVersion != ''
         root_tag = AwsFpgaTestBase.get_sdaccel_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
+
+        return "{}/xclbin".format(root_tag)
+
+    @staticmethod
+    def get_vitis_example_s3_xclbin_tag(examplePath, target, rteName, xilinxVersion):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        @param target: The target to build. For eg: hw, hw_emu, sw_emu
+        @param rteName: The runtime environment
+        @param xilinxVersion: The Xilinx tool version
+        '''
+        assert target != ''
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_vitis_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
 
         return "{}/xclbin".format(root_tag)
 
@@ -285,6 +344,22 @@ class AwsFpgaTestBase(object):
         return "{}/dcp".format(root_tag)
 
     @staticmethod
+    def get_vitis_example_s3_dcp_tag(examplePath, target, rteName, xilinxVersion):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        @param target: The target to build. For eg: hw, hw_emu, sw_emu
+        @param rteName: The runtime environment
+        @param xilinxVersion: The Xilinx tool version
+        '''
+        assert target != ''
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_vitis_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
+
+        return "{}/dcp".format(root_tag)
+
+    @staticmethod
     def get_sdaccel_example_s3_afi_tag(examplePath, target, rteName, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
@@ -300,9 +375,25 @@ class AwsFpgaTestBase(object):
         return "{}/create-afi/afi-ids.txt".format(root_tag)
 
     @staticmethod
-    def get_sdaccel_example_run_cmd(examplePath):
+    def get_vitis_example_s3_afi_tag(examplePath, target, rteName, xilinxVersion):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        @param target: The target to build. For eg: hw, hw_emu, sw_emu
+        @param rteName: The runtime environment
+        '''
+        assert target != ''
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        root_tag = AwsFpgaTestBase.get_vitis_example_s3_root_tag(examplePath, target, rteName, xilinxVersion)
+
+        return "{}/create-afi/afi-ids.txt".format(root_tag)
+
+    @staticmethod
+    def get_sdaccel_example_run_cmd(examplePath, xilinxVersion):
         '''
         @param examplePath: Path of the Xilinx SDAccel example
+        @param xilinxVersion: The Xilinx tool version
         '''
         description = AwsFpgaTestBase.get_sdaccel_example_description(examplePath)
         if description.get("em_cmd", None):
@@ -312,12 +403,47 @@ class AwsFpgaTestBase(object):
                 run_cmd = "./{}".format(description.get("host_exe", None))
                 if description.get("cmd_args", None):
                    if "PROJECT" not in description.get("cmd_args", None) and "BUILD" not in description.get("cmd_args", None):
-                       run_cmd += " {}".format(description.get("cmd_args", None))
+                       if "2019.1" not in xilinxVersion:
+                           run_cmd += " {}".format(description.get("cmd_args", None))
+                       else:
+                           run_cmd += " {}".format(description.get("cmd_args", None).replace(".xclbin",".hw.xilinx_aws-vu9p-f1-04261818_dynamic_5_0.xclbin"))
                    else:
-                       run_cmd += " {}".format((description.get("cmd_args", None).replace("PROJECT",".")).replace("BUILD","./xclbin"))
+                       if "2019.1" not in xilinxVersion:
+                           run_cmd += " {}".format((description.get("cmd_args", None).replace("PROJECT",".")).replace("BUILD","./xclbin"))
+                       else:
+                           run_cmd += " {}".format(((description.get("cmd_args", None).replace(".xclbin",".hw.xilinx_aws-vu9p-f1-04261818_dynamic_5_0.awsxclbin")).replace("PROJECT",".")).replace("BUILD","./xclbin"))
 
         assert run_cmd is not None, "Could not find run_cmd(em_cmd) or (host_exe) in the example description here {}".format(examplePath)
-        
+
+        return run_cmd
+
+    @staticmethod
+    def get_vitis_example_run_cmd(examplePath, xilinxVersion):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        @param xilinxVersion: The Xilinx tool version
+        '''
+        description = AwsFpgaTestBase.get_vitis_example_description(examplePath)
+
+        host_description = description.get("host", None)
+        assert host_description is not None, "Could not find host key in the description.json here {}".format(
+            examplePath)
+
+        launch_description = description.get("launch", None)
+        assert launch_description is not None, "Could not find launch/cmd_args key in the description.json here {}".format(
+            examplePath)
+
+        if host_description.get("host_exe", None):
+            run_cmd = "./{}".format(host_description.get("host_exe", None))
+
+        if launch_description[0].get("cmd_args", None):
+            run_cmd += " {}".format(((launch_description[0].get("cmd_args", None).replace(".xclbin",
+                                                                                        ".awsxclbin")).replace(
+                        "PROJECT", ".")).replace("BUILD", "./build_dir.hw.xilinx_aws-vu9p-f1_shell-v04261818_201920_2"))
+
+        assert run_cmd is not None, "Could not find run_cmd(em_cmd) or (host_exe) in the example description here {}".format(
+            examplePath)
+
         return run_cmd
 
     @staticmethod
@@ -333,7 +459,23 @@ class AwsFpgaTestBase(object):
             return description
 
     @staticmethod
+    def get_vitis_example_description(examplePath):
+        '''
+        @param examplePath: Path of the Xilinx Vitis example
+        '''
+
+        example_description = AwsFpgaTestBase.assert_non_zero_file(os.path.join(AwsFpgaTestBase.get_vitis_example_fullpath(examplePath), "description.json"))
+
+        with open(example_description) as json_data:
+            description = json.load(json_data)
+            return description
+
+    @staticmethod
     def get_sdaccel_example_fullpath(examplePath):
+        return "{}/{}/".format(AwsFpgaTestBase.WORKSPACE, examplePath)
+
+    @staticmethod
+    def get_vitis_example_fullpath(examplePath):
         return "{}/{}/".format(AwsFpgaTestBase.WORKSPACE, examplePath)
 
     @staticmethod
@@ -355,6 +497,24 @@ class AwsFpgaTestBase(object):
         return xclbin_path
 
     @staticmethod
+    def fetch_vitis_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion):
+        cwd = os.getcwd()
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+
+        os.chdir(AwsFpgaTestBase.get_vitis_example_fullpath(examplePath))
+        rc = os.system("aws s3 cp s3://{}/{} {} --recursive".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_vitis_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName, xilinxVersion=xilinxVersion), AwsFpgaTestBase.get_vitis_xclbin_dir(examplePath=examplePath)))
+        assert rc == 0, "Error while copying from s3://{}/{} to {}".format(AwsFpgaTestBase.s3_bucket, AwsFpgaTestBase.get_vitis_example_s3_xclbin_tag(examplePath=examplePath, target="hw", rteName=rteName, xilinxVersion=xilinxVersion), AwsFpgaTestBase.get_vitis_xclbin_dir(examplePath=examplePath))
+        xclbin_path = AwsFpgaTestBase.get_vitis_xclbin_dir(examplePath=examplePath)
+
+        logger.debug(xclbin_path)
+        assert os.path.exists(xclbin_path), "Vitis Example xclbin path={} does not exist".format(xclbin_path)
+
+        os.chdir(cwd)
+        return xclbin_path
+
+    @staticmethod
     def get_sdaccel_xclbin_file(examplePath, rteName, xilinxVersion):
         assert examplePath != ''
         assert rteName != ''
@@ -366,6 +526,17 @@ class AwsFpgaTestBase(object):
         return xclbin
 
     @staticmethod
+    def get_vitis_xclbin_file(examplePath, rteName, xilinxVersion):
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+        xclbin_path = AwsFpgaTestBase.fetch_vitis_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion)
+        logger.info("Checking that a non zero size xclbin file exists in {}".format(xclbin_path))
+
+        xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.xclbin"))
+        return xclbin
+
+    @staticmethod
     def get_sdaccel_aws_xclbin_file(examplePath, rteName, xilinxVersion):
         assert examplePath != ''
         assert rteName != ''
@@ -374,6 +545,17 @@ class AwsFpgaTestBase(object):
         xclbin_path = AwsFpgaTestBase.fetch_sdaccel_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion)
         logger.info("Checking that a non zero size awsxclbin file exists in {}".format(xclbin_path))
         aws_xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.{}.*.awsxclbin".format("hw")))
+        return aws_xclbin
+
+    @staticmethod
+    def get_vitis_aws_xclbin_file(examplePath, rteName, xilinxVersion):
+        assert examplePath != ''
+        assert rteName != ''
+        assert xilinxVersion != ''
+
+        xclbin_path = AwsFpgaTestBase.fetch_vitis_xclbin_folder_from_s3(examplePath, rteName, xilinxVersion)
+        logger.info("Checking that a non zero size awsxclbin file exists in {}".format(xclbin_path))
+        aws_xclbin = AwsFpgaTestBase.assert_non_zero_file(os.path.join(xclbin_path, "*.awsxclbin"))
         return aws_xclbin
 
     @staticmethod
@@ -481,6 +663,10 @@ class AwsFpgaTestBase(object):
 
         filenames = glob.glob(filter)
 
+        # Removing .link.xclbin found in Vitis2020.1
+
+        filenames = [x for x in filenames if ".link." not in x]
+
         assert len(filenames) > 0, "No {} file found in {}".format(filter, os.getcwd())
         assert len(filenames) == 1, "More than 1 {} file found: {}\n{}".format(filter, len(filenames), filenames)
 
@@ -517,7 +703,7 @@ class AwsFpgaTestBase(object):
         return os.path.join(AwsFpgaTestBase.get_fio_tool_root(), "scripts/{}_4-ch_4-1M_write.fio".format(driver))
 
     @staticmethod
-    def setup_fio_tools(python_version=2.7):
+    def setup_fio_tools():
         '''Install and setup fio tools'''
         # If downloaded repo already, exists, delete it so we can fetch again
         if os.path.exists(AwsFpgaTestBase.get_fio_tool_install_path()):
@@ -525,7 +711,7 @@ class AwsFpgaTestBase(object):
 
         logger.info("Installing fio_dma_tools")
 
-        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("python{} {} {}".format(python_version, AwsFpgaTestBase.get_fio_tool_install_script(), AwsFpgaTestBase.get_fio_tool_install_path()), echo=True)
+        (rc, stdout_lines, stderr_lines) = AwsFpgaTestBase.run_cmd("python {} {}".format(AwsFpgaTestBase.get_fio_tool_install_script(), AwsFpgaTestBase.get_fio_tool_install_path()), echo=True)
         assert rc == 0
         assert os.path.exists("{}".format(AwsFpgaTestBase.get_fio_tool_run_script()))
 

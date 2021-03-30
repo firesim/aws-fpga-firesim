@@ -98,6 +98,28 @@ endif
 endif
 endif
 
+COMMON_LIBLISTS =\
+   unisims_ver\
+   unisim\
+   unifast_ver\
+   unifast\
+   unimacro_ver\
+   unimacro\
+   secureip\
+   xpm
+COMMON_LIBLISTS +=\
+   $(shell cd $(COMPLIB_DIR) >/dev/null 2>&1;\
+   for i in\
+      axi_register_slice_v2_1_\
+      axi_infrastructure_v1_1_\
+      axi_crossbar_v2_1_\
+      axi_clock_converter_v2_1_\
+      fifo_generator_v13_2_\
+      fifo_generator_v13_1_\
+      axi_data_fifo_v2_1_\
+      generic_baseblocks_v2_1_;\
+   do ls | grep $$i; done)
+
 include $(HDK_COMMON_DIR)/verif/tb/scripts/Makefile.$(SIMULATOR).inc
 
 regression: $(SV_TEST_LIST) $(C_TEST_LIST) 
@@ -115,3 +137,7 @@ $(HDK_COMMON_DIR)/verif/models/sh_bfm/cl_ports_sh_bfm.vh: $(HDK_SHELL_DESIGN_DIR
 
 make_sim_dir: $(HDK_COMMON_DIR)/verif/models/sh_bfm/cl_ports_sh_bfm.vh
 	mkdir -p $(SIM_ROOT)
+
+show_common_liblists:
+	@ for i in $(COMMON_LIBLISTS); do echo $$i; done
+

@@ -99,9 +99,9 @@ Starting from 1.4, The shell is reconfigurable, allowing, in most cases, develop
 
 **DW –** Doubleword: referring to 4-byte (32-bit) data size.
 
-[**AXI-4** ARM Advanced eXtensible Interface.](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.set.amba/index.html)
+[**AXI-4** ARM Advanced eXtensible Interface.](https://developer.arm.com/architectures/system-architectures/amba/amba-4)
 
-[**AXI-4 Stream –** ARM Advanced eXtensible Stream Interface.](http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.set.amba/index.html)
+[**AXI-4 Stream –** ARM Advanced eXtensible Stream Interface.](https://developer.arm.com/architectures/system-architectures/amba/amba-4)
 
 **M –** Typically refers to the Master side of an AXI bus.
 
@@ -222,9 +222,10 @@ These parameters are used to control which DDR controllers are impemented in the
               ...
  ```   
 
-### DRAM Content Preservation between AFI Loads (Future)
+### DRAM Content Preservation between AFI Loads
 
-In future Shell versions a DRAM content preservation feature will be implemented. This feature allows the DDR state to be preserved when dynamically changing CL logic. The current Shell version will not guarantee preservation of DRAM contents if the CL logic is re-loaded.
+Shell version 1.4 allows the DDR state to be preserved when dynamically changing CL logic. Any AFI generated with a v1.4 shell will enable DRAM content preservation by default.
+Please refer to the [guide on how to use the DRAM data retention mode to preserve the content of DRAM across AFI loads](./data_retention.md) for more details on utilizing this feature.
 
 <a name="dma"></a>
 ## DMA
@@ -316,7 +317,8 @@ Each DRAM interface is accessed via an AXI-4 interface:
 
 There is a single status signal that the DRAM interface is trained and ready for access.  DDR access should be gated when the DRAM interface is not ready. The addressing uses ROW/COLUMN/BANK (Interleaved) mapping of AXI address to DRAM Row/Col/BankGroup. The Read and Write channels are serviced with round-robin arbitration (i.e. equal priority).
 
-The DRAM interface uses the Xilinx DDR-4 Interface controller. The AXI-4 interface adheres to the Xilinx specification. Uncorrectable ECC errors are signaled with RRESP.  ECC error status can be read using AWS Management Software APIs.
+The DRAM interface uses the Xilinx DDR-4 Interface controller. The AXI-4 interface adheres to the Xilinx specification. Uncorrectable ECC errors are signaled with RRESP.  A CL can be designed to handle ECC errors by monitoring RRESP on the DDR AXI interfaces. The CL will receive a SLVERR RRESP on an uncorrectable ECC error. 
+**NOTE:** Writing to a DDR location is required before reading the DDR location to initialize the ECC. False ECC errors may occur when un-initialized DDR locations are read.
 
 Additionally, there are three statistics interfaces between the Shell and CL (one for each CL DDR controller). If the DDR controllers are being used by the CL, then the interfaces must be connected between the Shell and the DRAM interface controller modules. 
 
@@ -648,12 +650,6 @@ It is ideal to place logic that interfaces to the shell in the same SLR as the S
 For the interfaces that are in both the MID/BOTTOM the recommendation is to use flops for pipelining, but don’t constrain to an SLR.  Also it is recommended to not use the SDA interface because it spans two SLR's (use BAR1 or OCL instead). You can constrain logic to a particular SLR by creating PBLOCKs (one per SLR), and assigning logic to the PBLOCKs (refer to cl_dram_dma example [cl_pnr_user.xdc](../cl/examples/cl_dram_dma/build/constraints/cl_pnr_user.xdc)).
 Dataflow should be mapped so that SLR crossing is minimized (for example a pipeline should be organized such that successive stages are mostly in the same SLR).
 
-Here’s an example post on the Xilinx forum which points to some documentation related to solving this:
-<https://forums.xilinx.com/t5/UltraScale-Architecture/Ultrascale-SLR-crossing/td-p/798435>
-
-There are some good timing closure tips in this methodology doc pointed to by the Xilinx forum post:
-<https://www.xilinx.com/support/documentation/sw_manuals/xilinx2017_1/ug949-vivado-design-methodology.pdf>
-
 <a name="impl_tips_logic_levels"></a>
 ### Logic Levels
 You can report all paths that are greater than a certain number of logic levels.  This can be used to iterate on timing in synthesis rather than waiting for place and route.  For example at 250MHz a general rule of thumb is try to keep logic levels to around 10.  The following commands report on all paths that have more than 10 logic levels:
@@ -691,13 +687,10 @@ You have to be careful that pipeline registers do not infer a shift register com
   
 <a name="impl_tips_vivado"></a>
 ### Vivado Analysis  
-Vivado has some nice analysis capabilities:
+Vivado has the following analysis capabilities:
 * report_methodology (includes CDC report)
 * clock interaction report (see if paths between async clocks are erroneously being timed)
 * congestion heat map
 * power analysis
 * physical implementation analysis (placement, routing)
 * linked timing/schematic/physical views 
-
-<https://www.xilinx.com/support/documentation/sw_manuals/xilinx2017_4/ug906-vivado-design-analysis.pdf>
-

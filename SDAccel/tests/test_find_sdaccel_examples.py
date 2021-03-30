@@ -44,6 +44,8 @@ class TestFindSDAccelExamples(AwsFpgaTestBase):
     NOTE: Cannot have an __init__ method.
 
     '''
+    ADD_XILINX_VERSION = True
+
     @classmethod
     def setup_class(cls):
         '''
@@ -52,7 +54,7 @@ class TestFindSDAccelExamples(AwsFpgaTestBase):
         AwsFpgaTestBase.setup_class(cls, __file__)
         return
 
-    def test_find_example_makefiles(self):
+    def test_find_example_makefiles(self, xilinxVersion):
 
         assert os.path.exists(self.xilinx_sdaccel_examples_dir), "The Xilinx SDAccel example dir does not exist: {}".format(self.xilinx_sdaccel_examples_dir)
         assert os.listdir(self.xilinx_sdaccel_examples_dir) != [], "Xilinx SDAccel example submodule not cloned or does not exist"
@@ -61,13 +63,34 @@ class TestFindSDAccelExamples(AwsFpgaTestBase):
         xilinx_sdaccel_example_map = {}
 
         for root, dirs, files in os.walk(self.xilinx_sdaccel_examples_dir):
-            for file in files:
-                if file.endswith('Makefile'):
-                    makefile_path = root + "/Makefile"
+            ignore = False
 
-                    # If the Makefile has a docs target, it's not the makefile we want to read
-                    if 'docs:' not in open(makefile_path).read():
-                        xilinx_examples_makefiles.append(root)
+            if os.path.exists(root + "/description.json") and os.path.exists(root + "/Makefile"):
+                with open(root + "/description.json", "r") as description_file:
+                    description = json.load(description_file)
+
+                    if "containers" in description:
+                        if len(description["containers"]) > 1:
+                            ignore = True
+                            logger.info("Ignoring {} as >1 containers found in description.json.".format(root))
+
+                    else:
+                        ignore = True
+                        logger.info("Ignoring {} as no containers found in description.json.".format(root))
+                        continue
+
+                    if "nboard" in description:
+                        if "xilinx_aws-vu9p-f1-04261818" in description["nboard"]:
+                            ignore = True
+                            logger.info("Ignoring {} as F1 device found in nboard.".format(root))
+                            continue
+            else:
+                ignore = True
+                logger.warn("Ignoring: {} as no Makefile/description.json exist".format(root))
+
+            if not ignore:
+                xilinx_examples_makefiles.append(root)
+                logger.info("Adding: " + root)
 
         assert len(xilinx_examples_makefiles) != 0, "Could not find any Xilinx SDAccel example in %s" % self.xilinx_sdaccel_examples_dir
 
@@ -83,5 +106,9 @@ class TestFindSDAccelExamples(AwsFpgaTestBase):
 
         with open(self.xilinx_sdaccel_examples_list_file, 'w') as outfile:
             json.dump(xilinx_sdaccel_example_map, outfile)
+
+        # Also write the archive file
+        with open(self.xilinx_sdaccel_examples_list_file + "." + xilinxVersion, 'w') as archive_file:
+            json.dump(xilinx_sdaccel_example_map, archive_file)
 
         assert os.path.getsize(self.xilinx_sdaccel_examples_list_file) > 0, "%s is a non zero file. We need to have some data in the file" % self.xilinx_sdaccel_examples_list_file

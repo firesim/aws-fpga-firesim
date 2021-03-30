@@ -177,7 +177,7 @@ fpga_mgmt_cmd_init_metrics(union afi_cmd *cmd, uint32_t *len, uint32_t flags)
 	afi_cmd_hdr_set_flags(cmd, 0);
 
 	/** Fill in cmd body; only allow specific flags to be set */
-	req->fpga_cmd_flags = flags &
+	req->fpga_cmd_flags = FPGA_CMD_EXTENDED_METRICS_SIZE | flags &
 		(FPGA_CMD_GET_HW_METRICS | FPGA_CMD_CLEAR_HW_METRICS);
 
 	*len = sizeof(struct afi_cmd_hdr) + payload_len;
@@ -249,22 +249,26 @@ fpga_mgmt_mbox_attach(int slot_id)
 	int ret;
 	pci_bar_handle_t handle;
 
-	ret = fpga_pci_attach(slot_id,
-	                      FPGA_MGMT_PF,
-	                      F1_MBOX_RESOURCE_NUM,
-	                      0 /* flags */,
-	                      &handle);
-	fail_on(ret != 0, err, "Unable to attach to mbox bar");
+	if (fpga_mgmt_state.slots[slot_id].handle == PCI_BAR_HANDLE_INIT) {
+		ret = fpga_pci_attach(slot_id,
+		                      FPGA_MGMT_PF,
+		                      F1_MBOX_RESOURCE_NUM,
+		                      0 /* flags */,
+		                      &handle);
+		fail_on(ret != 0, err, "Unable to attach to mbox bar");
 
-	fpga_mgmt_state.slots[slot_id].handle = handle;
+		fpga_mgmt_state.slots[slot_id].handle = handle;
 
-	struct fpga_hal_mbox mbox = {
-		.timeout = fpga_mgmt_state.timeout,
-		.delay_msec = fpga_mgmt_state.delay_msec,
-	};
+		struct fpga_hal_mbox mbox = {
+			.timeout = fpga_mgmt_state.timeout,
+			.delay_msec = fpga_mgmt_state.delay_msec,
+		};
 
-	ret = fpga_hal_mbox_init(&mbox);
-	fail_on(ret != 0, err, "fpga_hal_mbox_init failed");
+		ret = fpga_hal_mbox_init(&mbox);
+		fail_on(ret != 0, err, "fpga_hal_mbox_init failed");
+	} else {
+		handle = fpga_mgmt_state.slots[slot_id].handle;
+	}
 
 	ret = fpga_hal_mbox_attach(handle, true); /**< clear_state=true */
 	fail_on(ret != 0, err, "fpga_hal_mbox_attach failed");
@@ -449,7 +453,6 @@ int
 fpga_mgmt_process_cmd(int slot_id,
 	const union afi_cmd *cmd, union afi_cmd *rsp, uint32_t *len)
 {
-	bool attached = false;
 	int ret;
 
 	fail_slot_id(slot_id, err, ret);
@@ -457,14 +460,8 @@ fpga_mgmt_process_cmd(int slot_id,
 	ret = fpga_mgmt_mbox_attach(slot_id);
 	fail_on(ret, err, "fpga_mgmt_mbox_attach failed");
 
-	attached = true;
-
 	ret = fpga_mgmt_send_cmd(slot_id, cmd, rsp, len);
 	fail_on(ret, err, "fpga_mgmt_send_cmd failed");
 err:
-	if (attached) {
-		fpga_mgmt_mbox_detach(slot_id);
-	}	
-
 	return ret;
 }

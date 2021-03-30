@@ -139,9 +139,14 @@ module test_dma_pcim_concurrent();
          end while ((status[0] !== 'h1) && (timeout_count < 4000));
 
          if (timeout_count > 4000) begin
-            $display("[%t] : *** ERROR *** Timeout waiting for dma transfers from cl", $realtime);
+            $error("[%t] : *** ERROR *** Timeout waiting for dma transfers from cl", $realtime);
             error_count++;
          end
+        
+         // DMA transfers are posted writes. The above code checks only if the dma transfer is setup and done. 
+         // We need to wait for writes to finish to memory before issuing reads.
+         $display("[%t] : Waiting for DMA write activity to complete", $realtime);
+         #500ns;
 
          $display("[%t] : starting C2H DMA channels ", $realtime);
 
@@ -161,7 +166,7 @@ module test_dma_pcim_concurrent();
          end while ((status[0] !== 'h1) && (timeout_count < 4000));
 
          if (timeout_count > 4000) begin
-            $display("[%t] : *** ERROR *** Timeout waiting for dma transfers from cl", $realtime);
+            $error("[%t] : *** ERROR *** Timeout waiting for dma transfers from cl", $realtime);
             error_count++;
          end
 
@@ -174,7 +179,7 @@ module test_dma_pcim_concurrent();
          host_memory_buffer_address = 64'h0_0001_0800;
          for (int i = 0 ; i<len0 ; i++) begin
             if (tb.hm_get_byte(.addr(host_memory_buffer_address + i)) !== 8'hAA) begin
-               $display("[%t] : *** ERROR *** DDR0 Data mismatch, addr:%0x read data is: %0x",
+               $error("[%t] : *** ERROR *** DDR0 Data mismatch, addr:%0x read data is: %0x",
                         $realtime, (host_memory_buffer_address + i), tb.hm_get_byte(.addr(host_memory_buffer_address + i)));
                error_count++;
             end
@@ -213,13 +218,31 @@ module test_dma_pcim_concurrent();
 
          // Number of instructions, zero based ([31:16] for read, [15:0] for write)
          tb.poke_ocl(.addr(`NUM_INST), .data(32'h0000_0000));
-
+        
          // Start writes and reads
-         tb.poke_ocl(.addr(`CNTL_REG), .data(`WR_START_BIT | `RD_START_BIT));
+         tb.poke_ocl(.addr(`CNTL_REG), .data(`WR_START_BIT));
 
-         $display("[%t] : Waiting for PCIe write and read activity to complete", $realtime);
+        //Even in SYNC mode ATG doesn't wait for write response before issuing read transactions.
+        // adding 500ns wait to account for random back pressure from sh_bfm on write address & write data channels.
+         $display("[%t] : Waiting for PCIe write activity to complete", $realtime);
          #500ns;
+         timeout_count = 0;
 
+         do begin
+            tb.peek_ocl(.addr(`CNTL_REG), .data(read_data));
+            timeout_count++;
+         end while ((read_data[2:0] !== 3'b000) && (timeout_count < 100));
+         
+         if ((timeout_count == 100) && (read_data[2:0] !== 3'b000)) begin
+            $error("[%t] : *** ERROR *** Timeout waiting for writes to complete.", $realtime);
+            error_count++;
+         end 
+           
+         tb.poke_ocl(.addr(`CNTL_REG), .data(`RD_START_BIT));
+         // adding 500ns wait to account for random back pressure from sh_bfm on read request channel.
+         $display("[%t] : Waiting for PCIe read activity to complete", $realtime);
+         #500ns;
+         
          timeout_count = 0;
          do begin
             tb.peek_ocl(.addr(`CNTL_REG), .data(read_data));
@@ -227,7 +250,7 @@ module test_dma_pcim_concurrent();
          end while ((read_data[2:0] !== 3'b000) && (timeout_count < 100));
 
          if ((timeout_count == 100) && (read_data[2:0] !== 3'b000)) begin
-            $display("[%t] : *** ERROR *** Timeout waiting for writes and reads to complete.", $realtime);
+            $error("[%t] : *** ERROR *** Timeout waiting for reads to complete.", $realtime);
             error_count++;
          end else begin
             // Stop reads and writes ([1] for reads, [0] for writes)
@@ -242,7 +265,7 @@ module test_dma_pcim_concurrent();
             tb.peek_ocl(.addr(`WR_CYCLE_CNT_HIGH), .data(read_data));
             cycle_count[63:32] = read_data;
             if (cycle_count == 64'h0) begin
-               $display("[%t] : *** ERROR *** Write Timer value was 0x0 at end of test.", $realtime);
+               $error("[%t] : *** ERROR *** Write Timer value was 0x0 at end of test.", $realtime);
                error_count++;
             end
 
@@ -253,7 +276,7 @@ module test_dma_pcim_concurrent();
             tb.peek_ocl(.addr(`RD_CYCLE_CNT_HIGH), .data(read_data));
             cycle_count[63:32] = read_data;
             if (cycle_count == 64'h0) begin
-               $display("[%t] : *** ERROR *** Read Timer value was 0x0 at end of test.", $realtime);
+               $error("[%t] : *** ERROR *** Read Timer value was 0x0 at end of test.", $realtime);
                error_count++;
             end
 
@@ -268,7 +291,7 @@ module test_dma_pcim_concurrent();
                error_addr[63:32] = read_data;
                tb.peek_ocl(.addr(`RD_ERR_INDEX), .data(read_data));
                error_index = read_data[3:0];
-               $display("[%t] : *** ERROR *** Read compare error from address 0x%016x, index 0x%1x", $realtime, error_addr, error_index);
+               $error("[%t] : *** ERROR *** Read compare error from address 0x%016x, index 0x%1x", $realtime, error_addr, error_index);
                error_count++;
             end
          end // else: !if((timeout_count == 100) && (read_data[2:0] !== 3'b000))
@@ -288,7 +311,7 @@ module test_dma_pcim_concurrent();
       $display("[%t] : Detected %3d errors during this test", $realtime, error_count);
 
       if (fail || (tb.chk_prot_err_stat())) begin
-         $display("[%t] : *** TEST FAILED ***", $realtime);
+         $error("[%t] : *** TEST FAILED ***", $realtime);
       end else begin
          $display("[%t] : *** TEST PASSED ***", $realtime);
       end

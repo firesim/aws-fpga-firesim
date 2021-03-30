@@ -176,7 +176,7 @@ SOFTWARE.
 '''
 
 xilinx_xdma1 = '''Xilinx XDMA IP Core Linux Driver
-Copyright(c) 2015 - 2017 Xilinx, Inc.
+Copyright(c) 2015 - 2020 Xilinx, Inc.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms and conditions of the GNU General Public License,
@@ -192,12 +192,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 The full GNU General Public License is included in this distribution in
 the file called "LICENSE".
-'''
-
-xilinx_xdma2 = '''Xilinx XDMA IP Core Linux Driver
-
-Copyright(c) Sidebranch.
-Copyright(c) Xilinx, Inc.
 '''
 
 xilinx1 = '''\xa9 Copyright 2017 Xilinx, Inc. All rights reserved.
@@ -400,7 +394,6 @@ all_exp_header_lines = [
     apache_header_2018.split("\n"),
     gpl2_header.split("\n"),
     xilinx_xdma1.split("\n"),
-    xilinx_xdma2.split("\n"),
     xilinx1.split("\n"),
     xilinx2_header.split("\n"),
     xilinx3_header.split("\n"),
@@ -554,13 +547,15 @@ def check_headers(dir):
             "sdk/linux_kernel_drivers/xocl/LICENSE$",
             "sdk/apps/virtual-ethernet/scripts/pktgen-ena-range.pkt",
             "sdk/apps/virtual-ethernet/scripts/pktgen-ena.pkt",
-	    
+
             "SDAccel/userspace/src/test",
             "SDAccel/examples/aws/kernel_3ddr_bandwidth/description.json",
             "SDAccel/examples/aws/helloworld_ocl_runtime/helloworld",
+            "SDAccel/examples/aws/helloworld_ocl_runtime/sdaccel.ini",
             "SDAccel/examples/aws/helloworld_ocl_runtime/vector_addition.hw.xilinx_aws-vu9p-f1-04261818_dynamic_5_0.awsxclbin",
-            "SDAccel/examples/aws/helloworld_ocl_runtime/2018.3/helloworld",
-            "SDAccel/examples/aws/helloworld_ocl_runtime/2018.3/vector_addition.hw.xilinx_aws-vu9p-f1-04261818_dynamic_5_0.awsxclbin"
+            "SDAccel/examples/aws/helloworld_ocl_runtime/2018.3_2019.1/helloworld",
+            "SDAccel/examples/aws/helloworld_ocl_runtime/2018.3_2019.1/sdaccel.ini",
+            "SDAccel/examples/aws/helloworld_ocl_runtime/2018.3_2019.1/vector_addition.hw.xilinx_aws-vu9p-f1-04261818_dynamic_5_0.awsxclbin"
         ])
 
     file_provider.set_exclude_paths([
@@ -572,6 +567,9 @@ def check_headers(dir):
             "SDAccel/aws_platform",
             "SDAccel/examples/3rd_party",
             "SDAccel/examples/xilinx",
+            "Vitis/aws_platform",
+            "Vitis/examples/xilinx",
+            "Vitis/docs/Alveo_to_AWS_F1_Migration/example",
         ])
 
     file_path_list = sorted(file_provider.get_files(dir))

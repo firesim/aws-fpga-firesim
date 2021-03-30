@@ -22,6 +22,10 @@
 #include <stdint.h>
 #include <hal/fpga_common.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * FPGA_PCI_BARS_MAX:
  *  -compile time tunable via mkall_fpga_mgmt_tools.sh, with the below default.
@@ -70,6 +74,23 @@ typedef int pci_bar_handle_t;
  * @returns 0 on success, non-zero on error
  */
 int fpga_pci_init(void);
+
+/**
+ * Initialize the fpga_mgmt library.
+ * Calls fpga_pci_init.
+ *
+ * @returns 0 on success, non-zero on error
+ */
+int fpga_mgmt_init(void);
+
+/**
+ * Closes the fpga_mgmt library and its dependencies and releases any acquired
+ * resources.
+ *
+ * @returns 0 on success, non-zero on error
+ */
+int fpga_mgmt_close(void);
+
 
 /**
  * Attach to an FPGA memory space.
