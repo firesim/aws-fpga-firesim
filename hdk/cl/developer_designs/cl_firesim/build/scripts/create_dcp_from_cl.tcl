@@ -342,6 +342,9 @@ if {$implement} {
    # Report utilization
    report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
+   # Report clock utilization
+   report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
+
    # This is what will deliver to AWS
    puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Writing final DCP to to_aws directory.";
 
