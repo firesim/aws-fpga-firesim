@@ -128,6 +128,9 @@ if { $failval==0 } {
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) writing post synth checkpoint.";
 write_checkpoint -force $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp
 
+report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_synth_utilization.rpt
+report_control_sets -verbose -file $CL_DIR/build/reports/${timestamp}.post_synth_control_sets.rpt
+
 close_project
 #Set param back to default value
 set_param sta.enableAutoGenClkNamePersistence 1
