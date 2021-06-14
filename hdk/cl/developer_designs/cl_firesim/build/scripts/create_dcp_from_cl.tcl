@@ -298,7 +298,7 @@ if {$implement} {
          impl_step opt_design $TOP "-merge_equivalent_drivers -sweep"
       }
    }
-   report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
+   report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
 
    ########################
    # CL Place
@@ -344,7 +344,7 @@ if {$implement} {
    report_timing_summary -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_timing_summary.rpt
 
    # Report utilization
-   report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
+   report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
    # Report clock utilization
    report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
