@@ -147,6 +147,8 @@ set_msg_config -id {Timing 38-436}       -suppress
 # Promote the following critical warnings to errors to prevent AGFI generation
 # Design not completely routed
 set_msg_config -id {Route 35-1} -new_severity "ERROR"
+# Route 35-535] Clock Net: <net> is not completely routed.
+set_msg_config -id {Route 35-535} -new_severity "ERROR"
 
 # Check that an email address has been set, else unset notify_via_sns
 
@@ -174,6 +176,10 @@ switch $strategy {
     "EXPLORE" {
         puts "EXPLORE strategy."
         source $HDK_SHELL_DIR/build/scripts/strategy_EXPLORE.tcl
+    }
+    "NORETIMING" {
+        puts "NORETIMING strategy."
+        source $HDK_SHELL_DIR/build/scripts/strategy_NORETIMING.tcl
     }
     "TIMING" {
         puts "TIMING strategy."
@@ -279,7 +285,7 @@ if {$implement} {
          impl_step opt_design $TOP "-merge_equivalent_drivers -sweep"
       }
    }
-   report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
+   report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
 
    ########################
    # CL Place
@@ -325,7 +331,7 @@ if {$implement} {
    report_timing_summary -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_timing_summary.rpt
 
    # Report utilization
-   report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
+   report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
    # This is what will deliver to AWS
    puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Writing final DCP to to_aws directory.";
