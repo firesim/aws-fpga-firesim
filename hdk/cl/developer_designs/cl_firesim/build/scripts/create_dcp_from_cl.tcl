@@ -210,7 +210,8 @@ switch $strategy {
 
 # Biancolin: Disable phys_opt to temporarily workaround around a clock paritioning issue
 # See https://forums.aws.amazon.com/thread.jspa?threadID=338735&tstart=0
-set phys_opt 0
+#set phys_opt 0
+set phys_opt 1
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
 
