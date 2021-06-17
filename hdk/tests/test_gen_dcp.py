@@ -87,6 +87,7 @@ class TestGenDcp(AwsFpgaTestBase):
 	        (('.*',), r'WARNING: \[Constraints 18-5648\] .*'),
             (('.*',), r'WARNING: \[Vivado_Tcl 4-391\] The following IPs are missing output products for Implementation target. These output products could be required for synthesis, please generate the output products using the generate_target or synth_ip command before running synth_design.*'),
             (('.*',), r'WARNING: \[DRC RPBF-3\] IO port buffering.*'),
+            (('.*',), r'WARNING: \[DRC PLCK-58\] Clock Placer Checks: Sub-optimal placement for a global clock-capable IO pin and BUFG pair.*'),
             (('.*',), r'WARNING: \[Place 46-14\] The placer has determined that this design is highly congested and may have difficulty routing. Run report_design_analysis -congestion for a detailed report\.'),
             (('.*',), r'WARNING: \[BD 41-1661\] .*'),
             (('.*',), r'WARNING: \[Vivado 12-584\] No ports matched \'tck\''),

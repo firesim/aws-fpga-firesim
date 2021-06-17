@@ -22,7 +22,6 @@ properties([parameters([
     booleanParam(name: 'test_all_vitis_examples_fdf',         defaultValue: false, description: 'Run Full Developer Flow testing of all Vitis examples. This overrides test_helloworld_sdaccel_example'),
     booleanParam(name: 'test_helloworld_vitis_example_fdf',   defaultValue: true,  description: 'Run Full Developer Flow testing of the Hello World Vitis example'),
     booleanParam(name: 'debug_dcp_gen',                       defaultValue: false, description: 'Only run FDF on cl_hello_world. Overrides test_*.'),
-    booleanParam(name: 'debug_fdf_uram',                      defaultValue: false, description: 'Debug the FDF for cl_uram_example.'),
     booleanParam(name: 'fdf_ddr_comb',                        defaultValue: false, description: 'run FDF for cl_dram_dma ddr combinations.'),
     booleanParam(name: 'disable_runtime_tests',               defaultValue: false, description: 'Option to disable runtime tests.'),
     booleanParam(name: 'use_test_ami',                        defaultValue: false, description: 'This option asks for the test AMI from Jenkins'),
@@ -71,25 +70,12 @@ def dcp_recipe_scenarios = [
 def fdf_test_names = [
     'cl_dram_dma[A1-B0-C0-DEFAULT]',
     'cl_hello_world[A0-B0-C0-DEFAULT]',
-    'cl_hello_world_vhdl',
-    'cl_sde[A0-B0-C0-DEFAULT]',
-    'cl_uram_example[2]',
-    'cl_uram_example[3]',
-    'cl_uram_example[4]'
+    'cl_sde[A0-B0-C0-DEFAULT]'
     ]
 
 boolean debug_dcp_gen = params.get('debug_dcp_gen')
 if (debug_dcp_gen) {
     fdf_test_names = ['cl_sde[A0-B0-C0-DEFAULT]']
-    test_markdown_links = false
-    test_sims = false
-    test_runtime_software = false
-    test_sdaccel_scripts = false
-}
-
-boolean debug_fdf_uram = params.get('debug_fdf_uram')
-if (debug_fdf_uram) {
-    fdf_test_names = ['cl_uram_example[2]', 'cl_uram_example[3]', 'cl_uram_example[4]']
     test_markdown_links = false
     test_sims = false
     test_runtime_software = false
@@ -126,9 +112,9 @@ task_label = [
 ]
 
 // Put the latest version last
-def xilinx_versions = [ '2019.1', '2019.2', '2020.1' , '2020.2' ]
+def xilinx_versions = [ '2020.2' ]
 
-def vitis_versions = ['2019.2', '2020.1' , '2020.2' ]
+def vitis_versions = []
 
 // We want the default to be the latest.
 def default_xilinx_version = xilinx_versions.last()
@@ -139,8 +125,7 @@ def dsa_map = [
 
 def xsa_map = [
     '2019.2' : [ 'DYNAMIC':'dyn'],
-    '2020.1' : [ 'DYNAMIC':'dyn'],
-    '2020.2' : [ 'DYNAMIC':'dyn']
+    '2020.1' : [ 'DYNAMIC':'dyn']
 ]
 
 def sdaccel_example_default_map = [
@@ -160,14 +145,6 @@ def vitis_example_default_map = [
         'RTL_Vadd_Debug': 'Vitis/examples/xilinx/rtl_kernels/rtl_vadd_hw_debug'
     ],
     '2020.1' : [
-        'Hello_World_1ddr': 'Vitis/examples/xilinx/ocl_kernels/cl_helloworld',
-        'Gmem_2Banks_2ddr': 'Vitis/examples/xilinx/ocl_kernels/cl_gmem_2banks',
-        'Kernel_Global_Bw_4ddr': 'Vitis/examples/xilinx/cpp_kernels/kernel_global_bandwidth',
-        'RTL_Vadd_Debug': 'Vitis/examples/xilinx/rtl_kernels/rtl_vadd_hw_debug',
-        'gemm_blas': 'Vitis/examples/xilinx/library_examples/gemm',
-        'gzip_app': 'Vitis/examples/xilinx/library_examples/gzip_app'
-    ],
-    '2020.2' : [
         'Hello_World_1ddr': 'Vitis/examples/xilinx/ocl_kernels/cl_helloworld',
         'Gmem_2Banks_2ddr': 'Vitis/examples/xilinx/ocl_kernels/cl_gmem_2banks',
         'Kernel_Global_Bw_4ddr': 'Vitis/examples/xilinx/cpp_kernels/kernel_global_bandwidth',
@@ -520,7 +497,7 @@ if (test_fpga_tools) {
 if (test_sims) {
     all_tests['Run Sims'] = {
         stage('Run Sims') {
-            def cl_names = ['cl_vhdl_hello_world', 'cl_uram_example', 'cl_dram_dma', 'cl_hello_world', 'cl_sde']
+            def cl_names = ['cl_dram_dma', 'cl_hello_world', 'cl_sde']
             def simulators = ['vivado']
             def sim_nodes = [:]
             if(params.internal_simulations) {
@@ -533,15 +510,8 @@ if (test_sims) {
                         String xilinx_version = y
                         String cl_name = x
                         String simulator = z
-                        if((cl_name == 'cl_vhdl_hello_world') && (simulator == 'ies')) {
-                           println ("Skipping Simulator: ${simulator}  CL: ${cl_name}")
-                           continue;
-                        }
                         String cl_dir_name = cl_name
-                        if(cl_name == 'cl_vhdl_hello_world') {
-                           cl_dir_name = "cl_hello_world_vhdl"
-                        }
-
+                  
                         String node_name = "Sim ${cl_name} ${xilinx_version} ${simulator}"
                         String key = "test_${cl_name}__"
                         String report_file = "test_sims_${cl_name}_${xilinx_version}.xml"

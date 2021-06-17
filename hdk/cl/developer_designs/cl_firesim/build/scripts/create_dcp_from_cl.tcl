@@ -104,51 +104,35 @@ puts "All reports and intermediate results will be time stamped with $timestamp"
 
 set_msg_config -id {Chipscope 16-3} -suppress
 set_msg_config -string {AXI_QUAD_SPI} -suppress
-set_msg_config -string {PIPE_CL_SH_AURORA_STAT} -suppress
-set_msg_config -string {PIPE_CL_SH_HMC_STAT} -suppress
-set_msg_config -string {PIPE_AURORA_CHANNEL_UP} -suppress
-set_msg_config -string {PIPE_HMC_IIC} -suppress
-set_msg_config -string {PIPE_SH_CL_AURORA_STAT} -suppress
-
 
 # Suppress Warnings
 # These are to avoid warning messages that may not be real issues. A developer
 # may comment them out if they wish to see more information from warning
 # messages.
 set_msg_config -id {Common 17-55}        -suppress
-set_msg_config -id {Designutils 20-1567} -suppress
-set_msg_config -id {IP_Flow 19-2162}     -suppress
-set_msg_config -id {Project 1-498}       -suppress
-set_msg_config -id {Route 35-328}        -suppress
-set_msg_config -id {Vivado 12-508}       -suppress
-set_msg_config -id {Constraints 18-4866} -suppress
-set_msg_config -id {filemgmt 56-12}      -suppress
-set_msg_config -id {Constraints 18-4644} -suppress
-set_msg_config -id {Coretcl 2-64}        -suppress
 set_msg_config -id {Vivado 12-4739}      -suppress
-set_msg_config -id {Vivado 12-5201}      -suppress
+set_msg_config -id {Constraints 18-4866} -suppress
+set_msg_config -id {IP_Flow 19-2162}     -suppress
+set_msg_config -id {Route 35-328}        -suppress
+set_msg_config -id {Vivado 12-1008}      -suppress
+set_msg_config -id {Vivado 12-508}       -suppress
+set_msg_config -id {filemgmt 56-12}      -suppress
 set_msg_config -id {DRC CKLD-1}          -suppress
+set_msg_config -id {DRC CKLD-2}          -suppress
 set_msg_config -id {IP_Flow 19-2248}     -suppress
-#set_msg_config -id {Opt 31-155}          -suppress
-set_msg_config -id {Synth 8-115}         -suppress
-set_msg_config -id {Synth 8-3936}        -suppress
-set_msg_config -id {Vivado 12-1023}      -suppress
+set_msg_config -id {Vivado 12-1580}      -suppress
 set_msg_config -id {Constraints 18-550}  -suppress
 set_msg_config -id {Synth 8-3295}        -suppress
 set_msg_config -id {Synth 8-3321}        -suppress
 set_msg_config -id {Synth 8-3331}        -suppress
 set_msg_config -id {Synth 8-3332}        -suppress
+set_msg_config -id {Synth 8-6014}        -suppress
+set_msg_config -id {Timing 38-436}       -suppress
+set_msg_config -id {DRC REQP-1853}       -suppress
 set_msg_config -id {Synth 8-350}         -suppress
 set_msg_config -id {Synth 8-3848}        -suppress
 set_msg_config -id {Synth 8-3917}        -suppress
 set_msg_config -id {Opt 31-430}          -suppress
-# TODO: Sagar: where did the rest of these come from?
-set_msg_config -id {Synth 8-6014}        -suppress
-set_msg_config -id {Vivado 12-1580}      -suppress
-set_msg_config -id {Constraints 18-619}  -suppress
-set_msg_config -id {DRC CKLD-2}          -suppress
-set_msg_config -id {DRC REQP-1853}       -suppress
-set_msg_config -id {Timing 38-436}       -suppress
 # https://forums.aws.amazon.com/forum.jspa?forumID=243&start=0
 set_msg_config -severity "CRITICAL WARNING" -string "WRAPPER_INST/SH" -suppress
 set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
@@ -158,6 +142,8 @@ set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
 #set_msg_config -id {Route 35-1} -new_severity "ERROR"
 # Route 35-535] Clock Net: <net> is not completely routed.
 set_msg_config -id {Route 35-535} -new_severity "ERROR"
+
+puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
 
 # Check that an email address has been set, else unset notify_via_sns
 
@@ -213,8 +199,6 @@ switch $strategy {
 #set phys_opt 0
 set phys_opt 1
 
-puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
-
 #Encrypt source code
 source encrypt.tcl
 
@@ -242,9 +226,6 @@ set_param hd.clockRoutingWireReduction false
 if {${cl.synth}} {
    source -notrace ./synth_${CL_MODULE}.tcl
    set synth_dcp ${timestamp}.CL.post_synth.dcp
-} else {
-   open_checkpoint ../checkpoints/CL.post_synth.dcp
-   set synth_dcp CL.post_synth.dcp
 }
 
 ##################################################
@@ -261,8 +242,7 @@ if {$implement} {
       set_property IP_REPO_PATHS $cacheDir [current_project]
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Combining Shell and CL design checkpoints";
       add_files $HDK_SHELL_DIR/build/checkpoints/from_aws/SH_CL_BB_routed.dcp
-      #add_files $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp
-      add_files $CL_DIR/build/checkpoints/$synth_dcp
+      add_files $CL_DIR/build/checkpoints/${timestamp}.CL.post_synth.dcp
       set_property SCOPED_TO_CELLS {WRAPPER_INST/CL} [get_files $CL_DIR/build/checkpoints/$synth_dcp]
 
       #Read the constraints, note *DO NOT* read cl_clocks_aws (clocks originating from AWS shell)
@@ -353,11 +333,9 @@ if {$implement} {
    # This is what will deliver to AWS
    puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Writing final DCP to to_aws directory.";
 
-   #FIXME -- THIS SHOULD BE REMOVED FROM THE FINAL SCRIPT
-   #write_checkpoint -force $CL_DIR/build/checkpoints/to_aws/${timestamp}.SH_CL_routed_before_ddr_fix.dcp
-   #source top_ddr_fix.tcl
-   #checkpoint can used by developer for analysis and hence donot encrypt
+   #writing unencrypted dcp for analysis to checkpoints dir.
    write_checkpoint -force $CL_DIR/build/checkpoints/${timestamp}.SH_CL_routed.dcp
+
    #checkpoint that will be sent to aws and hence encrypt
    write_checkpoint -encrypt -force $CL_DIR/build/checkpoints/to_aws/${timestamp}.SH_CL_routed.dcp
 
