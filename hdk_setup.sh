@@ -30,18 +30,6 @@ current_dir=$(pwd)
 
 debug=0
 
-# This function checks if an environment module exists
-# Returns 0 if it exists, and returns 1 if it doesn't
-function does_module_exist() {
-
-    output=`/usr/bin/ls /usr/local/Modules/$MODULE_VERSION/modulefiles | grep $1`
-
-    if [[ $output == "$1" ]]; then
-        return 0;
-    else
-        return 1;
-    fi
-}
 
 function usage {
   echo -e "USAGE: source [\$AWS_FPGA_REPO_DIR/]$script_name [-d|-debug] [-h|-help]"
@@ -88,7 +76,7 @@ hdk_shell_version=$(readlink $HDK_COMMON_DIR/shell_stable)
 debug_msg "Checking for Vivado install:"
 
 # before going too far make sure Vivado is available
-if ! is_vivado_available; then
+if ! exists vivado; then
     err_msg "Please install/enable Vivado."
     err_msg "  If you are using the FPGA Developer AMI then please request support."
     return 1
@@ -127,10 +115,7 @@ debug_msg "Done setting environment variables.";
 # Download correct shell DCP
 info_msg "Using HDK shell version $hdk_shell_version"
 debug_msg "Checking HDK shell's checkpoint version"
-hdk_shell_s3_bucket=aws-fpga-hdk-resources
-declare -a s3_hdk_ltx_files=("cl_hello_world.debug_probes.ltx"
-                             "cl_dram_dma.debug_probes.ltx"
-                             )
+hdk_resources_s3_bucket=aws-fpga-hdk-resources
 
 # Shell files to be downloaded
 declare -a s3_hdk_files=("SH_CL_BB_routed.dcp"
@@ -148,13 +133,14 @@ do
   fi
   hdk_shell_dir=$HDK_SHELL_DIR/build/$sub_dir/from_aws
   hdk_file=$hdk_shell_dir/$shell_file
-  s3_shell_dir=$hdk_shell_s3_bucket/hdk/$hdk_shell_version/build/$sub_dir/from_aws
+  s3_shell_dir=hdk/$hdk_shell_version/build/$sub_dir/from_aws
   # Download the sha256
   if [ ! -e $hdk_shell_dir ]; then
       mkdir -p $hdk_shell_dir || { err_msg "Failed to create $hdk_shell_dir"; return 2; }
   fi
   # Use curl instead of AWS CLI so that credentials aren't required.
-  curl -s https://s3.amazonaws.com/$s3_shell_dir/$shell_file.sha256 -o $hdk_file.sha256 || { err_msg "Failed to download HDK shell's $shell_file version from $s3_shell_dir/$shell_file.sha256 -o $hdk_file.sha256"; return 2; }
+  debug_msg "curl -s https://$hdk_resources_s3_bucket.s3.amazonaws.com/$s3_shell_dir/$shell_file.sha256 -o $hdk_file.sha256"
+  curl -s https://$hdk_resources_s3_bucket.s3.amazonaws.com/$s3_shell_dir/$shell_file.sha256 -o $hdk_file.sha256 || { err_msg "Failed to download HDK shell's $shell_file version from $s3_shell_dir/$shell_file.sha256 -o $hdk_file.sha256"; return 2; }
   if grep -q '<?xml version' $hdk_file.sha256; then
     err_msg "Failed to download HDK shell's $shell_file version from $s3_shell_dir/$shell_file.sha256"
     cat $hdk_file.sha256
@@ -177,7 +163,7 @@ do
   if [ ! -e $hdk_file ]; then
     info_msg "Downloading latest HDK shell $shell_file from $s3_shell_dir/$shell_file"
     # Use curl instead of AWS CLI so that credentials aren't required.
-    curl -s https://s3.amazonaws.com/$s3_shell_dir/$shell_file -o $hdk_file || { err_msg "HDK shell checkpoint download failed"; return 2; }
+    curl -s https://$hdk_resources_s3_bucket.s3.amazonaws.com/$s3_shell_dir/$shell_file -o $hdk_file || { err_msg "HDK shell checkpoint download failed"; return 2; }
   fi
 
   # Check sha256
@@ -213,31 +199,22 @@ else
   models_vivado_version=NOT_BUILT
   info_msg "DDR4 model files in "$ddr4_model_dir/" do NOT exist. Running model creation step.";
 fi
-if [[ $models_vivado_version != $VIVADO_VER ]]; then
-  ddr4_build_dir=$AWS_FPGA_REPO_DIR/ddr4_model_build
-  info_msg "  Building in $ddr4_build_dir"
-  info_msg "  This could take 5-10 minutes, please be patient!";
-  mkdir -p $ddr4_build_dir
-  pushd $ddr4_build_dir &> /dev/null
-  # Run init.sh then clean-up
-  if ! $HDK_DIR/common/verif/scripts/init.sh $models_dir; then
-    err_msg "DDR4 model build failed."
-    err_msg "  Build dir=$ddr4_build_dir"
-    popd &> /dev/null
-    return 2
-  fi
-  info_msg "DDR4 model build passed."
-  popd &> /dev/null
-  rm -rf $ddr4_build_dir
-else
-  debug_msg "DDR4 model files exist in "$ddr4_model_dir/". Skipping model creation step.";
+if [[ $models_vivado_version != $VIVADO_VER ]] && [ ! -e $models_dir/build.lock ]; then
+  rm -rf $HDK_COMMON_DIR/verif/scripts/.done 2>&1 >/dev/null
 fi
+ddr4_build_dir=$HDK_COMMON_DIR/verif/scripts/tmp
+if [ -d $ddr4_build_dir ] && [ ! -e $models_dir/build.lock ]; then rm -rf $ddr4_build_dir; fi
+if ! make -s -C $HDK_DIR/common/verif/scripts MODEL_DIR=$models_dir; then
+  err_msg "  build dir=$ddr4_build_dir"
+  return 2
+fi
+
 if [[ ":$CL_DIR" == ':' ]]; then
-  info_msg "ATTENTION: Don't forget to set the CL_DIR variable for the directory of your Custom Logic.";
+  info_msg "attention: don't forget to set the CL_DIR variable for the directory of your custom logic.";
 else
   info_msg "CL_DIR is $CL_DIR"
   if [ ! -d $CL_DIR ]; then
-    err_msg "CL_DIR doesn't exist. Set CL_DIR to a valid directory."
+    err_msg "CL_DIR doesn't exist. set CL_DIR to a valid directory."
     unset CL_DIR
   fi
 fi

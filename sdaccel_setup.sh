@@ -158,10 +158,18 @@ for (( i = 0; i < ${#args[@]}; i++ )); do
     esac
 done
 
+
+if [[ ! -z "$XILINX_VITIS" ]]; then
+    debug_msg "XILINX_VITIS is set"
+    err_msg "XILINX_VITIS variable is set, but you are calling sdaccel_setup.sh. This likely means that you are calling source sdaccel_setup.sh with Xilinx Vitis installed. Xilinx has replaced SDAccel with Vitis from 2019.2 release onwards. Please checkout the Vitis README and flow instead."
+    return 1
+fi
+
 # Check XILINX_SDX is set
 if ! check_set_xilinx_sdx; then
     return 1
 fi
+
 
 info_msg " XILINX_SDX is set to $XILINX_SDX"
 # Install patches as required.
@@ -171,7 +179,7 @@ setup_patches
 
 # Update Xilinx SDAccel Examples from GitHub
 info_msg "Using SDx $RELEASE_VER"
-if [[ $RELEASE_VER =~ .*2017\.4.* || $RELEASE_VER =~ .*2018\.2.* || $RELEASE_VER =~ .*2018\.3.* ]]; then
+if [[ $RELEASE_VER =~ .*2017\.4.* || $RELEASE_VER =~ .*2018\.2.* || $RELEASE_VER =~ .*2018\.3.* || $RELEASE_VER =~ .*2019\.1.* ]]; then
     info_msg "Updating Xilinx SDAccel Examples $RELEASE_VER"
     git submodule update --init -- SDAccel/examples/xilinx_$RELEASE_VER
     export VIVADO_TOOL_VER=$RELEASE_VER
@@ -183,8 +191,8 @@ if [[ $RELEASE_VER =~ .*2017\.4.* || $RELEASE_VER =~ .*2018\.2.* || $RELEASE_VER
     fi
     ln -sf $SDACCEL_DIR/examples/xilinx_$RELEASE_VER $SDACCEL_DIR/examples/xilinx
 else
-   echo " $RELEASE_VER is not supported (2017.4, 2018.2 & 2018.3 are supported).\n"
-   exit 2
+   echo " $RELEASE_VER is not supported (2017.4, 2018.2, 2018.3 and 2019.1 are supported).\n"
+   return 2
 fi
 
 # settings64 removal - once we put this in the AMI, we will add a check
@@ -194,7 +202,7 @@ export LD_LIBRARY_PATH=`$XILINX_SDX/bin/ldlibpath.sh $XILINX_SDX/lib/lnx64.o`:$X
 export LD_LIBRARY_PATH=$XILINX_SDX/lnx64/tools/opencv/:$LD_LIBRARY_PATH
 
 # add variable to allow compilation using 2017.4 and 2018.2 on newer OSes
-export XOCC_ADD_OPTIONS="--xp param:compiler.useHlsGpp=1"
+export XOCC_ADD_OPTIONS="--xp param:compiler.useHlsGpp=1 --xp param:compiler.minFrequencyLimit=80"
 
 # Check if internet connection is available
 if ! check_internet; then

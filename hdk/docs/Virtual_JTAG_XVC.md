@@ -142,6 +142,7 @@ To connect the debug Xilinx Hardware Manager to Virtual JTAG XVC server on the t
 
 `> connect_hw_server -url <hostname or IP address>:3121`
 
+If the above command fails, it is most likely because hw_server is not running on target F1 instance. Please follow see this [FAQ](#hw_serverRunOnF1Instance) on how to start hw_server
 
 <img src="./images/connect_hw_server.jpg" width="600">  
 
@@ -153,7 +154,7 @@ To connect the debug Xilinx Hardware Manager to Virtual JTAG XVC server on the t
 
 **NOTES:**
 
--  If the above command fails, its most likely that either the virtual jtag server is not running, the IP/Port are wrong, or a firewall/security-group rule is blocking the connection. See the [FAQ](#faq) section in the end of this document.
+-  If the above command fails, its most likely that either the virtual jtag server or hw_server is not running, the IP/Port are wrong, or a firewall/security-group rule is blocking the connection. See the [FAQ](#faq) section in the end of this document.
 
 
 Upon successful connection, Vivado's Hardware panel will be populated with a debug bridge instance. 
@@ -187,7 +188,7 @@ The connection Vivado and the target instance can be terminated by closing the X
 
 # Embedding Debug Cores in the CL 
 
-Before beginning, it should be noted that the following only applies to the HDK flow.  For adding debug cores to a design using SDAccel, see [Debug_RTL_Kernel.md](../../SDAccel/docs/Debug_RTL_Kernel.md) for instructions on how to do so.
+> ⚠️ **NOTE:** Before beginning, it should be noted that the following only applies to the HDK flow. [SDAccel instructions](../../SDAccel/docs/Debug_RTL_Kernel.md) and [Vitis instructions](../../Vitis/docs/Debug_Vitis_Kernel.md) are also available.
 
 The Custom Logic (CL) is required to include the [CL Debug Bridge](../common/shell_v04261818/design/ip/cl_debug_bridge/sim/cl_debug_bridge.v) provided by AWS as part of the HDK, and any required standard Xilinx debug IP components like ILAs and VIOs.
 
@@ -216,6 +217,7 @@ cl_debug_bridge CL_DEBUG_BRIDGE (
       .bscanid(bscanid)
    );
 ```
+**NOTE:** According to [UG908](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug908-vivado-programming-debugging.pdf), the debug hub clock should be atleast 2.5x faster than the JTAG clock frequency. The JTAG clock frequency is fixed in the AWS Shell at 31.25MHz. Therefore the frequency of the clock connected to the cl_debug_bridge should be at-least 2.5 x 31.25MHz = 78.125MHz. Otherwise the debug network will not work. However, the minimum clock frequency requirement does not apply for ILA and rest of the CL logic. If CL design is running on a slower clock from the available [clock_recipes](https://github.com/aws/aws-fpga/blob/master/hdk/docs/clock_recipes.csv) then care must be taken that cl_debug_bridge is clocked at 78.125MHz or above speed.
 
 The following list describes the steps to successfully setup debug in a CL:  
 
@@ -228,7 +230,6 @@ The following list describes the steps to successfully setup debug in a CL:
 
 
 # Frequently Asked Questions 
-
   
 
 **Q: Do I need to run Vivado or Hardware Manager on the target EC2 instance to debug?**  
@@ -238,6 +239,11 @@ No, you may run Vivado on a "remote" host as long as your instance/VPC has the r
 
 **Q: How do I configure Linux firewalls and EC2 network security groups to enable remote debug?**
 
+If your OS has the `firewalld` service running, you can disable it for the time being for setting up remote debug by calling: 
+```sudo systemctl stop firewalld```
+
+You will also have to allow incoming and outgoing traffic to TCP ports 3121 and 10201. 
+To open up incoming and outgoing traffic on those ports for your instance, please refer to the [EC2 Security Group documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html#sg-rules-other-instances)
 
 **Q: Can I have a secure connection (i.e. SSL/TLS) to the target FPGA-enable EC2 Instance running Virtual JTAG service?**
 
@@ -249,26 +255,41 @@ You may use the ssh "port forwarding" option (-L) to forward connections from th
 No, you need the Vivado Lab Edition which does not require a license.
 
   
-
 **Q: How do I stop the Virtual JTAG service on the target instance?**
 
-  
+After starting the Virtual JTAG service, you can stop it by calling `Ctrl + C` from your keyboard.  
 
 **Q: Can I debug multiple FPGAs on same target EC2 instance concurrently?**
 
 Yes, you must start the the  `$ fpga-start-virtual-jtag` with a different Slot/Port for each FPGA.  You can launch multiple Vivado sessions, and have each session connect to the corresponding TCP port associated with the FPGA.
 
-
+<a name="hw_serverRunOnF1Instance"></a>
 **Q: What are some of the best practices I should be aware when working with Virtual JTAG?**
 
 If you are running Vivado on a remote machine trying to connect to Virtual JTAG - we recommend running the hw_server on the F1 instance - to ensure optimal performance between Vivado and the Virtual JTAG server.
-
+On your target F1 Instance:
+```
+[$] sudo su 
+[$]# hw_server &
+****** Xilinx hw_server v2019.2
+  **** Build date : Oct 24 2019 at 19:23:45
+    ** Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+ 
+INFO: hw_server application started
+INFO: Use Ctrl-C to exit hw_server application
+ 
+INFO: To connect to this hw_server instance use url: TCP:ip-xxx-xx-xx-xxx.ec2.internal:3121
+ 
+[$]# fpga-start-virtual-jtag -P 10201 -S 0
+Starting Virtual JTAG XVC Server for FPGA slot id 0, listening to TCP port 10201.
+Press CTRL-C to stop the service.
+```
 
 **Q: Can other instances running on the same F1 server access the Virtual JTAG of my instance?**
 
 No, other customer instances running on the same F1 server do not have access to the Virtual JTAG of your instance.
 
-**Q: I am getting this error:**
+**Q: Why am I getting this error?**
 
 ```
 % fpga-start-virtual-jtag -P 10201 -S 0
@@ -277,11 +298,24 @@ Press CTRL-C to stop the service.
 Error: (1) internal-error
 ```
 
-This could mean there is already a server running with thtat TCP port.  Either find this process and kill it, or choose a different TCP port.
+This could mean there is already a server running with that TCP port.  Either find this process and kill it, or choose a different TCP port.
 
+**Q: Why am I getting this error?**
+
+```
+ERROR: [Xicom 50-38] xicom: Device:0, user chain number:1, slave index:3. Reading intermittently wrong data from core. Try slower target speed. Make sure design meets timing requirements.
+ERROR: [Xicom 50-38] xicom: Device:0, user chain number:1, slave index:3, is not a valid CseXsdb Slave core.
+ERROR: [Labtools 27-3176] hw_server failed during internal command.
+Resolution: Check that the hw_server is running and the hardware connectivity to the target
+
+```
+
+This means the clock connected to the cl_debug_bridge module is slower than the required minimum of 78.125MHz. Please choose a faster clock to connect to your cl_debug_bridge.
 
 **Q: What is XVC and where can I learn about it?**
 
 Xilinc Virtual Cable (XVC) is a protocol for transferring JTAG commands over TCP/IP network connection between a debug tool (like Vivado Lab Edition Hardware Manager) and a debug target.
 
 More information including a link to the full specification for XVC version 1.0 is available [here](https://www.xilinx.com/products/intellectual-property/xvc.html).  
+
+

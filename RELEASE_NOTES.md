@@ -1,33 +1,118 @@
-
 # AWS EC2 FPGA HDK+SDK Release Notes
 
+## Release 1.4.18 (See [ERRATA](./ERRATA.md) for unsupported features)
+* FPGA developer kit now supports Xilinx Vivado/Vitis 2020.2
 
-##  AWS EC2 F1 Platform Features:
-   *    1-8 Xilinx UltraScale+ VU9P based FPGA slots
-   *    Per FPGA Slot, Interfaces available for Custom Logic(CL):
-         *    One x16 PCIe Gen 3 Interface
-         *    Four DDR4 RDIMM interfaces (with ECC)
-         *    AXI4 protocol support on all interfaces
-   *    User-defined clock frequency driving all CL to Shell interfaces
-   *    Multiple free running auxiliary clocks
-   *    PCI-E endpoint presentation to Custom Logic(CL)
-         *    Management PF (physical function)
-         *    Application PF
-   *    Virtual JTAG, Virtual LED, Virtual DIP Switches
-   *    PCI-E interface between Shell(SH) and Custom Logic(CL).
-         *    SH to CL inbound 512-bit AXI4 interface
-         *    CL to SH outbound 512-bit AXI4 interface
-     *    Multiple 32-bit AXI-Lite buses for register access, mapped to different PCIe BARs
-         *    Maximum payload size set by the Shell
-         *    Maximum read request size set by the Shell
-         *    AXI4 error handling 
-    *    DDR interface between SH and CL
-         *    CL to SH 512-bit AXI4 interface
-         *    1 DDR controller implemented in the SH (always available)
-         *    3 DDR controllers implemented in the CL (configurable number of implemented controllers allowed)
+## Release 1.4.17 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Updated XDMA Driver to allow builds on newer kernels
+* Updated documentation on Alveo U200 to F1 platform porting
+* Added Vitis 2019.2 Patching for AR#73068
 
+## Release 1.4.16 (See [ERRATA](./ERRATA.md) for unsupported features)
+* FPGA developer kit now supports Xilinx Vivado/Vitis 2020.1
+    * To upgrade, use [Developer AMI v1.9.0](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) on the AWS Marketplace.
+* Updated Vitis examples to include usage of Vitis Libraries.
+* Added documentation and examples to show Xilinx Alveo design migration to F1.
+
+## Release 1.4.15a (See [ERRATA](./ERRATA.md) for unsupported features)
+* Fixed Xilinx AR#73068 patching
+    * DDR4 IP needs to be regenerated for the patch to take effect.
+* Updated cl_dram_dma public AFI.
+
+## Release 1.4.15 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Added Xilinx AR#73068 patching
+* Added DMA range error to the interrupt status register metrics
+* Enhanced DDR model rebuild qualifiers in hdk_setup.sh 
+* Updated Virtual JTAG Documentation
+
+## Release 1.4.14 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Updated Vitis Platform file to fix a DDR bandwidth issue
+* Added Vitis Debug Documentation
+
+## Release 1.4.13 (See [ERRATA](./ERRATA.md) for unsupported features)
+* FPGA developer kit now supports Xilinx Vivado/Vitis 2019.2
+* To upgrade, use [Developer AMI v1.8.0](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) on the AWS Marketplace.
+       
+## Release 1.4.12 (See [ERRATA](./ERRATA.md) for unsupported features)
+* Added supported versions for BJS AMI's
+* Added link to the re:Invent 19 F1 workshop
+* Fixed missing extern C declaration by PR #473 
+* Documentation Path fixes from PR #466, #468 and #470 
+
+## Release 1.4.11 (See [ERRATA](./ERRATA.md) for unsupported features)
+* FPGA developer kit now supports Xilinx SDx/Vivado 2019.1
+    * We recommend developers upgrade to v1.4.11 to benefit from the new features, bug fixes, and optimizations. 
+    * To upgrade, use [Developer AMI v1.7.0](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) on the AWS Marketplace. The Developer Kit scripts (hdk_setup.sh or sdaccel_setup.sh) will detect the tool version and update the environment based on requirements needed for Xilinx 2019.1 tools. 
+* New functionality:
+    * Added a [developer resources section](./developer_resources/README.md) that provides guides on how to setup your own GUI Desktop and compute cluster environment.
+    * Developers can now ask for AFI limit increases via the [AWS Support Center Console](https://console.aws.amazon.com/support/cases#/create).
+        * Create a case to increase your `EC2 FPGA` service limit from the console.
+    * HLx IPI flow updates
+        * HLx support for AXI Fast Memory mode.
+        * HLx support for 3rd party simulations.
+        * HLx support for changes in shell and AWS IP updates(e.g. sh_ddr).     
+* Bug Fixes:
+    * Documentation fixes in the [Shell Interface Specification](./hdk/docs/AWS_Shell_Interface_Specification.md)
+    * Fixes for forum questions
+        * [Unable to compile aws_v1_0_vl_rfs.sv in Synopsys VCS](https://forums.aws.amazon.com/thread.jspa?threadID=308829&tstart=0)
+        * [Use fpga_mgmt init in HLx runtime](https://forums.aws.amazon.com/thread.jspa?messageID=912063)
+    * New XRT versions added to the [XRT Installation Instructions](./SDAccel/docs/XRT_installation_instructions.md) to fix segmentation faults when using xclbin instead of awsxclbin files.
+* Deprecations:
+    * Removed GUI Setup scripts from AMI v1.7.0 onwards. See the [developer resources section](./developer_resources/README.md) that provides guides on how to setup your own GUI Desktop and compute cluster environment.
+* Package versions used for validation
+  
+   | Package | AMI 1.7.0 [2019.1] | AMI 1.6.0 [2018.3] |AMI 1.5.0 [2018.2] | AMI 1.4.0 [2017.4] |
+   |---------|---|------------------------|------------------------|-----------------------|
+   | OS      | Centos 7.6 | Centos 7.6 | Centos 7.5, 7.6 | Centos 7.4 |
+   | kernel  | 3.10.0-957.27.2.el7.x86_64 | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64  | 3.10.0-693.21.1.el7.x86_64 |
+   | kernel-devel | 3.10.0-957.27.2.el7.x86_64 | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
+   | LIBSTDC++ | libstdc++-4.8.5-36.el7_6.2.x86_64 | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-16.el7_4.2.x86_64 |   
+
+## Release 1.4.10 (See [ERRATA](./ERRATA.md) for unsupported features)
+* New functionality:
+    * SDK now sorts the slots in DBDF order. Any scripts or integration maintainers should note that the slot order will be different from previous versions and should make any updates accordingly.
+  
+* Bug Fixes:
+    * Fixes a bug in the [Automatic Traffic Generator (ATG)](./hdk/cl/examples/cl_dram_dma/design/cl_tst.sv). In SYNC mode, the ATG did not wait for write response transaction before issuing read transactions.
+    * Released [Xilinx runtime(XRT) version 2018.3.3.2](https://github.com/Xilinx/XRT/releases/tag/2018.3.3.2) to fix the following error:
+           `symbol lookup error: /opt/xilinx/xrt/lib/libxrt_aws.so: undefined symbol: uuid_parse!`
+    * This release fixes a bug wherein concurrent AFI load requests on two or more slots resulted in a race condition which sometimes resulted in Error: `(20) pci-device-missing`
+    * This release fixes a issue with coding style of logic which could infer a latch during synthesis in [sde_ps_acc module](./hdk/cl/examples/cl_sde/design/sde_ps_acc.sv) within cl_sde example 
+
+* Package versions used for validation
+  
+   | Package | AMI 1.6.0 [2018.3] |AMI 1.5.0 [2018.2] | AMI 1.4.0 [2017.4] |
+   |---------|------------------------|------------------------|-----------------------|
+   | OS      | Centos 7.6 | Centos 7.5, 7.6 | Centos 7.4 |
+   | kernel  | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64  | 3.10.0-693.21.1.el7.x86_64 |
+   | kernel-devel | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
+   | LIBSTDC++ | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-16.el7_4.2.x86_64 |
+   
+
+## Release 1.4.9 (See [ERRATA](./ERRATA.md) for unsupported features)
+ * New functionality:
+    * Improved AFI load times for pipelined accelerator designs. For more details please see [Amazon FPGA image (AFI) pre-fetch and caching features](./hdk/docs/load_times.md).
+
+ * Ease of Use features:
+    * [Improved SDK Error messaging](./sdk/userspace/fpga_libs/fpga_mgmt/fpga_mgmt.c)
+    * [Improved documentation](./hdk/docs/IPI_GUI_Vivado_Setup.md#switching-between-hdk-and-hlx-flows) to help with transition from [HLX to HDK command line flows](https://forums.aws.amazon.com/thread.jspa?threadID=302718&tstart=0) and vice versa
+    * Incorporates feedback from [aws-fpga Issue 458](https://github.com/aws/aws-fpga/issues/458) by making the ```init_ddr``` function, used in design simulations to initialize DDR, more generic by moving out ATG deselection logic to a new ```deselect_atg_hw``` task 
+
+ * Bug Fixes:
+    * Fixed Shell simulation model (sh_bfm) issue on PCIM AXI read data channel back pressure which was described in HDK 1.4.8 Errata.
+    * Fixed HDK simulation example which [demonstrates DMA and PCIM traffic in parallel](./hdk/cl/examples/cl_dram_dma/verif/tests/test_dma_pcim_concurrent.sv).
+
+ * Package versions used for validation
+  
+   | Package | AMI 1.6.0 [2018.3] |AMI 1.5.0 [2018.2] | AMI 1.4.0 [2017.4] |
+   |---------|------------------------|------------------------|-----------------------|
+   | OS      | Centos 7.6 | Centos 7.5, 7.6 | Centos 7.4 |
+   | kernel  | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64  | 3.10.0-693.21.1.el7.x86_64 |
+   | kernel-devel | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
+   | LIBSTDC++ | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-16.el7_4.2.x86_64 |
+   
 ## Release 1.4.8 (See [ERRATA](./ERRATA.md) for unsupported features)
-  * FPGA developer kit supports Xilinx SDx/Vivado 2018.3
+ * FPGA developer kit supports Xilinx SDx/Vivado 2018.3
     * We recommend developers upgrade to v1.4.8 to benefit from the new features, bug fixes, and optimizations. To upgrade, use [Developer AMI v1.6.0](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) on AWS Marketplace.  The Developer Kit scripts (hdk_setup.sh or sdaccel_setup.sh) will detect the tool version and update the environment based on requirements needed for Xilinx 2018.3 tools. 
  * Ease of Use features:
     * Support for importing results into SDx GUI - By importing results from a script-based flow into SDx IDE, developers can leverage the tools for debug/profiling while keeping flexibility of the script-based flow
@@ -57,9 +142,6 @@
    | kernel-devel | 3.10.0-957.5.1.el7.x86_64 | 3.10.0-862.11.6.el7.x86_64, 3.10.0-957.1.3.el7.x86_64 | 3.10.0-693.21.1.el7.x86_64 |
    | LIBSTDC++ | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-36.el7.x86_64 | libstdc++-4.8.5-16.el7_4.2.x86_64 |
    
-
-
-
 
 ## Release 1.4.7 (See [ERRATA](./ERRATA.md) for unsupported features)
 
@@ -107,7 +189,7 @@
    
 ## Release 1.4.5 (See [ERRATA](./ERRATA.md) for unsupported features) 
 
-* [Documents SDAccel Runtime compatibility](SDAccel/docs/Create_Runtime_AMI.md#runtime-ami-compatability-table)
+* [Documents SDAccel Runtime compatibility](SDAccel/docs/Create_Runtime_AMI.md#runtime-ami-compatibility-table)
 * [Enables SDK FPGA Mgmt tool access to Non-root users](sdk/README.md#using-fpga-as-non-root-user)
 * Fixed issues
   * [HLX simulation failure](https://forums.aws.amazon.com/thread.jspa?threadID=293313&tstart=0)
@@ -120,7 +202,7 @@
 ## Release 1.4.3 (See [ERRATA](./ERRATA.md) for unsupported features)
 * [DRAM Data Retention](hdk/docs/data_retention.md) - With DRAM data retention, developers can simply load a new AFI and continue using the data that is persistently kept in the DRAM attached to the FPGA, eliminating unnecessary data movements and greatly improving the overall application performance.
 * [Virtual Ethernet](./sdk/apps/virtual-ethernet/README.md) - Provides a low latency network interface for EC2 F1, that enables high performance hardware acceleration to ethernet based applications on AWS like firewalls, routers and advanced security virtual appliances. With Virtual Ethernet, developers are able to create F1 accelerators that process ethernet packets directly from user-space on the FPGA with high throughput and low-latency. 
-* [Developer AMI v1.5](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) with Vivado/SDx 2018.2 tools - New FPGA developer AMI supporting Vivado 2018.2 for faster compile times, higher frequencies and improved timing closure
+* [Developer AMI v1.5](https://aws.amazon.com/marketplace/pp/B06VVYBLZZ) with Vivado/SDx 2018.2 tools - New FPGA Developer AMI supporting Vivado 2018.2 for faster compile times, higher frequencies and improved timing closure
 
 ## Release 1.4.2 (See [ERRATA](./ERRATA.md) for unsupported features)
 * Fixed SDAccel XOCL driver compile fails that occur on linux kernels greater than 3.10.0-862.3.3.el7.x86_64
@@ -146,55 +228,6 @@
 * The previous shell (v071417d3) will be supported until 09/01/2018.  Developers are required to use the [developer kit v1.3.X branch](https://github.com/aws/aws-fpga/tree/REL_v1_3_8) for all shell version v071417d3 development.  
 
 * Release 1.4.0 greatly improves the performance of the DMA (for interrupt driven DMA on the cl\_dram\_dma example design). This is accomplished through a combination of shell changes to relax DMA timeouts and a new XDMA software driver option.  We have ported the relevant HDK examples to the XDMA driver in this release. EDMA is still supported, and developers can freely choose which DMA driver to use as part of their host application.
-
-
-## Supported Tools and Environment
-
-* The HDK and SDK are designed for **Linux** environment and has not been tested on other platforms
-* The First installation of AWS FPGA SDK requires having gcc installed on the instance. If it's not available, try `sudo yum update && sudo yum group install "Development Tools"`
-* The HDK build step requires having Xilinx's Vivado tool and Vivado License Management running.  These are provided with AWS FPGA Developer AMI at no additional cost
-* This release is tested and validated with Xilinx 2017.4 SDx/Vivado
-* Developers that choose to develop on-premises need to have Xilinx license 'EF-VIVADO-SDX-VU9P-OP' installed. For more help, please refer to the [on-premises licensing help](./hdk/docs/on_premise_licensing_help.md)
-* The following simulators are supported with this HDK:
-**Vivado XSIM RTL simulator
-** Mentor Graphics' Questa RTL simulator (with a separate license from MentorGraphics)
-** Synopsys' VCS RTL simulator (with a separate license from Synopsys)
-
-## License Requirements
-
-The HDK and SDK in the FPGA development kit have different licenses. For more details please refer to the [HDK License](./hdk/LICENSE.txt) and the [SDK License](./sdk/LICENSE.txt).
-
-## FAQs
- 
-**Q: How do I know which HDK version I have on my instance/machine? **
-
-Look for the ./hdk/hdk_version.txt file.
-
-**Q: How do I know what my Shell version is? **
-
-The Shell version of an FPGA slot is available through the FPGA Image Management tools after an AFI has been loaded.  See the description of `fpga-describe-local-image` for more details on retrieving the shell version from a slot.  Prior to loading an AFI, the state of the FPGA (including shell version) is undefined and non-deterministic.  
-
-**Q: How do I know what version of FPGA Image management tools are running on my instance? **
-
-The FPGA Image management tools version is reported with any command executed from these tools.  See the description of `fpga-describe-local-image` for more details.
-
-**Q: How do I update my existing design with this release?**
-
-1.    Start by either cloning the entire GitHub structure for the HDK release or downloading new directories that have changed.  AWS recommends an entire GitHub clone to ensure no files are missed
-2.    Update the CL design to conform to the new AWS_Shell_Interface_Specification TODO: add link. TODO: need a doc to outline what changes are a MUST in this upgrade, and which ones are optional?
-3.    Follow the process for AFI generation outlined in aws-fpga/hdk/cl/examples/readme.md
-4.    Update FPGA Image Management Tools to the version included in aws-fpga/sdk/management
-TODO: SDaccel design have different steps?
-
-**Q: How do I get support?**
-
-The FPGA Development forum provides an easy access to Developer support.  It's the first place to go to post questions, suggestions and receive important announcements from the AWS FPGA team. To gain access to the user forum, please go to https://forums.aws.amazon.com/index.jspa and login. To be notified of important messages you will need to click the “Watch Forum” button on the right side of the screen.
-
-**Q: How do I know which HDK GitHub release I am working with? **
-
-See the release notes at the top of the GitHub directory to identify the version of your GitHub clone.  
-
-TODO: The following major features are included in this HDK release: 
 
 
 ## Previous release notes
@@ -224,7 +257,7 @@ The following major features are included in this HDK release:
 * Restrictions on URAM have been updated to enable 100% of the URAM with a CL to be utilized.  See documentation on enabling URAM utilization: [URAM_options](./hdk/docs/URAM_Options.md)
 
 ### 5.    Vivado IP Integrator (IPI) and GUI Workflow
-* Vivado graphical design canvas and project-based flow is now supported.  This flow allows developers to create CL logic as either RTL or complex subsystems based on an IP centric block diagram.  Prior experience in RTL or system block designs is recommended.  The [IP Integrator and GUI Vivado workflow](hdk/docs/IPI_GUI_Vivado_Setup.md) enables a unified graphical environment to guide the developer through the common steps to design, implement, and verify FGPAs.  To get started, start with the [README that will take you through getting started steps and documents on IPI](hdk/docs/IPI_GUI_Vivado_Setup.md)
+* Vivado graphical design canvas and project-based flow is now supported.  This flow allows developers to create CL logic as either RTL or complex subsystems based on an IP centric block diagram.  Prior experience in RTL or system block designs is recommended.  The [IP Integrator and GUI Vivado workflow](hdk/docs/IPI_GUI_Vivado_Setup.md) enables a unified graphical environment to guide the developer through the common steps to design, implement, and verify FPGAs. To get started, start with the [README that will take you through getting started steps and documents on IPI](hdk/docs/IPI_GUI_Vivado_Setup.md)
  
 ### 6.    Build Flow improvments
 * See [Build_Scripts](./hdk/common/shell_v04261818/build/scripts)

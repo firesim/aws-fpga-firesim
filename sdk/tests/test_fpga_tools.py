@@ -26,6 +26,7 @@ import sys
 import time
 import traceback
 import ctypes
+import multiprocessing.dummy
 try:
     import aws_fpga_test_utils
     from aws_fpga_test_utils.AwsFpgaTestBase import AwsFpgaTestBase
@@ -41,17 +42,21 @@ logger = aws_fpga_utils.get_logger(__name__)
 class TestFpgaTools(BaseSdkTools):
     '''
     Pytest test class.
-    
+
     NOTE: Cannot have an __init__ method.
-    
+
     Test FPGA AFI Management tools described in ../userspace/fpga_mgmt_tools/README.md
     '''
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_describe_local_image_slots(self):
         for slot in range(self.num_slots):
             self.fpga_clear_local_image(slot)
 
         logger.info("PCI devices:\n{}".format("\n".join(self.list_pci_devices())))
+
+        logger.info("verify that the slots are in order")
+        assert self.slot2device.values() == sorted(self.slot2device.values())
 
         (rc, stdout, stderr) = self.run_cmd("sudo fpga-describe-local-image-slots", echo=True)
         assert len(stdout) == self.num_slots + 1
@@ -84,6 +89,7 @@ class TestFpgaTools(BaseSdkTools):
             assert stdout[slot * 3 + 1] == 'AFIDEVICE    {}       0x1d0f      0x1042      {}'.format(slot, self.slot2device[slot]), "slot={}\n{}".format(slot, "\n".join(stdout))
             assert stdout[slot * 3 + 2] == 'AFIDEVICE    {}       0x1d0f      0x1041      {}'.format(slot, self.slot2mbox_device[slot]), "slot={}\n{}".format(slot, "\n".join(stdout))
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_describe_local_image(self):
         for slot in range(self.num_slots):
             self.fpga_clear_local_image(slot)
@@ -104,24 +110,26 @@ class TestFpgaTools(BaseSdkTools):
 
             # Test -M (Return FPGA image hardware metrics.)
             (rc, stdout, stderr) = self.run_cmd("sudo fpga-describe-local-image -M -S {}".format(slot), echo=True)
-            assert len(stdout) == 57
+            assert len(stdout) == 59
             assert len(stderr) == 1
             assert stdout[0] == 'AFI          {}       none                    cleared           1        ok               0       {}'.format(slot, self.shell_version)
             assert stdout[1] == 'AFIDEVICE    {}       0x1d0f      0x1042      {}'.format(slot, self.slot2device[slot])
             assert stdout[2] == 'sdacl-slave-timeout=0'
-            assert stdout[50] == 'Clock Group C Frequency (Mhz)'
-            assert stdout[51] == '0  0  '
+            assert stdout[51] == 'Clock Group C Frequency (Mhz)'
+            assert stdout[52] == '0  0  '
+            assert stdout[-2].startswith('Cached agfis:')
 
             # Test -C (Return FPGA image hardware metrics (clear on read).)
-            (rc, stdout, stderr) = self.run_cmd("sudo fpga-describe-local-image -M -S {}".format(slot), echo=True)
-            assert len(stdout) == 57
+            (rc, stdout, stderr) = self.run_cmd("sudo fpga-describe-local-image -C -M -S {}".format(slot), echo=True)
+            assert len(stdout) == 59
             assert len(stderr) == 1
             assert stdout[0] == 'AFI          {}       none                    cleared           1        ok               0       {}'.format(slot, self.shell_version)
             assert stdout[1] == 'AFIDEVICE    {}       0x1d0f      0x1042      {}'.format(slot, self.slot2device[slot])
             assert stdout[2] == 'sdacl-slave-timeout=0'
-            assert stdout[50] == 'Clock Group C Frequency (Mhz)'
-            assert stdout[51] == '0  0  '
+            assert stdout[51] == 'Clock Group C Frequency (Mhz)'
+            assert stdout[52] == '0  0  '
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_load_local_image(self):
         for slot in range(self.num_slots):
             (rc, stdout, stderr) = self.run_cmd("sudo fpga-load-local-image --request-timeout {} -S {} -I {}".format(self.DEFAULT_REQUEST_TIMEOUT, slot, self.cl_hello_world_agfi), echo=True)
@@ -168,6 +176,7 @@ class TestFpgaTools(BaseSdkTools):
             assert stdout[1] == 'AFIDEVICE    {}       0x1d0f      0xf000      {}'.format(slot, self.slot2device[slot])
             self.fpga_clear_local_image(slot)
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_clear_local_image(self):
         for slot in range(self.num_slots):
             # Test clearing already cleared
@@ -204,6 +213,14 @@ class TestFpgaTools(BaseSdkTools):
                 assert stdout[1] == 'AFIDEVICE    {}       0x1d0f      0x1042      {}'.format(slot, self.slot2device[slot])
                 break
 
+    def test_afi_caching(self):
+        for slot in range(self.num_slots):
+            self.fpga_clear_local_image(slot)
+            (rc, stdout, stderr) = self.run_cmd("sudo fpga-load-local-image --request-timeout {} -S {} -I {} -P".format(self.DEFAULT_REQUEST_TIMEOUT, slot, self.cl_dram_dma_agfi), echo=True)
+            assert rc == 0
+            (rc, stdout, stderr) = self.run_cmd("sudo fpga-describe-local-image -M -S {}".format(slot), echo=True)
+            assert re.match(self.cl_dram_dma_agfi, stdout[-2].strip())
+
     @pytest.mark.skip(reason="No way to test right now.")
     def test_start_virtual_jtag(self):
         assert False
@@ -217,6 +234,7 @@ class TestFpgaTools(BaseSdkTools):
             assert stdout[0] == 'AFI          {}       none                    cleared           1        ok               0       {}'.format(slot, self.shell_version)
             assert stdout[1] == 'AFIDEVICE    {}       0x1d0f      0x1042      {}'.format(self.slot2device[slot])
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_get_virtual_led(self):
         # This is tested in the cl_hello_world example
         for slot in range(self.num_slots):
@@ -228,6 +246,7 @@ class TestFpgaTools(BaseSdkTools):
             assert stdout[0] == 'FPGA slot id {} have the following Virtual LED:'.format(slot)
             assert re.match('[01]{4}-[01]{4}-[01]{4}-[01]{4}', stdout[1])
 
+    @pytest.mark.flaky(reruns=2, reruns_delay=5)
     def test_virtual_dip_switch(self):
         for slot in range(self.num_slots):
             # Start it on an empty slot
@@ -246,3 +265,17 @@ class TestFpgaTools(BaseSdkTools):
             assert len(stderr) == 1
             assert stdout[0] == 'FPGA slot id {} has the following Virtual DIP Switches:'.format(slot)
             assert stdout[1] == '1111-1111-1111-1111'
+
+    # Add extra delay in case we have a lot of slot loads
+    @pytest.mark.flaky(reruns=2, reruns_delay=10)
+    def test_parallel_slot_loads(self):
+        def run_slot(slot):
+            for afi in [self.cl_dram_dma_agfi, self.cl_hello_world_agfi, self.cl_dram_dma_agfi]:
+                (rc, stdout, stderr) = self.run_cmd("sudo fpga-load-local-image -HS{} -I {}".format(slot, afi))
+                assert rc == 0
+                logger.info(stdout)
+
+
+        slots = range(self.num_slots)
+        pool = multiprocessing.dummy.Pool(len(slots))
+        pool.map(run_slot, slots)

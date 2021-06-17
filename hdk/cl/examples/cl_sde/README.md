@@ -35,7 +35,7 @@ See [SDE HW Guide](../../../../sdk/apps/virtual-ethernet/doc/SDE_HW_Guide.md) fo
 <a name="Interfaces"></a>
 ## Interfaces and Address Range
 ### Interfaces
-CL_SDE uses two interfaces from the Shell. 
+CL_SDE uses three interfaces from the Shell. 
 The PCIS interface is used to provide connectivity between the [Virtual Ethernet Application](../../../../sdk/apps/virtual-ethernet/doc/Virtual_Ethernet_Application_Guide.md) and the SDE.
 The OCL interface is used to provide connectivity between the host and all the test/control/utility blocks (except the SDE). 
 The PCIM interfaces is used by the SDE to read and write to host memory. 
@@ -74,5 +74,5 @@ The following table displays information about the CL that is required to regist
 | PCI Vendor ID | 0x1D0F (Amazon) |
 | PCI Subsystem ID | 0x1D51 |
 | PCI Subsystem Vendor ID | 0xFEDC |
-| Pre-generated AFI ID (N.Virginia:us-east-1) | afi-08fca33060fff4a62 |
-| Pre-generated AGFI ID | agfi-0f4eca32dc6100729 |
+| Pre-generated AFI ID (N.Virginia:us-east-1) | afi-030f5efdbdb03e186 |
+| Pre-generated AGFI ID | agfi-0e6adf0cd6932d880 |

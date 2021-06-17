@@ -36,6 +36,14 @@ import tb_type_defines_pkg::*;
    export "DPI-C" task sv_map_host_memory;
    export "DPI-C" task cl_peek;
    export "DPI-C" task cl_poke;
+   export "DPI-C" task cl_peek_pcis;
+   export "DPI-C" task cl_poke_pcis;
+   export "DPI-C" task cl_peek_sda;
+   export "DPI-C" task cl_poke_sda;
+   export "DPI-C" task cl_peek_ocl;
+   export "DPI-C" task cl_poke_ocl;
+   export "DPI-C" task cl_peek_bar1;
+   export "DPI-C" task cl_poke_bar1;
    export "DPI-C" task sv_int_ack;
    export "DPI-C" task sv_pause;
    export "DPI-C" task sv_fpga_pci_peek;
@@ -45,6 +53,7 @@ import tb_type_defines_pkg::*;
    export "DPI-C" task sv_fpga_start_cl_to_buffer;
 `endif
    export "DPI-C" task init_ddr;
+   export "DPI-C" task deselect_atg_hw;
    
    static int h2c_desc_index = 0;
    static int c2h_desc_index = 0;
@@ -63,6 +72,38 @@ import tb_type_defines_pkg::*;
    
    task cl_poke(input longint unsigned addr, int unsigned data);
       poke_ocl(.addr(addr), .data(data));
+   endtask
+   
+   task cl_peek_pcis(input longint unsigned addr, output int unsigned data);
+      tb.card.fpga.sh.peek(.addr(addr), .data(data), .intf(AxiPort::PORT_DMA_PCIS));
+   endtask
+   
+   task cl_poke_pcis(input longint unsigned addr, int unsigned data);
+      tb.card.fpga.sh.poke(.addr(addr), .data(data), .intf(AxiPort::PORT_DMA_PCIS));
+   endtask
+
+   task cl_peek_sda(input longint unsigned addr, output int unsigned data);
+      tb.card.fpga.sh.peek(.addr(addr), .data(data), .intf(AxiPort::PORT_SDA));
+   endtask
+   
+   task cl_poke_sda(input longint unsigned addr, int unsigned data);
+      tb.card.fpga.sh.poke(.addr(addr), .data(data), .intf(AxiPort::PORT_SDA));
+   endtask
+
+   task cl_peek_ocl(input longint unsigned addr, output int unsigned data);
+      tb.card.fpga.sh.peek(.addr(addr), .data(data), .intf(AxiPort::PORT_OCL));
+   endtask
+   
+   task cl_poke_ocl(input longint unsigned addr, int unsigned data);
+      tb.card.fpga.sh.poke(.addr(addr), .data(data), .intf(AxiPort::PORT_OCL));
+   endtask
+
+   task cl_peek_bar1(input longint unsigned addr, output int unsigned data);
+      tb.card.fpga.sh.peek(.addr(addr), .data(data), .intf(AxiPort::PORT_BAR1));
+   endtask
+   
+   task cl_poke_bar1(input longint unsigned addr, int unsigned data);
+      tb.card.fpga.sh.poke(.addr(addr), .data(data), .intf(AxiPort::PORT_BAR1));
    endtask
 
    task sv_int_ack(input int unsigned int_num);
@@ -208,16 +249,22 @@ end
       poke_stat(.addr(8'h0c), .ddr_idx(1), .data(32'h0000_0000));
       poke_stat(.addr(8'h0c), .ddr_idx(2), .data(32'h0000_0000));
 
-      //de-select the ATG hardware
+     
+      // allow memory to initialize
+      nsec_delay(27000);
+   endtask // initialize_sh_model
+
+
+   task deselect_atg_hw();
+
+    //de-select the ATG hardware
 
       poke_ocl(.addr(64'h130), .data(0));
       poke_ocl(.addr(64'h230), .data(0));
       poke_ocl(.addr(64'h330), .data(0));
       poke_ocl(.addr(64'h430), .data(0));
-
-      // allow memory to initialize
-      nsec_delay(27000);
-   endtask // initialize_sh_model
+      nsec_delay(1000);
+   endtask
 
 `ifdef DMA_TEST
    //DPI task to transfer HOST to CL data.

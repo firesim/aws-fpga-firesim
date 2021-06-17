@@ -39,7 +39,7 @@ set uram_option         [lindex $argv 11]
 set notify_via_sns      [lindex $argv 12]
 set VDEFINES            [lindex $argv 13]
 ##################################################
-## Flow control variables 
+## Flow control variables
 ##################################################
 set cl.synth   1
 set implement  1
@@ -104,6 +104,12 @@ puts "All reports and intermediate results will be time stamped with $timestamp"
 
 set_msg_config -id {Chipscope 16-3} -suppress
 set_msg_config -string {AXI_QUAD_SPI} -suppress
+set_msg_config -string {PIPE_CL_SH_AURORA_STAT} -suppress
+set_msg_config -string {PIPE_CL_SH_HMC_STAT} -suppress
+set_msg_config -string {PIPE_AURORA_CHANNEL_UP} -suppress
+set_msg_config -string {PIPE_HMC_IIC} -suppress
+set_msg_config -string {PIPE_SH_CL_AURORA_STAT} -suppress
+
 
 # Suppress Warnings
 # These are to avoid warning messages that may not be real issues. A developer
@@ -123,7 +129,7 @@ set_msg_config -id {Vivado 12-4739}      -suppress
 set_msg_config -id {Vivado 12-5201}      -suppress
 set_msg_config -id {DRC CKLD-1}          -suppress
 set_msg_config -id {IP_Flow 19-2248}     -suppress
-set_msg_config -id {Opt 31-155}          -suppress
+#set_msg_config -id {Opt 31-155}          -suppress
 set_msg_config -id {Synth 8-115}         -suppress
 set_msg_config -id {Synth 8-3936}        -suppress
 set_msg_config -id {Vivado 12-1023}      -suppress
@@ -143,10 +149,13 @@ set_msg_config -id {Constraints 18-619}  -suppress
 set_msg_config -id {DRC CKLD-2}          -suppress
 set_msg_config -id {DRC REQP-1853}       -suppress
 set_msg_config -id {Timing 38-436}       -suppress
+# https://forums.aws.amazon.com/forum.jspa?forumID=243&start=0
+set_msg_config -severity "CRITICAL WARNING" -string "WRAPPER_INST/SH" -suppress
+set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
 
 # Promote the following critical warnings to errors to prevent AGFI generation
 # Design not completely routed
-set_msg_config -id {Route 35-1} -new_severity "ERROR"
+#set_msg_config -id {Route 35-1} -new_severity "ERROR"
 # Route 35-535] Clock Net: <net> is not completely routed.
 set_msg_config -id {Route 35-535} -new_severity "ERROR"
 
@@ -166,7 +175,7 @@ if {[string compare $notify_via_sns "1"] == 0} {
 source $CL_DIR/design/cl_firesim_generated_env.tcl
 
 ##################################################
-### Strategy options 
+### Strategy options
 ##################################################
 switch $strategy {
     "BASIC" {
@@ -199,6 +208,11 @@ switch $strategy {
     }
 }
 
+# Biancolin: Disable phys_opt to temporarily workaround around a clock paritioning issue
+# See https://forums.aws.amazon.com/thread.jspa?threadID=338735&tstart=0
+#set phys_opt 0
+set phys_opt 1
+
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
 
 #Encrypt source code
@@ -211,7 +225,7 @@ source $HDK_SHELL_DIR/build/scripts/device_type.tcl
 source $HDK_SHELL_DIR/build/scripts/step_user.tcl -notrace
 
 ########################################
-## Generate clocks based on Recipe 
+## Generate clocks based on Recipe
 ########################################
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling aws_gen_clk_constraints.tcl to generate clock constraints from developer's specified recipe.";
@@ -332,6 +346,9 @@ if {$implement} {
 
    # Report utilization
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
+
+   # Report clock utilization
+   report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
 
    # This is what will deliver to AWS
    puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Writing final DCP to to_aws directory.";

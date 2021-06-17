@@ -13,12 +13,20 @@
  * permissions and limitations under the License.
  */
 
+#pragma once
+
+#include <stdint.h>
+
+#include "afi_cmd_api.h"
+#include "hal/fpga_common.h"
+#include "fpga_pci.h"
+
 /**
  * Default timeout:
  *   CLI_TIMEOUT_DFLT * CLI_DELAY_MSEC_DFLT
  */
-#define FPGA_MGMT_TIMEOUT_DFLT    250
-#define FPGA_MGMT_DELAY_MSEC_DFLT 20
+#define FPGA_MGMT_TIMEOUT_DFLT    2500
+#define FPGA_MGMT_DELAY_MSEC_DFLT 2
 
 /** First flag bit, @see afi_cmd_hdr#len_flags */
 #define AFI_CMD_HDR_FLAGS_SHIFT 24
@@ -40,6 +48,7 @@ extern struct fgpa_mgmt_state_s {
 	} slots[FPGA_SLOT_MAX];
 	uint32_t timeout;
 	uint32_t delay_msec;
+	bool initialized;
 } fpga_mgmt_state;
 
 // FIXME

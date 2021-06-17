@@ -61,6 +61,9 @@ export SDK_DIR=$AWS_FPGA_REPO_DIR/sdk
 # SDACCEL
 # Setup Location of SDACCEL_DIR
 export SDACCEL_DIR=$AWS_FPGA_REPO_DIR/SDAccel
+#  Vitis
+# Setup Location of VITIS_DIR
+export VITIS_DIR=$AWS_FPGA_REPO_DIR/Vitis
 
 # PYTHONPATH
 # Update PYTHONPATH with libraries used for unit testing
@@ -72,3 +75,6 @@ PYTHONPATH=$python_lib:$PYTHONPATH
 
 export PATH=$(echo $PATH | sed -e 's/\(^\|:\)[^:]\+\/shared\/bin\/scripts\(:\|$\)/:/g; s/^://; s/:$//')
 PATH=$AWS_FPGA_REPO_DIR/shared/bin/scripts:$PATH
+
+# Enable xilinx licensing
+export XILINX_ENABLE_AWS_WHITELIST=095707098027
