@@ -267,9 +267,11 @@ if {$implement} {
 
       #Read the constraints, note *DO NOT* read cl_clocks_aws (clocks originating from AWS shell)
       read_xdc [ list \
-         $CL_DIR/build/constraints/cl_pnr_user.xdc
+         $CL_DIR/build/constraints/cl_pnr_user.xdc \
+         $CL_DIR/design/cl_firesim_generated.xdc
       ]
       set_property PROCESSING_ORDER late [get_files cl_pnr_user.xdc]
+      set_property PROCESSING_ORDER late [get_files cl_firesim_generated.xdc]
 
       puts "\nAWS FPGA: ([clock format [clock seconds] -format %T]) - Running link_design";
       link_design -top $TOP -part [DEVICE_TYPE] -reconfig_partitions {WRAPPER_INST/SH WRAPPER_INST/CL}

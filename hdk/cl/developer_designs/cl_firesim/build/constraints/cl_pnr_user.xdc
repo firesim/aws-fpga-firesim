@@ -49,3 +49,6 @@ set_false_path -from [get_clocks clk_main_a0] \
 
 
 set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets WRAPPER_INST/SH/kernel_clks_i/clkwiz_sys_clk/inst/CLK_CORE_DRP_I/clk_inst/clk_out2]
+
+# Give the main simulator clock a better name
+create_generated_clock -name host_clock [get_pins WRAPPER_INST/CL/firesim_clocking/inst/mmcme4_adv_inst/CLKOUT0]
