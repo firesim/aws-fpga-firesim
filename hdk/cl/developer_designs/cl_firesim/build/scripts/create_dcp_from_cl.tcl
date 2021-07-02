@@ -172,7 +172,7 @@ if {[string compare $notify_via_sns "1"] == 0} {
 ##################################################
 ### Source FireSim Generated TCL Env variables
 ##################################################
-source $CL_DIR/design/cl_firesim_generated_env.tcl
+source $CL_DIR/design/FireSim-generated.env.tcl
 
 ##################################################
 ### Strategy options
