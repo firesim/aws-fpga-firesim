@@ -60,13 +60,13 @@ logic rst_extra1_n_sync;
 // on them
 // See: https://forums.aws.amazon.com/thread.jspa?messageID=939230&#939230
 //-------------------------------------------------
-logic clk_extra_a1_reg;                          //Extra clock A1 (phase aligned to "A" clock group)
-logic clk_extra_a2_reg;                          //Extra clock A2 (phase aligned to "A" clock group)
-logic clk_extra_a3_reg;                          //Extra clock A3 (phase aligned to "A" clock group)
-logic clk_extra_b0_reg;                          //Extra clock B0 (phase aligned to "B" clock group)
-logic clk_extra_b1_reg;                          //Extra clock B1 (phase aligned to "B" clock group)
-logic clk_extra_c0_reg;                          //Extra clock C0 (phase aligned to "B" clock group)
-logic clk_extra_c1_reg;                          //Extra clock C1 (phase aligned to "B" clock group)
+(* dont_touch = "true" *) logic clk_extra_a1_reg;                          //Extra clock A1 (phase aligned to "A" clock group)
+(* dont_touch = "true" *) logic clk_extra_a2_reg;                          //Extra clock A2 (phase aligned to "A" clock group)
+(* dont_touch = "true" *) logic clk_extra_a3_reg;                          //Extra clock A3 (phase aligned to "A" clock group)
+(* dont_touch = "true" *) logic clk_extra_b0_reg;                          //Extra clock B0 (phase aligned to "B" clock group)
+(* dont_touch = "true" *) logic clk_extra_b1_reg;                          //Extra clock B1 (phase aligned to "B" clock group)
+(* dont_touch = "true" *) logic clk_extra_c0_reg;                          //Extra clock C0 (phase aligned to "B" clock group)
+(* dont_touch = "true" *) logic clk_extra_c1_reg;                          //Extra clock C1 (phase aligned to "B" clock group)
 
 always_ff @(posedge clk_extra_a1) begin
     clk_extra_a1_reg <= 1'b1;
