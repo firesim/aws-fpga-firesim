@@ -44,8 +44,8 @@ notify=0
 ignore_memory_requirement=0
 expected_memory_usage=30000000
 uram_option=2
-vdefine=""
-reference_checkpoint=""
+vdefine="__NONE__"
+reference_checkpoint="__NONE__"
 
 function info_msg {
   echo -e "INFO: $1"
