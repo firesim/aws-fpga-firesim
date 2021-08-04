@@ -38,6 +38,8 @@ set clock_recipe_c      [lindex $argv 10]
 set uram_option         [lindex $argv 11]
 set notify_via_sns      [lindex $argv 12]
 set VDEFINES            [lindex $argv 13]
+set reference_checkpoint [lindex $argv 14]
+
 ##################################################
 ## Flow control variables 
 ##################################################
@@ -273,6 +275,14 @@ if {$implement} {
    }
 
    ########################
+   # Load Reference Checkpoint (if provided)
+   ########################
+   if {$reference_checkpoint != ""} {
+       read_checkpoint -incremental $reference_checkpoint
+       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_link_incremental_reuse.rpt 
+   }
+
+   ########################
    # CL Optimize
    ########################
    set place_preHookTcl  ""
@@ -284,6 +294,9 @@ if {$implement} {
       }
    }
    report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
+   if {$reference_checkpoint != ""} {
+       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_incremental_reuse.rpt 
+   }
 
    ########################
    # CL Place
@@ -327,6 +340,10 @@ if {$implement} {
    ##############################
    # Report final timing
    report_timing_summary -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_timing_summary.rpt
+
+   if {$reference_checkpoint != ""} {
+       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_incremental_reuse.rpt 
+   }
 
    # Report utilization
    report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
