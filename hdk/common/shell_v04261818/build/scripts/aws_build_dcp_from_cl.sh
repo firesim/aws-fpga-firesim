@@ -44,7 +44,7 @@ notify=0
 ignore_memory_requirement=0
 expected_memory_usage=30000000
 uram_option=2
-vdefine="__NONE__"
+vdefine=""
 reference_checkpoint="__NONE__"
 
 function info_msg {
@@ -166,7 +166,11 @@ do
  opt_vdefine+=" -verilog_define "
  opt_vdefine+=${vdefine_array[index]}
 done
-echo "$opt_vdefine"
+
+if [[ "$opt_vdefine" == "" ]]; then
+    opt_vdefine="__NONE__"
+fi
+info_msg "opt_vdefine is : $opt_vdefine"
 if [ $expected_memory_usage -gt `get_instance_memory` ]; then
 
     output_message="YOUR INSTANCE has less memory than is necessary for certain builds. This means that your builds will take longer than expected. \nTo change to an instance type with more memory, please check our instance resize guide: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html"
