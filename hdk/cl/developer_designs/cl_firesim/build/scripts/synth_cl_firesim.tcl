@@ -4,7 +4,7 @@
 
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling firesim_ila_insert_vivado.tcl to generate ILAs from developer's specified recipe.";
 
-source $CL_DIR/design/ila_files/firesim_ila_insert_vivado.tcl
+source $CL_DIR/design/FireSim-generated.ila_insert_vivado.tcl
 
 
 #Param needed to avoid clock name collisions
@@ -36,7 +36,7 @@ puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Reading developer's 
 # Reading the .sv and .v files, as proper designs would not require
 # reading .v, .vh, nor .inc files
 
-read_verilog -sv [glob $ENC_SRC_DIR/*.?v]
+read_verilog -sv [glob $ENC_SRC_DIR/*.{v,sv}]
 
 #---- End of section replaced by User ----
 
