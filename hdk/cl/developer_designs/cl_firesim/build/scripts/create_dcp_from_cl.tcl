@@ -282,14 +282,6 @@ if {$implement} {
    }
 
    ########################
-   # Load Reference Checkpoint (if provided)
-   ########################
-   if {$reference_checkpoint != "__NONE__"} {
-       read_checkpoint -incremental $reference_checkpoint
-       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_link_incremental_reuse.rpt 
-   }
-
-   ########################
    # CL Optimize
    ########################
    set place_preHookTcl  ""
@@ -301,7 +293,12 @@ if {$implement} {
       }
    }
    report_utilization -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
+
+   ########################
+   # Load Reference Checkpoint (if provided)
+   ########################
    if {$reference_checkpoint != "__NONE__"} {
+       read_checkpoint -incremental $reference_checkpoint
        report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_incremental_reuse.rpt 
    }
 
