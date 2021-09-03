@@ -100,7 +100,8 @@ read_xdc [ list \
    $CL_DIR/build/constraints/cl_clocks_aws.xdc \
    $HDK_SHELL_DIR/build/constraints/cl_ddr.xdc \
    $HDK_SHELL_DIR/build/constraints/cl_synth_aws.xdc \
-   $CL_DIR/build/constraints/cl_synth_user.xdc
+   $CL_DIR/build/constraints/cl_synth_user.xdc \
+   $CL_DIR/design/FireSim-generated.synthesis.xdc \
 ]
 
 # FireSim custom clocking
