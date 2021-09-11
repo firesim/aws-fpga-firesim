@@ -49,3 +49,21 @@ set_false_path -from [get_clocks clk_main_a0] \
 
 
 set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets WRAPPER_INST/SH/kernel_clks_i/clkwiz_sys_clk/inst/CLK_CORE_DRP_I/clk_inst/clk_out2]
+
+
+# FireSim added CDC + width adapters
+# SH DDR (Channel C)
+add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_0]
+add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits]
+
+# CL DDR A
+add_cells_to_pblock [get_pblocks pblock_CL_top] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_1]
+add_cells_to_pblock [get_pblocks pblock_CL_top] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits_1]
+
+# CL DDR B
+add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_2]
+add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits_2]
+
+# CL DDR D
+add_cells_to_pblock [get_pblocks pblock_CL_bot] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_3]
+add_cells_to_pblock [get_pblocks pblock_CL_bot] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits_3]
