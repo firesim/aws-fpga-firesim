@@ -1455,7 +1455,7 @@ assign cl_sh_ddr_arid = 16'b0; // dwidth convert has no arid for some reason...
 // unused: sh_cl_ddr_bid
 // unused: sh_cl_ddr_rid
 
-axi_dwidth_converter_0 dwidth_adapt_64bits_512bits (
+axi_dwidth_converter_0 dwidth_adapt_64bits_512bits_0 (
   .s_axi_aclk(clk_main_a0),          // input wire s_axi_aclk
   .s_axi_aresetn(rst_main_n_sync),    // input wire s_axi_aresetn
 

@@ -54,7 +54,7 @@ set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets WRAPPER_INST/SH/kern
 # FireSim added CDC + width adapters
 # SH DDR (Channel C)
 add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_0]
-add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits]
+add_cells_to_pblock [get_pblocks pblock_CL_mid] [get_cells -quiet WRAPPER_INST/CL/dwidth_adapt_64bits_512bits_0]
 
 # CL DDR A
 add_cells_to_pblock [get_pblocks pblock_CL_top] [get_cells -quiet WRAPPER_INST/CL/clock_convert_dramslim_1]
