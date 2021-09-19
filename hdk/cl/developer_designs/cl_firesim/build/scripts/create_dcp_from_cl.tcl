@@ -213,8 +213,9 @@ switch $strategy {
 #set phys_opt 0
 set phys_opt 1
 
-puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
-
+#puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
+# FireSim: note, this only moves sources into the encrypt directory without
+# actually encrypting them. Modify encrypt.tcl to renable CL-source encryption.
 #Encrypt source code
 source encrypt.tcl
 
