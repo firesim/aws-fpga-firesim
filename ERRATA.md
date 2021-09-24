@@ -1,13 +1,14 @@
 
 # AWS EC2 FPGA HDK+SDK Errata
 
-## Shell v1.4 (04261818)
-[Shell\_04261818_Errata](./hdk/docs/AWS_Shell_ERRATA.md)
+## Shell Errata
+Shell errata is [documented here](./hdk/docs/AWS_Shell_ERRATA.md)
 
 ## HDK
 * Multiple SDE instances per CL is not supported in this release. Support is planned for a future release.
 * DRAM Data retention is not supported for CL designs with less than 4 DDRs enabled
-* Combinatorial loops in CL designs are not supported.  
+* Combinatorial loops in CL designs are not supported.
+  * We will display a `UNKNOWN_BITSTREAM_GENERATE_ERROR` on detection of a combinatorial loop in the CL design and an AFI will not be generated.
 * Connecting one of the clocks provided from the shell (clk_main_a0, clk_extra_a1, etc...) directly to a BUFG in the CL is not supported by the Xilinx tools and may result in a non-functional clock. To workaround this limitation, it is recommended to use an MMCM to feed the BUFG (clk_from_shell -> MMCM -> BUFG). Please refer to [Xilinx AR# 73360](https://www.xilinx.com/support/answers/73360.html) for further details.
 
 ### flop_ccf.sv bug
@@ -22,7 +23,7 @@ Q: Which designs does this bug affect?
 A: This bug only affects designs that instantiate the sh_ddr module.
 
 Q: How do I fix my design if I am affected by this bug?
-A: Pull aws-fpga release v1.4.19 or laterfrom the aws-fpga github and rebuild your cl design. 
+A: Pull aws-fpga release v1.4.19 or later from the aws-fpga github and rebuild your cl design. 
 The flop_ccf.sv files from the latest release that contain the fix are: [sh_ddr/synth/flop_ccf.sv](https://github.com/aws/aws-fpga/blob/master/hdk/common/shell_v04261818/design/sh_ddr/synth/flop_ccf.sv) & 
 [sh_ddr/sim/flop_ccf.sv](https://github.com/aws/aws-fpga/blob/master/hdk/common/shell_v04261818/design/sh_ddr/sim/flop_ccf.sv)
 

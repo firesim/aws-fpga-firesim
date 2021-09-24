@@ -87,7 +87,7 @@ The instructions below describe how to run the Vitis SW Emulation flow using the
 ```
     $ cd $VITIS_DIR/examples/xilinx/hello_world          
     $ make clean                                                                 
-    $ make check TARGET=sw_emu DEVICE=$AWS_PLATFORM all     
+    $ make run TARGET=sw_emu DEVICE=$AWS_PLATFORM all     
 ```
 
 For more information on how to debug your application in a SW Emulation environment.
@@ -102,7 +102,7 @@ The instructions below describe how to run the HW Emulation flow using the Makef
 ```
     $ cd $VITIS_DIR/examples/xilinx/hello_world             
     $ make clean                                                                   
-    $ make check TARGET=hw_emu DEVICE=$AWS_PLATFORM all      
+    $ make run TARGET=hw_emu DEVICE=$AWS_PLATFORM all      
 ```
 For more information on how to debug your application in a HW Emulation environment.
 
@@ -200,7 +200,7 @@ For help with AFI creation issues, see [create-fpga-image error codes](../hdk/do
     $ cd $AWS_FPGA_REPO_DIR
     $ source vitis_runtime_setup.sh   # Other runtime env settings needed by the host app should be setup after this step
     # Wait till the MPD service has initialized. Check systemctl status mpd
-    $ ./host ./vadd.awsxclbin 
+    $ ./hello_world ./vadd.awsxclbin 
     ```
 * The runtime setup script also starts the Xilinx XRT Message Proxy Daemon(MPD) service. To learn more about the XRT implementation, check the [XRT Instructions](./docs/XRT_installation_instructions.md#mpd)
 
