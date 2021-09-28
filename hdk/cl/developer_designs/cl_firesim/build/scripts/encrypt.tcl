@@ -70,6 +70,7 @@ puts "vivado_version $vivado_version"
 # checkpoints and timing reports making it difficult to analyze build
 # difficulties without rerunning a build with encryption disabled.
 # The final checkpoint is still encrypted before delivery to AWS.
+# See https://forums.aws.amazon.com/thread.jspa?threadID=346135&tstart=0 
 
 # encrypt .v/.sv/.vh/inc as verilog files
 #
