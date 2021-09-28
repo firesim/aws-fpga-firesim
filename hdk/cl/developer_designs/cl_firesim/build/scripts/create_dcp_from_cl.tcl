@@ -213,8 +213,10 @@ switch $strategy {
 #set phys_opt 0
 set phys_opt 1
 
-#puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl.";
-# FireSim: note, this only moves sources into the encrypt directory without actually encrypting them.
+#puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling the encrypt.tcl."
+# Source encryption renders timing reports and checkpoints unsuable because it obfuscates net names, so in FireSim we've disabled it.
+# However, to minimize divergence between FireSim's fork and upstream, we've achieved this by modifying encrypt.tcl to move sources
+# into the existing encrypted source directory (where the rest of the build expects them) without actually encrypting them.
 # See comment in encrypt.tcl for more detail.
 #Encrypt source code
 source encrypt.tcl
