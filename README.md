@@ -1,3 +1,11 @@
+# AWS FPGA Shell for FireSim
+
+This is a fork of [aws-fpga](https://github.com/aws/aws-fpga) used for FireSim. More information about this repo can be found in the [FireSim Changelog](https://github.com/firesim/firesim/blob/master/CHANGELOG.md).
+
+Below is the standard aws-fpga documentation from upstream.
+
+<span style="display: inline-block;">
+
 # Table of Contents
 
 1. [Overview of AWS EC2 FPGA Development Kit](#overview-of-aws-ec2-fpga-development-kit)

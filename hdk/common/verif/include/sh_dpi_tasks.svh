@@ -67,11 +67,11 @@ import tb_type_defines_pkg::*;
    endtask
 
    task cl_peek(input longint unsigned addr, output int unsigned data);
-      tb.card.fpga.sh.peek(.addr(addr), .data(data), .intf(AxiPort::PORT_OCL));
+      peek_ocl(.addr(addr), .data(data));
    endtask
    
    task cl_poke(input longint unsigned addr, int unsigned data);
-      tb.card.fpga.sh.poke(.addr(addr), .data(data), .intf(AxiPort::PORT_OCL));
+      poke_ocl(.addr(addr), .data(data));
    endtask
    
    task cl_peek_pcis(input longint unsigned addr, output int unsigned data);

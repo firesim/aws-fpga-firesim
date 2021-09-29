@@ -111,3 +111,8 @@ patches/*
 .temp
 
 .python-version
+
+# FireSim specific
+awsver.txt
+
+sdk/linux_kernel_drivers/xdma/.libxdma.o.d
