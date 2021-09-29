@@ -302,6 +302,7 @@ if {$implement} {
       }
    }
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv 
 
    ########################
    # CL Place
@@ -348,6 +349,9 @@ if {$implement} {
 
    # Report utilization
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
+
+   # Report RAM utilization
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.csv 
 
    # Report clock utilization
    report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
