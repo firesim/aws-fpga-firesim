@@ -116,6 +116,8 @@ set_property PROCESSING_ORDER EARLY  [get_files cl_clocks_aws.xdc]
 puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Start design synthesis.";
 
 update_compile_order -fileset sources_1
+# Fix "TclStackFree: incorrect freePtr. Call out of sequence?" bug - https://support.xilinx.com/s/article/55687?language=en_US
+set_param synth.elaboration.rodinMoreOptions {set rt::extractNetlistGenomes false}
 puts "\nRunning synth_design for $CL_MODULE $CL_DIR/build/scripts \[[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Y}]\]"
 eval [concat synth_design -top $CL_MODULE -verilog_define XSDB_SLV_DIS $VDEFINES -part [DEVICE_TYPE] -mode out_of_context $synth_options -directive $synth_directive]
 
