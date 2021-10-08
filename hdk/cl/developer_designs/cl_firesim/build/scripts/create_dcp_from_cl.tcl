@@ -38,6 +38,15 @@ set clock_recipe_c      [lindex $argv 10]
 set uram_option         [lindex $argv 11]
 set notify_via_sns      [lindex $argv 12]
 set VDEFINES            [lindex $argv 13]
+set reference_checkpoint [lindex $argv 14]
+
+
+if {$VDEFINES == "__NONE__"} {
+    # it is easier to explicitly pass something rather than having to get
+    # empty string passed correctly through layers of string interpolation
+    set VDEFINES ""
+}
+
 ##################################################
 ## Flow control variables
 ##################################################
@@ -308,6 +317,14 @@ if {$implement} {
    report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv 
 
    ########################
+   # Load Reference Checkpoint (if provided)
+   ########################
+   if {$reference_checkpoint != "__NONE__"} {
+       read_checkpoint -incremental $reference_checkpoint
+       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.post_opt_incremental_reuse.rpt 
+   }
+
+   ########################
    # CL Place
    ########################
    if {$place} {
@@ -349,6 +366,10 @@ if {$implement} {
    ##############################
    # Report final timing
    report_timing_summary -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_timing_summary.rpt
+
+   if {$reference_checkpoint != "__NONE__"} {
+       report_incremental_reuse  -hierarchical -file $CL_DIR/build/reports/${timestamp}.SH_CL_incremental_reuse.rpt 
+   }
 
    # Report utilization
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt

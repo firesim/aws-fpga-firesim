@@ -18,7 +18,7 @@
 # Usage help
 function usage
 {
-    echo "usage: aws_build_dcp_from_cl.sh [ [-script <vivado_script>] | [-strategy BASIC | DEFAULT | EXPLORE | TIMING | NORETIMING | CONGESTION] [-clock_recipe_a A0 | A1 | A2] [-clock_recipe_b B0 | B1 | B2 | B3 | B4 | B5] [-clock_recipe_c C0 | C1 | C2 | C3] [-uram_option 2 | 3 | 4] [-vdefine macro1,macro2,macro3,.....,macrox] -foreground] [-notify] | [-h] | [-H] | [-help] ]"
+    echo "usage: aws_build_dcp_from_cl.sh [ [-script <vivado_script>] | [-strategy BASIC | DEFAULT | EXPLORE | TIMING | NORETIMING | CONGESTION] [-clock_recipe_a A0 | A1 | A2] [-clock_recipe_b B0 | B1 | B2 | B3 | B4 | B5] [-clock_recipe_c C0 | C1 | C2 | C3] [-uram_option 2 | 3 | 4] [-vdefine macro1,macro2,macro3,.....,macrox] -foreground] [-notify] [-reference_checkpoint <dcp>] | [-h] | [-H] | [-help] ]"
     echo " "
     echo "By default the build is run in the background using nohup so that the"
     echo "process will not be terminated if the terminal window is closed."
@@ -45,6 +45,7 @@ ignore_memory_requirement=0
 expected_memory_usage=30000000
 uram_option=2
 vdefine=""
+reference_checkpoint="__NONE__"
 
 function info_msg {
   echo -e "INFO: $1"
@@ -100,6 +101,9 @@ while [ "$1" != "" ]; do
                                 ;;
         -ignore_memory_requirement) ignore_memory_requirement=1
                                 ;;
+	-reference_checkpoint)  shift
+	                        reference_checkpoint=$1
+				;;
         -h | -H | -help )       usage
                                 exit
                                 ;;
@@ -162,7 +166,11 @@ do
  opt_vdefine+=" -verilog_define "
  opt_vdefine+=${vdefine_array[index]}
 done
-echo "$opt_vdefine"
+
+if [[ "$opt_vdefine" == "" ]]; then
+    opt_vdefine="__NONE__"
+fi
+info_msg "opt_vdefine is : $opt_vdefine"
 if [ $expected_memory_usage -gt `get_instance_memory` ]; then
 
     output_message="YOUR INSTANCE has less memory than is necessary for certain builds. This means that your builds will take longer than expected. \nTo change to an instance type with more memory, please check our instance resize guide: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-resize.html"
@@ -243,7 +251,7 @@ subsystem_id="0x${id1_version:0:4}";
 subsystem_vendor_id="0x${id1_version:4:4}";
 
 # Run vivado
-cmd="vivado -mode batch -nojournal -log $logname -source $vivado_script -tclargs $timestamp $strategy $hdk_version $shell_version $device_id $vendor_id $subsystem_id $subsystem_vendor_id $clock_recipe_a $clock_recipe_b $clock_recipe_c $uram_option $notify $opt_vdefine"
+cmd="vivado -mode batch -nojournal -log $logname -source $vivado_script -tclargs $timestamp $strategy $hdk_version $shell_version $device_id $vendor_id $subsystem_id $subsystem_vendor_id $clock_recipe_a $clock_recipe_b $clock_recipe_c $uram_option $notify $opt_vdefine $reference_checkpoint"
 if [[ "$foreground" == "0" ]]; then
   nohup $cmd > $timestamp.nohup.out 2>&1 &
   
