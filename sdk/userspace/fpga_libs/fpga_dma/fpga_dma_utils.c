@@ -187,6 +187,7 @@ int fpga_pci_get_dma_device_num(enum fpga_dma_driver which_driver,
     char *possible_dbdf = NULL;
     struct fpga_pci_resource_map resource;
     char sysfs_path_instance[MAX_FD_LEN + sizeof(entry->d_name) + sizeof(path)];
+    DIR *dirp = NULL;
 
     const struct dma_opts_s *dma_opts = fpga_dma_get_dma_opts(which_driver);
     fail_on_with_code(!dma_opts, err, rc, -EINVAL, "invalid DMA driver");
@@ -207,7 +208,7 @@ int fpga_pci_get_dma_device_num(enum fpga_dma_driver which_driver,
     fail_on_with_code(rc < 1, err, rc, FPGA_ERR_SOFTWARE_PROBLEM,
         "Could not record DBDF");
 
-    DIR *dirp = opendir(path);
+    dirp = opendir(path);
     fail_on_with_code(!dirp, err, rc, FPGA_ERR_SOFTWARE_PROBLEM,
         "opendir failed for path=%s", path);
 

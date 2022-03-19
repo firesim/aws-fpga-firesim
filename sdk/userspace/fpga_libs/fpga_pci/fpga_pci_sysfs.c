@@ -457,7 +457,7 @@ fpga_pci_slot_spec_compare(const void *a, const void *b)
 static int
 fpga_pci_mbox_scan(struct fpga_slot_spec spec_array_out[], int size)
 {
-	int ret;
+	int ret = -1;
 	bool found_afi_slot = false;
 	char *path = "/sys/bus/pci/devices";
 	DIR *dirp = opendir(path);
