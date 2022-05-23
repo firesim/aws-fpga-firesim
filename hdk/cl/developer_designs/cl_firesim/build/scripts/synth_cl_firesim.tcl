@@ -5,6 +5,20 @@ set VDEFINES $VDEFINES
 
 create_project -in_memory -part [DEVICE_TYPE] -force
 
+# Generate IP instantated in Golden-Gate generated RTL
+file mkdir $CL_DIR/design/ipgen
+set ipgen_scripts [glob $CL_DIR/design/FireSim-generated.*.ipgen.tcl]
+foreach script $ipgen_scripts {
+    source $script
+}
+
+# Generate targets for all IPs contained within the generated module hierarchy.
+# With the exception of the PLL, these are the only IP instances that don't have
+# their output artifacts checked in.
+generate_target all [get_ips]
+
+synth_ip [get_ips]
+
 ########################################
 ## Generate clocks based on Recipe 
 ########################################
