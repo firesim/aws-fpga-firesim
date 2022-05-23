@@ -1016,11 +1016,6 @@ wire fsimtop_s_3_axi_rvalid;
 wire fsimtop_s_3_axi_rready;
 
 
-
-
-
-`include "FireSim-generated.ila_insert_wires.v"
-
   F1Shim firesim_top (
    .clock(firesim_internal_clock),
    .reset(!rst_firesim_n_sync),
@@ -1116,8 +1111,6 @@ wire fsimtop_s_3_axi_rready;
    .io_dma_r_bits_last(cl_sh_dma_pcis_rlast_FIRESIM),
    .io_dma_r_bits_id(cl_sh_dma_pcis_rid_FIRESIM),
    .io_dma_r_bits_user(),    // UNUSED at top level
-
-   `include "FireSim-generated.ila_insert_ports.v"
 
    .io_slave_0_aw_ready(fsimtop_s_0_axi_awready),
    .io_slave_0_aw_valid(fsimtop_s_0_axi_awvalid),
@@ -2459,8 +2452,6 @@ assign zeroila = 64'b0;
                    .probe4 (zeroila),
                    .probe5 (zeroila)
                    );
-
-`include "FireSim-generated.ila_insert_inst.v"
 
 // Debug Bridge 
  cl_debug_bridge CL_DEBUG_BRIDGE (

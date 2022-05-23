@@ -1,12 +1,3 @@
-########################################
-## Generate ILA based on Recipe 
-########################################
-
-puts "AWS FPGA: ([clock format [clock seconds] -format %T]) Calling firesim_ila_insert_vivado.tcl to generate ILAs from developer's specified recipe.";
-
-source $CL_DIR/design/FireSim-generated.ila_insert_vivado.tcl
-
-
 #Param needed to avoid clock name collisions
 set_param sta.enableAutoGenClkNamePersistence 0
 set CL_MODULE $CL_MODULE
@@ -69,7 +60,7 @@ read_ip [ list \
 
 #Read IP for virtual jtag / ILA/VIO
 read_ip [ list \
-  $HDK_SHELL_DESIGN_DIR/ip/ila_0/ila_0.xci\
+  $HDK_SHELL_DESIGN_DIR/ip/ila_0/ila_0.xci \
   $HDK_SHELL_DESIGN_DIR/ip/cl_debug_bridge/cl_debug_bridge.xci \
   $HDK_SHELL_DESIGN_DIR/ip/ila_vio_counter/ila_vio_counter.xci \
   $HDK_SHELL_DESIGN_DIR/ip/vio_0/vio_0.xci \
@@ -77,8 +68,7 @@ read_ip [ list \
   $CL_DIR/ip/axi_clock_converter_dramslim/axi_clock_converter_dramslim.xci \
   $CL_DIR/ip/axi_clock_converter_oclnew/axi_clock_converter_oclnew.xci \
   $CL_DIR/ip/axi_clock_converter_512_wide/axi_clock_converter_512_wide.xci \
-  $CL_DIR/ip/axi_dwidth_converter_0/axi_dwidth_converter_0.xci \
-  $CL_DIR/ip/firesim_ila_ip/ila_firesim_0/ila_firesim_0.xci
+  $CL_DIR/ip/axi_dwidth_converter_0/axi_dwidth_converter_0.xci
 ]
 
 # Additional IP's that might be needed if using the DDR
