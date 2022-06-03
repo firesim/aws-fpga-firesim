@@ -7,7 +7,7 @@ create_project -in_memory -part [DEVICE_TYPE] -force
 
 # Generate IP instantated in Golden-Gate generated RTL
 file mkdir $CL_DIR/design/ipgen
-set ipgen_scripts [glob $CL_DIR/design/FireSim-generated.*.ipgen.tcl]
+set ipgen_scripts [glob -nocomplain $CL_DIR/design/FireSim-generated.*.ipgen.tcl]
 foreach script $ipgen_scripts {
     source $script
 }
