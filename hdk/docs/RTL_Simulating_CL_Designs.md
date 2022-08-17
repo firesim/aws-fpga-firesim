@@ -4,16 +4,18 @@
 
 Developers tend to simulate their designs to validate the RTL design and functionality, before hitting the build stage and registering it with AWS EC2 as Amazon FPGA Image (AFI). AWS FPGA HDK comes with a shell simulation model that supports RTL-level simulation using Xilinx' Vivado XSIM,  MentorGraphics' Questa, Cadence Incisive and Synopsys' VCS RTL simulators. See table below for supported simulator versions. 
 
-| Simulator | Vivado 2019.1 |  Vivado 2019.2 | Vivado 2020.1 | Vivado 2020.2 | Vivado 2021.1 | 
-|-----------| --- | --- | --- | --- | --- |
-| Xilinx Vivado XSIM | Vivado v2019.1 | Vivado v2019.2 | Vivado v2020.1 | Vivado v2020.2 | Vivado v2021.1 |
-| Synopsys VCS | O-2018.09 | O-2018.09-SP2-1 | P-2019.06-SP1-1 | Q-2020.03 | R-2020.12 | 
-| Mentor Graphics Questa | 10.7c | 2019.2 | 2019.4 | 2020.2 | 2020.4 |
-| Cadence Incisive Enterprise Simulator(IES) | 15.20.065 | 15.20.073 | 15.20.079 | 15.20.083 | 15.20.083 |
+| Simulator                                  | Vivado 2019.1  | Vivado 2019.2   | Vivado 2020.1   | Vivado 2020.2  | Vivado 2021.1  | Vivado 2021.2 | 
+|--------------------------------------------|----------------|-----------------|-----------------|----------------|----------------|---------------|
+| Xilinx Vivado XSIM                         | Vivado v2019.1 | Vivado v2019.2  | Vivado v2020.1  | Vivado v2020.2 | Vivado v2021.1 | Vivado v2021.2 |
+| Synopsys VCS                               | O-2018.09      | O-2018.09-SP2-1 | P-2019.06-SP1-1 | Q-2020.03      | R-2020.12      | R-2020.12 |
+| Mentor Graphics Questa                     | 10.7c          | 2019.2          | 2019.4          | 2020.2         | 2020.4         | 2020.4 |
+| Cadence Incisive Enterprise Simulator(IES) | 15.20.065      | 15.20.073       | 15.20.079       | 15.20.083      | 15.20.083      | N/A |
+| Cadence Xcelium Parallel Simulator         | N/A            | N/A             | N/A             | N/A            | N/A            | 20.09.006 |
+
 
 Developers can write their tests in SystemVerilog and/or C languages. If a developer chooses to use the supplied C framework, he/she can use the same C code for simulation and for runtime on your FPGA-enabled instance like F1.
 
-<img src="./ppts/simulation/Slide2.PNG" alt="Testbench Top-Level Diagram">
+<img src="./images/Testbench.PNG" alt="Testbench Top-Level Diagram">
 
 # Quick Start
 
@@ -289,8 +291,6 @@ Your design may share data between host memory and logic within the CL. To verif
 ```
 
 If you are are using C to verify your CL, then use C domain host memory. Allocate a memory buffer in your C code and pass the pointer to the SV domain. The AXI BFM connected to the PCIeM port will use DPI calls to read and write the memory buffer.
-
-<img src="./ppts/simulation/Slide3.PNG" alt="C/SV Host Memory"/>
 
 
 Backdoor access to host memory is provided by two functions:
