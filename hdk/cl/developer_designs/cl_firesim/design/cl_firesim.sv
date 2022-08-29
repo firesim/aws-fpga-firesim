@@ -283,12 +283,12 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_awaddr(sh_cl_dma_pcis_awaddr),      // input wire [63 : 0] s_axi_awaddr
   .s_axi_awlen(sh_cl_dma_pcis_awlen),        // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(sh_cl_dma_pcis_awsize),      // input wire [2 : 0] s_axi_awsize
-  .s_axi_awburst(),    // input wire [1 : 0] s_axi_awburst
-  .s_axi_awlock(),      // input wire [0 : 0] s_axi_awlock
-  .s_axi_awcache(),    // input wire [3 : 0] s_axi_awcache
-  .s_axi_awprot(),      // input wire [2 : 0] s_axi_awprot
-  .s_axi_awregion(),  // input wire [3 : 0] s_axi_awregion
-  .s_axi_awqos(),        // input wire [3 : 0] s_axi_awqos
+  .s_axi_awburst(2'b0),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awlock(1'b0),      // input wire [0 : 0] s_axi_awlock
+  .s_axi_awcache(4'b0),    // input wire [3 : 0] s_axi_awcache
+  .s_axi_awprot(3'b0),      // input wire [2 : 0] s_axi_awprot
+  .s_axi_awregion(4'b0),  // input wire [3 : 0] s_axi_awregion
+  .s_axi_awqos(4'b0),        // input wire [3 : 0] s_axi_awqos
   .s_axi_awvalid(sh_cl_dma_pcis_awvalid),    // input wire s_axi_awvalid
   .s_axi_awready(cl_sh_dma_pcis_awready),    // output wire s_axi_awready
 
@@ -307,12 +307,12 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_araddr(sh_cl_dma_pcis_araddr),      // input wire [63 : 0] s_axi_araddr
   .s_axi_arlen(sh_cl_dma_pcis_arlen),        // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(sh_cl_dma_pcis_arsize),      // input wire [2 : 0] s_axi_arsize
-  .s_axi_arburst(),    // input wire [1 : 0] s_axi_arburst
-  .s_axi_arlock(),      // input wire [0 : 0] s_axi_arlock
-  .s_axi_arcache(),    // input wire [3 : 0] s_axi_arcache
-  .s_axi_arprot(),      // input wire [2 : 0] s_axi_arprot
-  .s_axi_arregion(),  // input wire [3 : 0] s_axi_arregion
-  .s_axi_arqos(),        // input wire [3 : 0] s_axi_arqos
+  .s_axi_arburst(2'b0),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arlock(1'b0),      // input wire [0 : 0] s_axi_arlock
+  .s_axi_arcache(4'b0),    // input wire [3 : 0] s_axi_arcache
+  .s_axi_arprot(3'b0),      // input wire [2 : 0] s_axi_arprot
+  .s_axi_arregion(4'b0),  // input wire [3 : 0] s_axi_arregion
+  .s_axi_arqos(4'b0),        // input wire [3 : 0] s_axi_arqos
   .s_axi_arvalid(sh_cl_dma_pcis_arvalid),    // input wire s_axi_arvalid
   .s_axi_arready(cl_sh_dma_pcis_arready),    // output wire s_axi_arready
 
@@ -827,7 +827,7 @@ wire [1 : 0] fsimtop_s_0_axi_awburst;
 wire [0 : 0] fsimtop_s_0_axi_awlock;
 wire [3 : 0] fsimtop_s_0_axi_awcache;
 wire [2 : 0] fsimtop_s_0_axi_awprot;
-wire [3 : 0] fsimtop_s_0_axi_awregion;
+wire [3 : 0] fsimtop_s_0_axi_awregion = 4'b0;
 wire [3 : 0] fsimtop_s_0_axi_awqos;
 wire fsimtop_s_0_axi_awvalid;
 wire fsimtop_s_0_axi_awready;
@@ -852,7 +852,7 @@ wire [1 : 0] fsimtop_s_0_axi_arburst;
 wire [0 : 0] fsimtop_s_0_axi_arlock;
 wire [3 : 0] fsimtop_s_0_axi_arcache;
 wire [2 : 0] fsimtop_s_0_axi_arprot;
-wire [3 : 0] fsimtop_s_0_axi_arregion;
+wire [3 : 0] fsimtop_s_0_axi_arregion = 4'b0;
 wire [3 : 0] fsimtop_s_0_axi_arqos;
 wire fsimtop_s_0_axi_arvalid;
 wire fsimtop_s_0_axi_arready;
@@ -877,7 +877,7 @@ wire [1 : 0] fsimtop_s_1_axi_awburst;
 wire [0 : 0] fsimtop_s_1_axi_awlock;
 wire [3 : 0] fsimtop_s_1_axi_awcache;
 wire [2 : 0] fsimtop_s_1_axi_awprot;
-wire [3 : 0] fsimtop_s_1_axi_awregion;
+wire [3 : 0] fsimtop_s_1_axi_awregion = 4'b0;
 wire [3 : 0] fsimtop_s_1_axi_awqos;
 wire fsimtop_s_1_axi_awvalid;
 wire fsimtop_s_1_axi_awready;
@@ -902,7 +902,7 @@ wire [1 : 0] fsimtop_s_1_axi_arburst;
 wire [0 : 0] fsimtop_s_1_axi_arlock;
 wire [3 : 0] fsimtop_s_1_axi_arcache;
 wire [2 : 0] fsimtop_s_1_axi_arprot;
-wire [3 : 0] fsimtop_s_1_axi_arregion;
+wire [3 : 0] fsimtop_s_1_axi_arregion = 4'b0;
 wire [3 : 0] fsimtop_s_1_axi_arqos;
 wire fsimtop_s_1_axi_arvalid;
 wire fsimtop_s_1_axi_arready;
@@ -927,7 +927,7 @@ wire [1 : 0] fsimtop_s_2_axi_awburst;
 wire [0 : 0] fsimtop_s_2_axi_awlock;
 wire [3 : 0] fsimtop_s_2_axi_awcache;
 wire [2 : 0] fsimtop_s_2_axi_awprot;
-wire [3 : 0] fsimtop_s_2_axi_awregion;
+wire [3 : 0] fsimtop_s_2_axi_awregion = 4'b0;
 wire [3 : 0] fsimtop_s_2_axi_awqos;
 wire fsimtop_s_2_axi_awvalid;
 wire fsimtop_s_2_axi_awready;
@@ -952,7 +952,7 @@ wire [1 : 0] fsimtop_s_2_axi_arburst;
 wire [0 : 0] fsimtop_s_2_axi_arlock;
 wire [3 : 0] fsimtop_s_2_axi_arcache;
 wire [2 : 0] fsimtop_s_2_axi_arprot;
-wire [3 : 0] fsimtop_s_2_axi_arregion;
+wire [3 : 0] fsimtop_s_2_axi_arregion = 4'b0;
 wire [3 : 0] fsimtop_s_2_axi_arqos;
 wire fsimtop_s_2_axi_arvalid;
 wire fsimtop_s_2_axi_arready;
@@ -978,7 +978,7 @@ wire [1 : 0] fsimtop_s_3_axi_awburst;
 wire [0 : 0] fsimtop_s_3_axi_awlock;
 wire [3 : 0] fsimtop_s_3_axi_awcache;
 wire [2 : 0] fsimtop_s_3_axi_awprot;
-wire [3 : 0] fsimtop_s_3_axi_awregion;
+wire [3 : 0] fsimtop_s_3_axi_awregion = 4'b0;
 wire [3 : 0] fsimtop_s_3_axi_awqos;
 wire fsimtop_s_3_axi_awvalid;
 wire fsimtop_s_3_axi_awready;
@@ -1003,7 +1003,7 @@ wire [1 : 0] fsimtop_s_3_axi_arburst;
 wire [0 : 0] fsimtop_s_3_axi_arlock;
 wire [3 : 0] fsimtop_s_3_axi_arcache;
 wire [2 : 0] fsimtop_s_3_axi_arprot;
-wire [3 : 0] fsimtop_s_3_axi_arregion;
+wire [3 : 0] fsimtop_s_3_axi_arregion = 4'b0;
 wire [3 : 0] fsimtop_s_3_axi_arqos;
 wire fsimtop_s_3_axi_arvalid;
 wire fsimtop_s_3_axi_arready;
