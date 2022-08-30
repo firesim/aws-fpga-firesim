@@ -283,9 +283,11 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_awaddr(sh_cl_dma_pcis_awaddr),      // input wire [63 : 0] s_axi_awaddr
   .s_axi_awlen(sh_cl_dma_pcis_awlen),        // input wire [7 : 0] s_axi_awlen
   .s_axi_awsize(sh_cl_dma_pcis_awsize),      // input wire [2 : 0] s_axi_awsize
-  .s_axi_awburst(2'b0),    // input wire [1 : 0] s_axi_awburst
+  .s_axi_awburst(2'b1),    // input wire [1 : 0] s_axi_awburst
   .s_axi_awlock(1'b0),      // input wire [0 : 0] s_axi_awlock
-  .s_axi_awcache(4'b0),    // input wire [3 : 0] s_axi_awcache
+  // CACHE = xx1x indicates the transcation is modifiable and
+  // that the converter should pack narrow reads into wider ones
+  .s_axi_awcache(4'h2),    // input wire [3 : 0] s_axi_awcache
   .s_axi_awprot(3'b0),      // input wire [2 : 0] s_axi_awprot
   .s_axi_awregion(4'b0),  // input wire [3 : 0] s_axi_awregion
   .s_axi_awqos(4'b0),        // input wire [3 : 0] s_axi_awqos
@@ -307,9 +309,11 @@ axi_clock_converter_512_wide wide_pcis_clock_convert (
   .s_axi_araddr(sh_cl_dma_pcis_araddr),      // input wire [63 : 0] s_axi_araddr
   .s_axi_arlen(sh_cl_dma_pcis_arlen),        // input wire [7 : 0] s_axi_arlen
   .s_axi_arsize(sh_cl_dma_pcis_arsize),      // input wire [2 : 0] s_axi_arsize
-  .s_axi_arburst(2'b0),    // input wire [1 : 0] s_axi_arburst
+  .s_axi_arburst(2'b1),    // input wire [1 : 0] s_axi_arburst
   .s_axi_arlock(1'b0),      // input wire [0 : 0] s_axi_arlock
-  .s_axi_arcache(4'b0),    // input wire [3 : 0] s_axi_arcache
+  // CACHE = xx1x indicates the transcation is modifiable and
+  // that the converter should pack narrow reads into wider ones
+  .s_axi_arcache(4'h2),    // input wire [3 : 0] s_axi_arcache
   .s_axi_arprot(3'b0),      // input wire [2 : 0] s_axi_arprot
   .s_axi_arregion(4'b0),  // input wire [3 : 0] s_axi_arregion
   .s_axi_arqos(4'b0),        // input wire [3 : 0] s_axi_arqos
