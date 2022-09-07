@@ -78,9 +78,6 @@ ${CL_ROOT}/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/sim/axi_dwidth_converter_0.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_dwidth_converter_v2_1_vl_rfs.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_register_slice_v2_1_vl_rfs.v
-${CL_ROOT}/design/FireSim-generated.ila_insert_inst.v
-${CL_ROOT}/design/FireSim-generated.ila_insert_ports.v
-${CL_ROOT}/design/FireSim-generated.ila_insert_wires.v
 ${CL_ROOT}/design/FireSim-generated.sv
 ${CL_ROOT}/design/FireSim-generated.defines.vh
 ${CL_ROOT}/design/cl_firesim.sv
