@@ -54,9 +54,6 @@
 
 ${CL_ROOT}/../common/design/cl_common_defines.vh
 ${CL_ROOT}/design/cl_firesim_defines.vh
-${CL_ROOT}/design/FireSim-generated.ila_insert_inst.v
-${CL_ROOT}/design/FireSim-generated.ila_insert_ports.v
-${CL_ROOT}/design/FireSim-generated.ila_insert_wires.v
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_vio_counter/sim/ila_vio_counter.v
 ${HDK_SHELL_DESIGN_DIR}/ip/ila_0/sim/ila_0.v
 ${HDK_SHELL_DESIGN_DIR}/ip/cl_debug_bridge/bd_0/sim/bd_a493.v
@@ -80,7 +77,6 @@ ${CL_ROOT}/ip/axi_clock_converter_dramslim/sim/axi_clock_converter_dramslim.v
 ${CL_ROOT}/ip/axi_clock_converter_oclnew/sim/axi_clock_converter_oclnew.v
 ${CL_ROOT}/ip/axi_clock_converter_oclnew/hdl/axi_clock_converter_v2_1_vl_rfs.v
 ${CL_ROOT}/ip/axi_clock_converter_512_wide/sim/axi_clock_converter_512_wide.v
-${CL_ROOT}/ip/clk_wiz_0_firesim/clk_wiz_0_firesim_sim_netlist.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/sim/axi_dwidth_converter_0.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_dwidth_converter_v2_1_vl_rfs.v
 ${CL_ROOT}/ip/axi_dwidth_converter_0/hdl/axi_register_slice_v2_1_vl_rfs.v
