@@ -26,18 +26,19 @@ set CL_MODULE cl_firesim
 #################################################
 set timestamp           [lindex $argv  0]
 set strategy            [lindex $argv  1]
-set hdk_version         [lindex $argv  2]
-set shell_version       [lindex $argv  3]
-set device_id           [lindex $argv  4]
-set vendor_id           [lindex $argv  5]
-set subsystem_id        [lindex $argv  6]
-set subsystem_vendor_id [lindex $argv  7]
-set clock_recipe_a      [lindex $argv  8]
-set clock_recipe_b      [lindex $argv  9]
-set clock_recipe_c      [lindex $argv 10]
-set uram_option         [lindex $argv 11]
-set notify_via_sns      [lindex $argv 12]
-set VDEFINES            [lindex $argv 13]
+set frequency           [lindex $argv  2]
+set hdk_version         [lindex $argv  3]
+set shell_version       [lindex $argv  4]
+set device_id           [lindex $argv  5]
+set vendor_id           [lindex $argv  6]
+set subsystem_id        [lindex $argv  7]
+set subsystem_vendor_id [lindex $argv  8]
+set clock_recipe_a      [lindex $argv  9]
+set clock_recipe_b      [lindex $argv 10]
+set clock_recipe_c      [lindex $argv 11]
+set uram_option         [lindex $argv 12]
+set notify_via_sns      [lindex $argv 13]
+set VDEFINES            [lindex $argv 14]
 ##################################################
 ## Flow control variables
 ##################################################
@@ -53,6 +54,7 @@ puts "HDK Version:            $hdk_version";
 puts "Shell Version:          $shell_version";
 puts "Vivado Script Name:     $argv0";
 puts "Strategy:               $strategy";
+puts "Frequency:              $frequency";
 puts "PCI Device ID           $device_id";
 puts "PCI Vendor ID           $vendor_id";
 puts "PCI Subsystem ID        $subsystem_id";
@@ -170,9 +172,9 @@ if {[string compare $notify_via_sns "1"] == 0} {
   }
 }
 ##################################################
-### Source FireSim Generated TCL Env variables
+### Set FireSim Generated Env variables
 ##################################################
-source $CL_DIR/design/FireSim-generated.env.tcl
+set desired_host_frequency $frequency
 
 ##################################################
 ### Strategy options
@@ -288,7 +290,7 @@ if {$implement} {
       # Apply Clock Properties for Clock Table Recipes
       ##################################################
       puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Sourcing aws_clock_properties.tcl to apply properties to clocks. ";
-      
+
       # Apply properties to clocks
       source $HDK_SHELL_DIR/build/scripts/aws_clock_properties.tcl
 
@@ -309,7 +311,7 @@ if {$implement} {
       }
    }
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
-   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv 
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv
 
    ########################
    # CL Place
@@ -358,7 +360,7 @@ if {$implement} {
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
    # Report RAM utilization
-   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.csv 
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.csv
 
    # Report clock utilization
    report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
