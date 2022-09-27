@@ -69,16 +69,6 @@ function get_instance_memory {
   echo "$mem"
 }
 
-# Check CL_DIR is set before sourcing defaults
-if ! [ $CL_DIR ]
-then
-	err_msg "CL_DIR environment variable is not set. Set CL_DIR to a valid directory."
-	exit 1
-fi
-
-# Default arguments for strategy and frequency
-source $CL_DIR/design/FireSim-generated.env.sh
-
 # Parse command-line arguments
 while [ "$1" != "" ]; do
     case $1 in
@@ -201,6 +191,12 @@ info_msg "Checking for proper environment variables and build directories"
 if ! [ $HDK_SHELL_DIR ]
 then
 	err_msg "HDK_SHELL_DIR environment variable is not set, try running hdk_setup.sh script from the root directory of AWS FPGA repository."
+	exit 1
+fi
+
+if ! [ $CL_DIR ]
+then
+	err_msg "CL_DIR environment variable is not set. Set CL_DIR to a valid directory."
 	exit 1
 fi
 
