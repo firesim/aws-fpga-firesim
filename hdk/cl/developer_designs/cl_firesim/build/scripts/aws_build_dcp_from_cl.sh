@@ -18,7 +18,7 @@
 # Usage help
 function usage
 {
-    echo "usage: aws_build_dcp_from_cl.sh [ [-script <vivado_script>] | [-strategy BASIC | DEFAULT | EXPLORE | TIMING | NORETIMING | CONGESTION] [-frequency 1 | ... | 999] [-clock_recipe_a A0 | A1 | A2] [-clock_recipe_b B0 | B1 | B2 | B3 | B4 | B5] [-clock_recipe_c C0 | C1 | C2 | C3] [-uram_option 2 | 3 | 4] [-vdefine macro1,macro2,macro3,.....,macrox] -foreground] [-notify] | [-h] | [-H] | [-help] ]"
+    echo "usage: aws_build_dcp_from_cl.sh [ [-script <vivado_script>] | [-strategy BASIC | DEFAULT | EXPLORE | TIMING | NORETIMING | CONGESTION] [-frequency 1.0 | ... | 999.99] [-clock_recipe_a A0 | A1 | A2] [-clock_recipe_b B0 | B1 | B2 | B3 | B4 | B5] [-clock_recipe_c C0 | C1 | C2 | C3] [-uram_option 2 | 3 | 4] [-vdefine macro1,macro2,macro3,.....,macrox] -foreground] [-notify] | [-h] | [-H] | [-help] ]"
     echo " "
     echo "By default the build is run in the background using nohup so that the"
     echo "process will not be terminated if the terminal window is closed."
@@ -120,14 +120,14 @@ fi
 # Check that strategy is valid
 shopt -s extglob
 if [[ $strategy != @(BASIC|DEFAULT|EXPLORE|TIMING|CONGESTION|NORETIMING|AREA) ]]; then
-  err_msg "$strategy isn't a valid strategy. Valid strategies are BASIC, DEFAULT, EXPLORE, TIMING, CONGESTION and AREA."
+  err_msg "$strategy isn't a valid strategy. Valid strategies are BASIC, DEFAULT, EXPLORE, TIMING, CONGESTION, NORETIMING and AREA."
   exit 1
 fi
 
 # Check that frequency is valid
 shopt -s extglob
 if ! [ $(echo "1.0 <= $frequency && $frequency <= 1000.0" | bc -l) -eq 1 ]; then
-  err_msg "$frequency is not a valid frequency. Valid frequencies are between 1 and 1000 (MHz)"
+  err_msg "$frequency is not a valid frequency. Valid frequencies are between 1.0 and 1000.0 (MHz)"
   exit 1
 fi
 
@@ -252,7 +252,7 @@ subsystem_id="0x${id1_version:0:4}";
 subsystem_vendor_id="0x${id1_version:4:4}";
 
 # Run vivado
-cmd="vivado -mode batch -nojournal -log $logname -source $vivado_script -tclargs $timestamp $strategy $frequency $hdk_version $shell_version $device_id $vendor_id $subsystem_id $subsystem_vendor_id $clock_recipe_a $clock_recipe_b $clock_recipe_c $uram_option $notify $opt_vdefine"
+cmd="vivado -mode batch -nojournal -log $logname -source $vivado_script -tclargs $timestamp $strategy $hdk_version $shell_version $device_id $vendor_id $subsystem_id $subsystem_vendor_id $clock_recipe_a $clock_recipe_b $clock_recipe_c $uram_option $notify $frequency $opt_vdefine"
 if [[ "$foreground" == "0" ]]; then
   nohup $cmd > $timestamp.nohup.out 2>&1 &
 
