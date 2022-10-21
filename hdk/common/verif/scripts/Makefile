@@ -25,7 +25,6 @@ all: $(DONE_FILE)
 $(DONE_FILE): $(DEPS_FILE)
 	@ echo "INFO: Building in $(shell dirname $@)"
 	@ echo "INFO: This could take 5-10 minutes, please be patient!"
-	@ git clean -fXdq $(shell dirname $@)
 	@ cd $(shell dirname $@)\
 	&& ./init.sh $(MODEL_DIR)\
 	&& echo "INFO: DDR4 model build passed."\
