@@ -243,6 +243,8 @@ source $HDK_SHELL_DIR/build/scripts/aws_gen_clk_constraints.tcl
 ##################################################################
 set_param hd.clockRoutingWireReduction false
 
+set_param place.maxNumClocksInHalfColumn 12
+
 ##################################################
 ### CL XPR OOC Synthesis
 ##################################################
