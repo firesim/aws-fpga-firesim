@@ -169,7 +169,7 @@ set_msg_config -id {[Synth-8-6430]} -new_severity "ERROR"
 # without any indication of failure. Yeah. See UG835.
 set_msg_config -id {[Route 35-1]} -new_severity "ERROR"
 # Route 35-535] Clock Net: <net> is not completely routed.
-set_msg_config -id {[Route 35-535}] -new_severity "ERROR"
+set_msg_config -id {[Route 35-535]} -new_severity "ERROR"
 
 # Check that an email address has been set, else unset notify_via_sns
 
