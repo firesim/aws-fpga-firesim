@@ -156,10 +156,20 @@ set_msg_config -severity "CRITICAL WARNING" -string "WRAPPER_INST/SH" -suppress
 set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
 
 # Promote the following critical warnings to errors to prevent AGFI generation
+# A terrifying warning that may be symptomatic of unsound BRAM inference:
+# > The Block RAM <RAM> get memory collision
+# > error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *)
+# > to avoid collision
+# See https://www.beyond-circuits.com/wordpress/2019/10/ram-address-conflicts-and-a-vivado-synthesis-bug/ for discussion.
+set_msg_config -id {[Synth-8-6430]} -new_severity "ERROR"
+
 # Design not completely routed
-#set_msg_config -id {Route 35-1} -new_severity "ERROR"
+# The {[ ]} is manadatory here since this would otherwise match on all ID with the prefix
+# Route 35-1, including Route 35-18 (Route Success), which would silently bring down the build
+# without any indication of failure. Yeah. See UG835.
+set_msg_config -id {[Route 35-1]} -new_severity "ERROR"
 # Route 35-535] Clock Net: <net> is not completely routed.
-set_msg_config -id {Route 35-535} -new_severity "ERROR"
+set_msg_config -id {[Route 35-535]} -new_severity "ERROR"
 
 # Check that an email address has been set, else unset notify_via_sns
 
