@@ -161,7 +161,7 @@ set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
 # > error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *)
 # > to avoid collision
 # See https://www.beyond-circuits.com/wordpress/2019/10/ram-address-conflicts-and-a-vivado-synthesis-bug/ for discussion.
-set_msg_config -id {[Synth-8-6430]} -new_severity "ERROR"
+set_msg_config -id {[Synth 8-6430]} -new_severity "ERROR"
 
 # Design not completely routed
 # The {[ ]} is manadatory here since this would otherwise match on all ID with the prefix
