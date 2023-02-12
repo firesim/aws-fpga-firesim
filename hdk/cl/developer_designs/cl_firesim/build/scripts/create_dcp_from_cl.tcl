@@ -37,7 +37,8 @@ set clock_recipe_b      [lindex $argv  9]
 set clock_recipe_c      [lindex $argv 10]
 set uram_option         [lindex $argv 11]
 set notify_via_sns      [lindex $argv 12]
-set VDEFINES            [lindex $argv 13]
+set frequency           [lindex $argv 13]
+set VDEFINES            [lindex $argv 14]
 ##################################################
 ## Flow control variables
 ##################################################
@@ -53,6 +54,7 @@ puts "HDK Version:            $hdk_version";
 puts "Shell Version:          $shell_version";
 puts "Vivado Script Name:     $argv0";
 puts "Strategy:               $strategy";
+puts "Frequency:              $frequency";
 puts "PCI Device ID           $device_id";
 puts "PCI Vendor ID           $vendor_id";
 puts "PCI Subsystem ID        $subsystem_id";
@@ -154,10 +156,20 @@ set_msg_config -severity "CRITICAL WARNING" -string "WRAPPER_INST/SH" -suppress
 set_msg_config -severity "WARNING"          -string "WRAPPER_INST/SH" -suppress
 
 # Promote the following critical warnings to errors to prevent AGFI generation
+# A terrifying warning that may be symptomatic of unsound BRAM inference:
+# > The Block RAM <RAM> get memory collision
+# > error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *)
+# > to avoid collision
+# See https://www.beyond-circuits.com/wordpress/2019/10/ram-address-conflicts-and-a-vivado-synthesis-bug/ for discussion.
+set_msg_config -id {[Synth 8-6430]} -new_severity "ERROR"
+
 # Design not completely routed
-#set_msg_config -id {Route 35-1} -new_severity "ERROR"
+# The {[ ]} is manadatory here since this would otherwise match on all ID with the prefix
+# Route 35-1, including Route 35-18 (Route Success), which would silently bring down the build
+# without any indication of failure. Yeah. See UG835.
+set_msg_config -id {[Route 35-1]} -new_severity "ERROR"
 # Route 35-535] Clock Net: <net> is not completely routed.
-set_msg_config -id {Route 35-535} -new_severity "ERROR"
+set_msg_config -id {[Route 35-535]} -new_severity "ERROR"
 
 # Check that an email address has been set, else unset notify_via_sns
 
@@ -170,9 +182,9 @@ if {[string compare $notify_via_sns "1"] == 0} {
   }
 }
 ##################################################
-### Source FireSim Generated TCL Env variables
+### Set FireSim Generated Env variables
 ##################################################
-source $CL_DIR/design/FireSim-generated.env.tcl
+set desired_host_frequency $frequency
 
 ##################################################
 ### Strategy options
@@ -290,7 +302,7 @@ if {$implement} {
       # Apply Clock Properties for Clock Table Recipes
       ##################################################
       puts "AWS FPGA: ([clock format [clock seconds] -format %T]) - Sourcing aws_clock_properties.tcl to apply properties to clocks. ";
-      
+
       # Apply properties to clocks
       source $HDK_SHELL_DIR/build/scripts/aws_clock_properties.tcl
 
@@ -311,7 +323,7 @@ if {$implement} {
       }
    }
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.post_opt_utilization.rpt
-   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv 
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.post_opt_ram_utilization.csv
 
    ########################
    # CL Place
@@ -360,7 +372,7 @@ if {$implement} {
    report_utilization -hierarchical -hierarchical_percentages -file $CL_DIR/build/reports/${timestamp}.SH_CL_utilization.rpt
 
    # Report RAM utilization
-   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.csv 
+   report_ram_utilization -include_lutram -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.rpt -csv $CL_DIR/build/reports/${timestamp}.SH_CL_final_ram_utilization.csv
 
    # Report clock utilization
    report_clock_utilization -file $CL_DIR/build/reports/${timestamp}.SH_CL_final_clock_utilization.rpt
