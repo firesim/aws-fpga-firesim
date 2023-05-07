@@ -2406,7 +2406,7 @@ generate
         assign fsimtop_s_3_axi_rdata = '0;
         assign fsimtop_s_3_axi_rresp = '0;
         assign fsimtop_s_3_axi_rlast = '0;
-        assign fsimtop_s_2_axi_rvalid = '0;
+        assign fsimtop_s_3_axi_rvalid = '0;
     end
 endgenerate
 
