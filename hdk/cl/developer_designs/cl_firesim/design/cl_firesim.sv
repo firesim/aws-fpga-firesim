@@ -1033,21 +1033,16 @@ wire fsimtop_s_3_axi_rready;
    .io_master_aw_bits_cache(4'h0),
    .io_master_aw_bits_prot(3'h0), //unused? (could connect?)
    .io_master_aw_bits_qos(4'h0),
-   .io_master_aw_bits_region(4'h0),
    .io_master_aw_bits_id(12'h0),
-   .io_master_aw_bits_user(1'h0),
    .io_master_w_ready(ocl_sh_wready_q),
    .io_master_w_valid(sh_ocl_wvalid_q),
    .io_master_w_bits_data(sh_ocl_wdata_q),
    .io_master_w_bits_last(1'h1),
-   .io_master_w_bits_id(12'h0),
    .io_master_w_bits_strb(sh_ocl_wstrb_q), //OR 8'hff
-   .io_master_w_bits_user(1'h0),
    .io_master_b_ready(sh_ocl_bready_q),
    .io_master_b_valid(ocl_sh_bvalid_q),
    .io_master_b_bits_resp(ocl_sh_bresp_q),
    .io_master_b_bits_id(),      // UNUSED at top level
-   .io_master_b_bits_user(),    // UNUSED at top level
    .io_master_ar_ready(ocl_sh_arready_q),
    .io_master_ar_valid(sh_ocl_arvalid_q),
    .io_master_ar_bits_addr(sh_ocl_araddr_q[24:0]),
@@ -1058,16 +1053,13 @@ wire fsimtop_s_3_axi_rready;
    .io_master_ar_bits_cache(4'h0),
    .io_master_ar_bits_prot(3'h0),
    .io_master_ar_bits_qos(4'h0),
-   .io_master_ar_bits_region(4'h0),
    .io_master_ar_bits_id(12'h0),
-   .io_master_ar_bits_user(1'h0),
    .io_master_r_ready(sh_ocl_rready_q),
    .io_master_r_valid(ocl_sh_rvalid_q),
    .io_master_r_bits_resp(ocl_sh_rresp_q),
    .io_master_r_bits_data(ocl_sh_rdata_q),
    .io_master_r_bits_last(), //UNUSED at top level
    .io_master_r_bits_id(),      // UNUSED at top level
-   .io_master_r_bits_user(),    // UNUSED at top level
 
     // special NIC master interface
    .io_dma_aw_ready(cl_sh_dma_pcis_awready_FIRESIM),
