@@ -114,5 +114,6 @@ patches/*
 
 # FireSim specific
 awsver.txt
+.exported-env
 
 sdk/linux_kernel_drivers/xdma/.libxdma.o.d
