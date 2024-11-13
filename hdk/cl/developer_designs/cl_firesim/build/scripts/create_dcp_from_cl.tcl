@@ -198,6 +198,10 @@ switch $strategy {
         puts "AREA strategy."
         source $HDK_SHELL_DIR/build/scripts/strategy_AREA.tcl
     }
+    "GRPC0" {
+        puts "GRPC0 strategy."
+        source $HDK_SHELL_DIR/build/scripts/strategy_GRPC0.tcl
+    }
     "EXPLORE" {
         puts "EXPLORE strategy."
         source $HDK_SHELL_DIR/build/scripts/strategy_EXPLORE.tcl
